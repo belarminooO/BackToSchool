@@ -1,0 +1,8 @@
+// Add all files to git
+git add .
+// Check status
+git status 
+// Commit
+git commit -m "texto descriptivo"
+// Push
+git push
