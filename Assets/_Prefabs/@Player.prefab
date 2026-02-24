@@ -598,10 +598,10 @@ MonoBehaviour:
     activeAsOwner: 1
   - target: {fileID: 9143956543355942608}
     activeAsOwner: 1
-  - target: {fileID: 9065886480937070233}
-    activeAsOwner: 1
-  - target: {fileID: 488558012583472907}
-    activeAsOwner: 1
+  - target: {fileID: 0}
+    activeAsOwner: 0
+  - target: {fileID: 0}
+    activeAsOwner: 0
   _toActivate: []
   _toDeactivate: []
   _toEnable: []
