@@ -41,6 +41,11 @@ public class PlayerNameTag : NetworkBehaviour
         }
         else
         {
+            if (nameCanvas != null)
+            {
+                nameCanvas.gameObject.SetActive(true);
+            }
+
             OnNameChanged(steamName.value);
         }
 
@@ -73,8 +78,13 @@ public class PlayerNameTag : NetworkBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
+        if (!isOwner && nameText != null && nameText.text == "" && !string.IsNullOrEmpty(steamName.value))
+        {
+            nameText.text = steamName.value;
+        }
+
         if (nameCanvas != null && Camera.main != null)
         {
             nameCanvas.transform.rotation = Quaternion.LookRotation(nameCanvas.transform.position - Camera.main.transform.position);
