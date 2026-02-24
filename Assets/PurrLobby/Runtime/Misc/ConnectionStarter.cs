@@ -117,6 +117,24 @@ namespace PurrLobby
                 (_networkManager.transport as PurrTransport).roomName = _lobbyDataHolder.CurrentLobby.LobbyId;
             }
 
+            // ----------------------------------------------
+            #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
+            if (_networkManager.transport != null && _networkManager.transport.GetType().Name == "SteamTransport") {
+                if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
+                {
+                    Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
+                    Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
+                    var addressProperty = _networkManager.transport.GetType().GetProperty("address");
+                    if (addressProperty != null && addressProperty.CanWrite)
+                    {
+                        addressProperty.SetValue(_networkManager.transport, ownerId.m_SteamID.ToString());
+                    }
+                }
+            }
+            #endif
+            // ----------------------------------------------
+
+            // Pode-se usar StartHost()
             if(_lobbyDataHolder.CurrentLobby.IsOwner)
                 _networkManager.StartServer();
             StartCoroutine(StartClient());
