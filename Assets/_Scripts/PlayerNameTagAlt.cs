@@ -31,8 +31,7 @@ public class PlayerNameTagAlt : NetworkBehaviour
 
 
 
-            if (isOwner)
-        {
+            if (isOwner){
             try
             {
                 steamName.value = SteamFriends.GetPersonaName();
