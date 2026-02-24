@@ -1,12 +1,15 @@
-using UnityEngine;
-using TMPro;
+using MetaVoiceChat;
 using PurrNet;
 using Steamworks;
+using TMPro;
+using UnityEngine;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class PlayerNameTagAlt : NetworkBehaviour
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private Canvas nameCanvas;
+    [SerializeField] private MetaVc metaVc;
 
     public SyncVar<string> steamName = new SyncVar<string>(ownerAuth: true);
 
@@ -19,7 +22,16 @@ public class PlayerNameTagAlt : NetworkBehaviour
 
         steamName.onChanged += (newName) => { nameText.text = newName; };
 
-        if (isOwner)
+        if (metaVc != null)
+        {
+            metaVc.isSpeaking.OnValueChanged += UpdateNameTagColor;
+
+            UpdateNameTagColor(metaVc.isSpeaking.Value);
+        }
+
+
+
+            if (isOwner)
         {
             try
             {
@@ -52,5 +64,22 @@ public class PlayerNameTagAlt : NetworkBehaviour
         {
             nameText.text = steamName.value;
         }
+    }
+
+    private void UpdateNameTagColor(bool isSpeaking)
+    {
+        if (nameText != null)
+        {
+            nameText.color = isSpeaking ? Color.green : Color.white;
+        }
+    }
+
+    protected override void OnDespawned()
+    {
+        if (metaVc != null)
+        {
+            metaVc.isSpeaking.OnValueChanged -= UpdateNameTagColor;
+        }
+        base.OnDespawned();
     }
 }

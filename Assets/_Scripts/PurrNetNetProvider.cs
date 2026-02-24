@@ -82,7 +82,11 @@ namespace MetaVoiceChat.NetProviders.PurrNet
         [ObserversRpc(channel: Channel.Unreliable, excludeOwner: true)]
         private void RpcReceiveFrame(int index, double timestamp, float additionalLatency, byte[] data)
         {
+            
             if (MetaVc == null)
+                return;
+
+            if (isOwner)
                 return;
 
             if (isServer)

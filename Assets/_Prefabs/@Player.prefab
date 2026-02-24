@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 8615551729103891197}
   - component: {fileID: 4593848359285927842}
   - component: {fileID: 8325548679021303433}
+  - component: {fileID: 5334163809754318043}
   m_Layer: 0
   m_Name: VoiceChat
   m_TagString: Untagged
@@ -194,7 +195,7 @@ MonoBehaviour:
     jitterTimeWindow: 0.24
     jitterMeanOffsetWindow: 100
     outputMinBufferSize: 2
-  isEchoEnabled: 1
+  isEchoEnabled: 0
   isSineOverrideEnabled: 0
   maxCodecMilliseconds: 50
   allowMultipleCodecWarningsPerFrame: 0
@@ -260,6 +261,21 @@ MonoBehaviour:
   _directChildren: []
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
+--- !u!114 &5334163809754318043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883420235182172780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba32bddb93352a74fb03a5cbc7e642e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetaVoiceChat.AudioFilters.NoiseGate
+  optionalNextInputFilter: {fileID: 6733853886198480876}
+  decibelThreshold: -50
+  currentVolumeDB: 0
 --- !u!1 &1511745286854303199
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +334,7 @@ MonoBehaviour:
   _visitiblityRules: {fileID: 0}
   nameText: {fileID: 510654837989415761}
   nameCanvas: {fileID: 2797401776417709501}
+  metaVc: {fileID: 8964650326567704555}
   steamName:
     _value: 
     _ownerAuth: 1
@@ -589,6 +606,53 @@ MonoBehaviour:
   _toDeactivate: []
   _toEnable: []
   _toDisable: []
+--- !u!1 &2338687516016486564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7561798682148725521}
+  - component: {fileID: 6733853886198480876}
+  m_Layer: 0
+  m_Name: NoiseGate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7561798682148725521
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2338687516016486564}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6506861467479751428}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6733853886198480876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2338687516016486564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba32bddb93352a74fb03a5cbc7e642e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetaVoiceChat.AudioFilters.NoiseGate
+  optionalNextInputFilter: {fileID: 0}
+  decibelThreshold: -50
+  currentVolumeDB: 0
 --- !u!1 &4320290687597414624
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,7 +682,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7561798682148725521}
   m_Father: {fileID: 926072128894195615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &4480088947639684356
