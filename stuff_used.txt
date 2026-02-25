@@ -8,3 +8,7 @@ https://www.youtube.com/watch?v=9ibpY64wBYM
 Cinemachine Camera
 
 Steamworks.NET
+
+MetaVoiceChat: https://github.com/Metater/MetaVoiceChat
+
+ReadCSV https://www.educative.io/answers/how-to-read-a-csv-file-in-c-sharp
