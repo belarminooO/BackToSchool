@@ -135,6 +135,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
         else
         {
             currentVelocity -= Motor.CharacterUp * Gravity * deltaTime;
+ 
         }
     }
 

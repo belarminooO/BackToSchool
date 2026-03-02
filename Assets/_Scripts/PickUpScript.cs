@@ -5,6 +5,7 @@ using PurrNet;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.UI;
+using UnityEngine.Rendering.Universal; 
 
 public class PickUpScript : NetworkBehaviour
 {
@@ -53,6 +54,26 @@ public class PickUpScript : NetworkBehaviour
             rotateAction.action.Enable();
         if (lookAction) 
             lookAction.action.Enable();
+
+        Camera pickUpCam = GetComponentInChildren<Camera>(); 
+
+        Camera mainCam = Camera.main;
+        if (mainCam != null && pickUpCam != null)
+        {
+            var pickUpCamData = pickUpCam.GetComponent<UniversalAdditionalCameraData>();
+            if (pickUpCamData != null)
+            {
+                pickUpCamData.renderType = CameraRenderType.Overlay;
+            }
+            var mainCamData = mainCam.GetComponent<UniversalAdditionalCameraData>();
+            if (mainCamData != null)
+            {
+                if (!mainCamData.cameraStack.Contains(pickUpCam)) 
+                {
+                    mainCamData.cameraStack.Add(pickUpCam);
+                }
+            }
+        }
     }
     void Update()
     {
