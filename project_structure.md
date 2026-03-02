@@ -1,7 +1,7 @@
 # 🎒 Back To School - Game Design Document
 
 ## 1. Game Overview
-**Back To School** is a chaotic, first-person multiplayer trivia game where players compete to answer questions while navigating a procedurally generated school environment. The game combines knowledge-based quiz rounds with physical disruption, allowing players to punch, push, and ragdoll their friends while racing through obstacle courses between classrooms.
+**Back To School** is a chaotic, first-person multiplayer trivia game where players compete to answer questions while navigating the school environment. The game combines knowledge-based quiz rounds with physical disruption, allowing players to push, grab, and throw objects at their friends while racing through obstacle courses between classrooms. Players compete in teams of two, communicating via proximity voice chat to find the right answers without getting caught by the classroom guard (Vigia), with the highest total score winning at the end.
 
 ## 2. Technical Stack & Architecture
 The game relies on a peer-to-peer architecture to handle multiplayer lobbies, voice, and gameplay logic.
@@ -24,7 +24,8 @@ The game features a streamlined UI designed to get players into the action quick
 ### Main Menu
 * **Title:** Back To School
 * **Create Lobby:** Opens the lobby configuration window.
-* **Play Lobby:** Server browser/join via Steam friends.
+* **Browse Lobby:** Server browser to access existing lobbies.
+* **Join Lobby:** Join an existing lobby via a room code.
 * **Settings:** Audio, Video, and Control configurations.
 * **Quit:** Exit to desktop.
 
@@ -38,6 +39,14 @@ When a host creates a lobby, they can configure the match using the following pa
 | **Round Number** | Total number of quiz rounds in the match. |
 | **Quiz Themes** | Uploaded via `.csv` format (e.g., History, Math, Pop Culture). |
 
+### HUD
+During gameplay, the UI includes:
+* **Crosshair:** Identifies interactable objects and players in the center of the screen.
+* **Dynamic Timer:** Shows time remaining for questions or the hallway race.
+* **Scoreboard:** Displays the total score for each team.
+* **Interaction Visualizer:** Displays what actions can be taken on targeted objects/players.
+* **Voice Chat Indicator:** Highlights who is currently speaking via Proximity Voice Chat.
+
 ---
 
 ## 4. Core Gameplay Loop
@@ -45,14 +54,15 @@ The game alternates between two primary phases: the **Quiz Phase** and the **Obs
 
 ### Phase 1: The Quiz Room
 1.  **Preparation:** At the start of the game, an AI generates all questions in `.json` format based on the host's `.csv` themes. 
-2.  **Environment:** Players spawn in a classroom. A large board at the front displays the current question, and a countdown timer is visible in the top-right corner of the screen.
-3.  **Objective:** Guess as many questions correctly as possible. Each round consists of exactly **5 questions**.
-4.  **Disruption:** While guessing, players can freely move around and physically disrupt their opponents using the player mechanics.
+2.  **Environment:** Players spawn in a classroom seated at their respective desks. A large board at the front displays the current question, and a countdown timer is visible.
+3.  **Objective:** Answer as many questions correctly as possible. Each round consists of exactly **5 questions**.
+4.  **Interaction & Disruption:** Each desk has 4 physical buttons corresponding to the possible answers. Any player can press the buttons on any desk to register the answer for that desk's owner. Players can freely move around, push/grab opponents, or throw small physical objects (pencils, paper balls, cans) to cause chaos.
+5.  **The Guard (Vigia):** A guard NPC supervises the room via a vision cone and listening. If players talk too loudly via proximity chat, he investigates. If caught, the player is sent to a classroom "jail" and blocked from answering further questions that round.
 
 ### Phase 2: The Obstacle Race
 1.  **Transition:** Once the 5-question round ends, the classroom doors fly open suddenly.
-2.  **The Race:** Players must navigate a chaotic obstacle course through the school hallways to reach the next classroom.
-3.  **The Punishment:** The last player to arrive in the next classroom is penalized—they are **blocked from answering the first question** of the new round.
+2.  **The Race:** Players must navigate a chaotic obstacle course through the school hallways to reach the next classroom. The hallways are populated with simple wandering student NPCs (Colegas).
+3.  **The Punishment:** The last player to arrive in the new classroom, or any player who fails to arrive in time, receives a penalty to their team's total score.
 
 ---
 
@@ -62,29 +72,25 @@ The player character is built upon a modified **Kinematic Character Controller**
 
 
 **Movement Capabilities:**
-* Walk (Forward/Backward)
+* Walk (Forward/Backward/Left/Right)
 * Sprint (Forward only)
+* Jump
 * Crouch
 * Crouch Walk
 
 **Interaction & Combat:**
-* **Push & Grab:** Players can push opponents or grab items in the environment.
-* **Punching:** Players can throw punches to disrupt others.
-* **The Ragdoll System:** There is an internal combat counter. If a player is punched or grabbed **3 times** (interchangeably), they instantly turn into a physics ragdoll for **1 second** before standing back up. This is highly strategic for stopping players from answering questions or winning the hallway race.
+* **Interact (E):** Use utility objects (e.g., doors, physical quiz buttons) and pick up throwable physics objects.
+* **Push (Left Mouse Button):** Push an opponent away from their position.
+* **Grab (G):** Grab opponents, pulling them towards the player.
+* **Throw Objects:** Players can throw small physics objects to disrupt other players.
 
 ---
 
-## 6. Level Design & Procedural Generation
-The map is procedurally generated to ensure that no two schools are exactly the same, keeping the hallway races fresh and unpredictable.
+## 6. Level Design
+The game takes place within a fixed school environment. 
 
-
-
-* **Grid System:** The map is built on a large grid layout.
-* **Classrooms:** The algorithm generates a specific number of classroom rooms corresponding exactly to the *Round Number* set in the lobby settings. Each room hosts a different round of the quiz.
-* **Hallway Presets:** The spaces between classrooms are filled using three core presets:
-    1.  Standard Hallway
-    2.  Hallway with a Door (chokepoints)
-    3.  Cross Hallway (intersections)
+* **Classrooms:** Different rooms host the various rounds of the quiz. 
+* **Hallways:** The spaces between classrooms act as obstacle courses for the transition phases (Intervalo), filled with props, chokepoints, and moving student NPCs to hinder players during the race.
 
 ---
 

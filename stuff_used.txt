@@ -17,4 +17,8 @@ pick up + hold objects: https://www.youtube.com/watch?v=pPcYr3tL3Sc
 
 crosshair: https://kenney-assets.itch.io/crosshair-pack
 
-outline-shader: https://www.reddit.com/r/Unity3D/comments/1k96py2/free_outline_shaders_for_unity_6_from_my_project/
+shader system: https://assetstore.unity.com/packages/vfx/summonstyle-hardline-illustrative-comic-style-control-system-359042
+
+player prefs
+
+camera stacking

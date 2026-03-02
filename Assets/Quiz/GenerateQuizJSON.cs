@@ -31,6 +31,8 @@ public class GenerateQuizJSON : MonoBehaviour
 
     void Start()
     {
+        roundNumber = PlayerPrefs.GetInt("Quiz_RoundNumber", roundNumber);
+
         LoadEnvFile();
         LoadExistingQuiz();
     }
@@ -108,16 +110,45 @@ public class GenerateQuizJSON : MonoBehaviour
             Debug.LogError("CSV file not found at: " + csvFilePath);
             File.WriteAllText(csvFilePath, "Math\nScience\nHistory\nGeography\nPop Culture");
         }
-        StringBuilder themesBuilder = new StringBuilder();
+
+        System.Collections.Generic.List<string> loadedThemes = new System.Collections.Generic.List<string>();
         using (StreamReader reader = new StreamReader(csvFilePath))
         {
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                themesBuilder.AppendLine(line);
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    loadedThemes.Add(line.Trim());
+                }
             }
         }
+
+        if (loadedThemes.Count == 0)
+        {
+            loadedThemes.Add("General Knowledge");
+        }
+
+        StringBuilder themesBuilder = new StringBuilder();
+        int themeIndex = 0;
+
+        for (int i = 0; i < roundNumber; i++)
+        {
+            themesBuilder.AppendLine(loadedThemes[themeIndex]);
+
+            themeIndex = (themeIndex + 1) % loadedThemes.Count;
+        }
         return themesBuilder.ToString();
+
+        //using (StreamReader reader = new StreamReader(csvFilePath))
+        //{
+        //    string line;
+        //    while ((line = reader.ReadLine()) != null)
+        //    {
+        //        themesBuilder.AppendLine(line);
+        //    }
+        //}
+        //return themesBuilder.ToString();
     }
 
     private string BuildPrompt(string csvData)
