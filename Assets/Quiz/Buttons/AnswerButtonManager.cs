@@ -85,4 +85,14 @@ public class AnswerButtonManager : NetworkBehaviour
             currentSelectedButton = null;
         }
     }
+
+    [ObserversRpc]
+    public void RPC_ShowVignette(bool correctAnswer)
+    {
+        if (ownerPlayer.value != null && ownerPlayer.value.isOwner)
+        {
+           var player = ownerPlayer.value.GetComponent<MyCharacterController>();
+           player.ShowVignette(correctAnswer);
+        }
+    }
 }

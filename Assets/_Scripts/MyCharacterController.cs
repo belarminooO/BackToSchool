@@ -9,6 +9,10 @@ using Unity.Cinemachine;
 public class MyCharacterController : MonoBehaviour, ICharacterController
 {
 
+    [Header("Vignette Feedback")]
+    public GameObject vignetteObject;
+    public ChangeColor changeColorScript;
+
     [Header("Quiz System Data")]
     public Team team = Team.None;
     public bool hasAnswered = false;
@@ -191,5 +195,34 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     {
         score += points;
     }
-    
+
+    public void ShowVignette(bool correctAnswer)
+    {
+        if (vignetteObject != null && changeColorScript != null)
+        {
+
+            vignetteObject.SetActive(true);
+
+            if (correctAnswer)
+            {
+                changeColorScript.ChangeToGreen();
+            }
+            else
+            {
+                changeColorScript.ChangeToRed();
+            }
+
+            Invoke(nameof(HideVignette), 2f);
+
+        }
+    }
+
+    private void HideVignette()
+    {
+        if (vignetteObject != null)
+        {
+            vignetteObject.SetActive(false);
+        }
+    }
+
 }

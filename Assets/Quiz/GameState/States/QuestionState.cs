@@ -47,12 +47,15 @@ public class QuestionState : IGameState
         foreach (AnswerButtonManager station in allStations) {
             if (station.gameObject.activeInHierarchy && station.ownerPlayer.value != null && station.lockedAnswerIndex != -1)
             {
+                bool correctAnswer = false;
                 if (station.lockedAnswerIndex == correctAnswerIndex) {
                     MyCharacterController player = station.ownerPlayer.value.GetComponent<MyCharacterController>();
                     manager.scoreManager.AddScoreToTeam(player.team, 1);
-                    
-                } 
+                    correctAnswer = true;
 
+                }
+
+                station.RPC_ShowVignette(correctAnswer);
                 station.RPC_ResetButtons();
        
             }
