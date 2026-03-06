@@ -3,6 +3,8 @@ using TMPro;
 
 public class QuizUIManager : MonoBehaviour
 {
+    public static QuizUIManager Instance { get; private set; }
+
     [Header("Script")]
     public GenerateQuizJSON quizDataScript;
 
@@ -15,6 +17,24 @@ public class QuizUIManager : MonoBehaviour
     public TextMeshProUGUI greenButtonText;
     public TextMeshProUGUI blueButtonText;
     public TextMeshProUGUI yellowButtonText;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
+    public void OnStateChanged(string stateName) {
+        if (stateName == "QuestionState") {
+            UpdateUI();
+        } else if (stateName == "FreezeState") {
+            // Call FreezeTime UI
+        } else if (stateName == "ObstacleRaceState") {
+            // Call ObstacleRace UI
+        }
+    }
 
     public void UpdateUI()
     {

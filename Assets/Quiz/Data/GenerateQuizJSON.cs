@@ -22,6 +22,8 @@ public class GenerateQuizJSON : MonoBehaviour
     [SerializeField] public string blueOption;
     [SerializeField] public string yellowOption;
 
+    [SerializeField] public int currentCorrectAnswerIndex = 0;
+
     [Header("UI Manager Script")]
     public QuizUIManager uiManager;
 
@@ -29,12 +31,15 @@ public class GenerateQuizJSON : MonoBehaviour
     //private string csvFilePath = "Quiz/quiz_info.csv";
     private QuizDataRoot currentQuizData;
 
+    public bool isQuizReady { get; private set; } = false;
+    public System.Action onQuizReady;
+
     void Start()
     {
         roundNumber = PlayerPrefs.GetInt("Quiz_RoundNumber", roundNumber);
 
         LoadEnvFile();
-        LoadExistingQuiz();
+        //LoadExistingQuiz();
     }
 
     public void GoNextQuestion()
@@ -46,7 +51,7 @@ public class GenerateQuizJSON : MonoBehaviour
         {
             Debug.Log("Round finished!");
             currentQuestion = 1;
-            GoNextRound();
+            //GoNextRound();
         }
         UpdateCurrentQuestion();
     }
@@ -65,17 +70,44 @@ public class GenerateQuizJSON : MonoBehaviour
 
     public void OnClickedGenerateQuiz()
     {
-        Debug.Log("Botão clicado!");
+        if (QuizGameManager.instance != null)
+        {
+            roundNumber = QuizGameManager.instance.totalRoundsSettings.value;
+        }
+
+        Debug.Log("Button Clicked! -- Generating Quiz with " + roundNumber + " rounds.");
 
         //string csvData = ReadQuizCSV(csvFilePath);
         string csvData = ReadQuizCSV();
-
         csvData = DoubleCheckJSON(csvData);
         string prompt = BuildPrompt(csvData);
 
         Debug.Log(prompt);
-
         StartCoroutine(SendRequest(prompt));
+    }
+
+    public void AutoGenerateQuiz() {
+        isQuizReady = true;
+        if(QuizGameManager.instance != null) {
+
+            roundNumber = QuizGameManager.instance.totalRoundsSettings.value;
+            
+        }
+
+        Debug.Log("[GenerateQuizJSON] Auto-generating quiz with " + roundNumber + " rounds from quiz_info.csv...");
+    
+        string csvData = ReadQuizCSV();
+        csvData = DoubleCheckJSON(csvData);
+        string prompt = BuildPrompt(csvData);
+        StartCoroutine(SendRequestAndNotify(prompt));
+    }
+
+    private IEnumerator SendRequestAndNotify(string prompt)
+    {
+        yield return StartCoroutine(SendRequest(prompt));
+        isQuizReady = true;
+        Debug.Log("[GenerateQuizJSON] Quiz ready! Notifying state machine.");
+        onQuizReady?.Invoke();
     }
 
     private void LoadEnvFile()
@@ -208,12 +240,12 @@ public class GenerateQuizJSON : MonoBehaviour
                     .Replace("`", "");
     }
 
-// OPEN AI
+    // OPEN AI
 
-private IEnumerator SendRequest(string prompt)
+    private IEnumerator SendRequest(string prompt)
     {
         string apiKey = System.Environment.GetEnvironmentVariable("API_KEY");
-        
+
         string modelName = "gemini-2.5-flash";
         string url = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent?key={apiKey}";
         if (string.IsNullOrEmpty(apiKey))
@@ -227,7 +259,7 @@ private IEnumerator SendRequest(string prompt)
             {
                 parts = new GeminiPart[]
                 {
-                    new GeminiPart { text = "You are a helpful assistant that outputs raw JSON only." }
+                    new GeminiPart { text = "You are a helpful assistant that outputs raw JSON only. NEVER use markdown like ```json." }
                 }
             },
             contents = new GeminiContent[]
@@ -243,38 +275,52 @@ private IEnumerator SendRequest(string prompt)
             }
         };
         string jsonRequest = JsonUtility.ToJson(requestData);
-        using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
+
+        int maxRetries = 3;
+        int currentAttempt = 0;
+        bool success = false;
+
+        while (currentAttempt <maxRetries && !success) {
+            currentAttempt++;
+
+            Debug.Log($"Attempt {currentAttempt}/{maxRetries}");
+
+            using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
+            {
+                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
+                webRequest.downloadHandler = new DownloadHandlerBuffer();
+
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+                Debug.Log("Sending request to Gemini...");
+
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.result == UnityWebRequest.Result.Success)
+                {
+                    string jsonResponse = webRequest.downloadHandler.text;
+
+                    success = ParseQuiz(jsonResponse);
+
+                    if (!success)
+                    {
+                        Debug.LogWarning($"Parsing failed on attempt {currentAttempt}. Retry -");
+                    }
+                } else {
+
+                    Debug.LogError("Error: " + webRequest.error);
+
+                }
+            }
+
+            if (!success && currentAttempt < maxRetries)
+            {
+                yield return new WaitForSeconds(1f);
+            }
+        }
+
+        if (!success)
         {
-            webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonRequest));
-            webRequest.downloadHandler = new DownloadHandlerBuffer();
-            
-            webRequest.SetRequestHeader("Content-Type", "application/json");
-            Debug.Log("Sending request to Gemini...");
-
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.result == UnityWebRequest.Result.Success)
-            {
-                string jsonResponse = webRequest.downloadHandler.text;
-
-                ParseQuiz(jsonResponse);
-                
-                GeminiResponse responseData = JsonUtility.FromJson<GeminiResponse>(jsonResponse);
-                
-                if (responseData != null && responseData.candidates != null && responseData.candidates.Length > 0)
-                {
-                    string aiText = responseData.candidates[0].content.parts[0].text;
-                    Debug.Log("Response: " + aiText);
-                }
-                else
-                {
-                    Debug.LogWarning("Failed to parse the JSON content.");
-                }
-            }
-            else
-            {
-                Debug.LogError("Error: " + webRequest.error);
-            }
+            Debug.LogError("Failed to generate quiz after " + maxRetries + " attempts.");
         }
     }
 
@@ -342,42 +388,92 @@ private IEnumerator SendRequest(string prompt)
         public int correct_option_index;
     }
 
-    private void ParseQuiz(string response)
-    {
-        GeminiResponse responseData = JsonUtility.FromJson<GeminiResponse>(response);
+    //private void ParseQuiz(string response)
+    //{
+    //    GeminiResponse responseData = JsonUtility.FromJson<GeminiResponse>(response);
                 
+    //    if (responseData == null || responseData.candidates == null || responseData.candidates.Length == 0)
+    //    {
+    //        Debug.LogError("Error reading Gemini API Response...");
+    //        return;
+    //    }
+
+    //    // Clean-up
+    //    string aiText = responseData.candidates[0].content.parts[0].text;
+    //    string cleanJson = aiText.Replace("```json", "").Replace("```", "").Trim();
+
+    //    //string savePath = Path.Combine(Application.dataPath, "Quiz/quiz_current.json");
+    //    string savePath = Path.Combine(Application.persistentDataPath, "quiz_current.json");
+
+    //    File.WriteAllText(savePath, cleanJson);
+    //    Debug.Log("JSON saved to " + savePath);
+        
+    //    QuizDataRoot quizData = JsonUtility.FromJson<QuizDataRoot>(cleanJson);
+
+    //    if (quizData == null || quizData.match_data == null)
+    //    {
+    //        Debug.LogError("Failed to parse quiz data.");
+    //        return;
+    //    }
+
+    //    currentQuizData = quizData; 
+    //    UpdateCurrentQuestion(); 
+
+    //}
+
+    private bool ParseQuiz(string response)
+    {
+        GeminiResponse responseData = null;
+        try
+        {
+            responseData = JsonUtility.FromJson<GeminiResponse>(response);
+        }
+        catch (System.ArgumentException e)
+        {
+            Debug.LogWarning($"[ParseQuiz] - ${e}");
+            return false;
+        }
+
         if (responseData == null || responseData.candidates == null || responseData.candidates.Length == 0)
         {
-            Debug.LogError("Error reading Gemini API Response...");
-            return;
+            return false;
         }
 
         // Clean-up
         string aiText = responseData.candidates[0].content.parts[0].text;
         string cleanJson = aiText.Replace("```json", "").Replace("```", "").Trim();
-
-        //string savePath = Path.Combine(Application.dataPath, "Quiz/quiz_current.json");
         string savePath = Path.Combine(Application.persistentDataPath, "quiz_current.json");
-
         File.WriteAllText(savePath, cleanJson);
         Debug.Log("JSON saved to " + savePath);
-        
-        QuizDataRoot quizData = JsonUtility.FromJson<QuizDataRoot>(cleanJson);
 
-        // Check if quiz data is valid
-        if (quizData == null || quizData.match_data == null)
+        QuizDataRoot quizData = null;
+        try
         {
-            Debug.LogError("Failed to parse quiz data.");
-            return;
+            quizData = JsonUtility.FromJson<QuizDataRoot>(cleanJson);
+        }
+        catch (System.ArgumentException e)
+        {
+            Debug.LogWarning($"[ParseQuiz] - ${e}");
+            return false; 
         }
 
-        currentQuizData = quizData; 
-        UpdateCurrentQuestion(); 
+        if (quizData == null || quizData.match_data == null)
+        {
+            return false;
+        }
 
+        currentQuizData = quizData;
+        UpdateCurrentQuestion();
+        return true;
     }
 
-    private void UpdateCurrentQuestion()
+    public void UpdateCurrentQuestion()
     {
+        if (QuizGameManager.instance != null)
+        {
+            currentRound = QuizGameManager.instance.currentRound.value;
+        }
+
         int roundIndex = currentRound - 1;
         int questionIndex = currentQuestion - 1;
 
@@ -390,14 +486,24 @@ private IEnumerator SendRequest(string prompt)
                 Debug.Log($"Loaded Q{activeQuestion.question_id}: {activeQuestion.text}");
                         
                 currentQuestionText = activeQuestion.text;
-                redOption = activeQuestion.options[0];
-                greenOption = activeQuestion.options[1];
-                blueOption = activeQuestion.options[2];
-                yellowOption = activeQuestion.options[3];
 
-                if (uiManager != null) 
+                // options[0] = Red
+                // options[1] = Green
+                // options[2] = Blue
+                // options[3] = Yellow
+
+                redOption = activeQuestion.options[0];
+                blueOption = activeQuestion.options[1];
+                yellowOption = activeQuestion.options[2];
+                greenOption = activeQuestion.options[3];
+
+                currentCorrectAnswerIndex = activeQuestion.correct_option_index;
+
+                QuizUIManager[] allUIs = Object.FindObjectsByType<QuizUIManager>(FindObjectsSortMode.None);
+                foreach (var ui in allUIs)
                 {
-                    uiManager.UpdateUI();
+                    ui.quizDataScript = this; 
+                    ui.UpdateUI();
                 }
             }
         }

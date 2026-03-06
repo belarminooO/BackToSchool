@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 239850287968039670}
   - component: {fileID: 3419042655337813835}
   - component: {fileID: 2671027803883334389}
+  - component: {fileID: 8254915334436221065}
   m_Layer: 0
   m_Name: '@Player'
   m_TagString: Untagged
@@ -676,6 +677,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d5db12129113747856977cc13ed212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyCharacterController
+  team: 4
+  hasAnswered: 0
+  score: 0
   Motor: {fileID: 7837751252302355785}
   FirstPersonCamera: {fileID: 8010199116510301936}
   StaticCamera: {fileID: 0}
@@ -767,6 +771,21 @@ MonoBehaviour:
   _toDeactivate: []
   _toEnable: []
   _toDisable: []
+--- !u!114 &8254915334436221065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704014394818528818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fdc2ac879e42e549a42637aa0b79548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactor
+  InteractorSource: {fileID: 8041981344106180771}
+  InteractRange: 5
+  e_indicator: {fileID: 3669578496183915834}
 --- !u!1 &1762099589770950720
 GameObject:
   m_ObjectHideFlags: 0

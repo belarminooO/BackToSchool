@@ -27,30 +27,33 @@ namespace PurrLobby
     {
         private NetworkManager _networkManager;
         private LobbyDataHolder _lobbyDataHolder;
-        
+
         // Prevents duplicate network starts if scene loads multiple times
         private static bool _hasStarted = false;
         private bool _useUnityRelay = false;
-        
+
         private void Awake()
         {
 
-            if(!TryGetComponent(out _networkManager)) {
+            if (!TryGetComponent(out _networkManager))
+            {
                 // --------------------------
                 _networkManager = FindFirstObjectByType<NetworkManager>();
-                if(!_networkManager) {
+                if (!_networkManager)
+                {
                     PurrLogger.LogError($"Failed to get {nameof(NetworkManager)} component.", this);
                     return;
                 }
                 // --------------------------
             }
-            
+
             _lobbyDataHolder = FindFirstObjectByType<LobbyDataHolder>();
-            if(!_lobbyDataHolder) {
+            if (!_lobbyDataHolder)
+            {
                 PurrLogger.LogError($"Failed to get {nameof(LobbyDataHolder)} component.", this);
                 return;
             }
-            
+
 #if UTP_LOBBYRELAY
             // Check if we're using UTP with relay - requires async configuration
             _useUnityRelay = IsUsingUTPTransport();
@@ -65,11 +68,11 @@ namespace PurrLobby
                 return;
             }
 #endif
-            
+
             // For non-relay providers (Steam, etc.), use standard synchronous flow
             // NetworkManager will start normally in its Start() method
         }
-        
+
 #if UTP_LOBBYRELAY
         private bool IsUsingUTPTransport()
         {
@@ -94,11 +97,11 @@ namespace PurrLobby
             // Skip Start() if using Unity Relay - ConfigureRelayData() handles startup
             if (_useUnityRelay)
                 return;
-                
+
             // Standard startup for Steam and other non-relay providers
             StartNetworkStandard();
         }
-        
+
         private void StartNetworkStandard()
         {
             if (!_networkManager)
@@ -106,38 +109,40 @@ namespace PurrLobby
                 PurrLogger.LogError($"Failed to start connection. {nameof(NetworkManager)} is null!", this);
                 return;
             }
-            
+
             if (!_lobbyDataHolder)
             {
                 PurrLogger.LogError($"Failed to start connection. {nameof(LobbyDataHolder)} is null!", this);
                 return;
             }
-            
+
             if (!_lobbyDataHolder.CurrentLobby.IsValid)
             {
                 PurrLogger.LogError($"Failed to start connection. Lobby is invalid!", this);
                 return;
             }
 
-            if(_networkManager.transport is PurrTransport) {
+            if (_networkManager.transport is PurrTransport)
+            {
                 (_networkManager.transport as PurrTransport).roomName = _lobbyDataHolder.CurrentLobby.LobbyId;
             }
 
             // ----------------------------------------------
-            #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
-                        if (_networkManager.transport != null && _networkManager.transport.GetType().Name == "SteamTransport") {
-                            if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
-                            {
-                                Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
-                                Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
-                                var addressProperty = _networkManager.transport.GetType().GetProperty("address");
-                                if (addressProperty != null && addressProperty.CanWrite)
-                                {
-                                    addressProperty.SetValue(_networkManager.transport, ownerId.m_SteamID.ToString());
-                                }
-                            }
-                        }
-            #endif
+#if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
+            if (_networkManager.transport != null && _networkManager.transport.GetType().Name == "SteamTransport")
+            {
+                if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
+                {
+                    Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
+                    Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
+                    var addressProperty = _networkManager.transport.GetType().GetProperty("address");
+                    if (addressProperty != null && addressProperty.CanWrite)
+                    {
+                        addressProperty.SetValue(_networkManager.transport, ownerId.m_SteamID.ToString());
+                    }
+                }
+            }
+#endif
             // ----------------------------------------------
 
             // Pode-se usar StartHost()
@@ -146,7 +151,7 @@ namespace PurrLobby
             // StartCoroutine(StartClient());
 
             // --------------------------
-            if(_lobbyDataHolder.CurrentLobby.IsOwner)
+            if (_lobbyDataHolder.CurrentLobby.IsOwner)
             {
                 _networkManager.StartHost();
             }
@@ -303,6 +308,13 @@ namespace PurrLobby
             // Brief delay to ensure server is fully listening before client connects
             yield return new WaitForSeconds(1f);
             _networkManager.StartClient();
+        }
+
+
+        // Reset the _hasStarted flag when the ConnectionStarter is destroyed
+        private void OnDestroy()
+        {
+            _hasStarted = false;
         }
     }
 }

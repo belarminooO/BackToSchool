@@ -1,12 +1,19 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using KinematicCharacterController;
+using GinjaGaming.FinalCharacterController;
 
 using Unity.Cinemachine;
 
 [RequireComponent(typeof(KinematicCharacterMotor))]
 public class MyCharacterController : MonoBehaviour, ICharacterController
 {
+
+    [Header("Quiz System Data")]
+    public Team team = Team.None;
+    public bool hasAnswered = false;
+    public int score = 0;
+
     public KinematicCharacterMotor Motor;
 
     [Header("Cinemachine Cameras")]
@@ -30,6 +37,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     public float MovementSharpness = 15f;
     public float JumpSpeed = 10f;
     public float Gravity = 30f;
+    public bool IsMovementEnabled = true;
 
     [Header("Look Settings")]
     public float LookSensitivity = 0.5f; // Adjust if mouse is too fast/slow
@@ -71,7 +79,16 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
 
     private void Update()
     {
-        if (MoveAction == null || JumpAction == null || LookAction == null) return;
+        if (MoveAction == null || JumpAction == null || LookAction == null) {
+            return;
+        }
+
+        if (!IsMovementEnabled)
+        {
+            _moveInputVector = Vector3.zero;
+            _lookInputVector = Vector2.zero;
+            return;
+        }
 
         // 1. Read Inputs using New Input System
         Vector2 moveInput = MoveAction.action.ReadValue<Vector2>();
@@ -165,4 +182,14 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
     public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) { }
     public void OnDiscreteCollisionDetected(Collider hitCollider) { }
+
+    public void AssignTeam(Team assignedTeam)
+    {
+        team = assignedTeam;
+    }
+    public void ChangeScore(int points)
+    {
+        score += points;
+    }
+    
 }

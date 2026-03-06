@@ -36,16 +36,16 @@ MonoBehaviour:
     StarmapTilt: 60
   Outline:
     ColorOutlineColor: {r: 0.030927373, g: 0.037088294, b: 0.047169805, a: 1}
-    ColorOutlineStrength: 0.05
-    ColorOutlineNoiseScale: 2.91
-    ColorOutlineNoiseIntensity: 0.26
-    ColorOutlineNoiseAdd: 0.34
-    ColorOutlineClip: 0.71
+    ColorOutlineStrength: 0.57
+    ColorOutlineNoiseScale: 3.06
+    ColorOutlineNoiseIntensity: 3.75
+    ColorOutlineNoiseAdd: 0
+    ColorOutlineClip: 0
     GeoOutlineColor: {r: 0.045167305, g: 0.052897085, b: 0.066037714, a: 1}
-    GeoOutlineNormalStrength: 1.6
+    GeoOutlineNormalStrength: 4
     GeoOutlineNormalCutoffMaskStrength: 1
     GeoOutlineNormalCutoffMaskAdd: -10
-    GeoOutlineDepthStrengthStart: 0.1
+    GeoOutlineDepthStrengthStart: 0.04
     GeoOutlineDepthStrengthEnd: 2.79
     GeoOutlineDepthAdd: 10
     GeoOutlineDepthMult: 5

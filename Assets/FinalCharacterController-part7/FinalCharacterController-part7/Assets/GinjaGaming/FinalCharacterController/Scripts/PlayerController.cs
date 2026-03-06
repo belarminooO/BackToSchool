@@ -8,6 +8,11 @@ namespace GinjaGaming.FinalCharacterController
     [DefaultExecutionOrder(-1)]
     public class PlayerController : MonoBehaviour
     {
+        [Header("Quiz System Data")]
+        public Team team = Team.None;
+        public bool hasAnswered = false;
+        public int score = 0;
+
         #region Class Variables
         [Header("Components")]
         [SerializeField] private CharacterController _characterController;
@@ -291,5 +296,14 @@ namespace GinjaGaming.FinalCharacterController
             return _playerLocomotionInput.MovementInput.y >= Mathf.Abs(_playerLocomotionInput.MovementInput.x);
         }
         #endregion
+
+        public void AssignTeam(Team assignedTeam)
+        {
+            team = assignedTeam;
+        }
+        public void ChangeScore(int points)
+        {
+            score += points;
+        }
     }
 }

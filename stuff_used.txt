@@ -22,3 +22,5 @@ shader system: https://assetstore.unity.com/packages/vfx/summonstyle-hardline-il
 player prefs
 
 camera stacking
+
+rpc: https://www.youtube.com/watch?v=h2YRwb0RhcA
