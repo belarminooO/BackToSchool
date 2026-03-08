@@ -104,6 +104,15 @@ namespace PurrLobby
 
         private void StartNetworkStandard()
         {
+
+            if (_networkManager.serverState != ConnectionState.Disconnected || 
+                _networkManager.clientState != ConnectionState.Disconnected)
+            {
+                PurrLogger.Log("Network is already running. Skipping duplicate start.", this);
+                _hasStarted = true;
+                return;
+            }
+            
             if (!_networkManager)
             {
                 PurrLogger.LogError($"Failed to start connection. {nameof(NetworkManager)} is null!", this);
@@ -151,6 +160,7 @@ namespace PurrLobby
             // StartCoroutine(StartClient());
 
             // --------------------------
+            _hasStarted = true;
             if (_lobbyDataHolder.CurrentLobby.IsOwner)
             {
                 _networkManager.StartHost();
@@ -312,9 +322,9 @@ namespace PurrLobby
 
 
         // Reset the _hasStarted flag when the ConnectionStarter is destroyed
-        private void OnDestroy()
-        {
-            _hasStarted = false;
-        }
+        // private void OnDestroy()
+        // {
+        //     _hasStarted = false;
+        // }
     }
 }
