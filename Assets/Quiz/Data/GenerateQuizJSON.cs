@@ -8,6 +8,9 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class GenerateQuizJSON : MonoBehaviour
 {
+    [Header("Debug")]
+    [SerializeField] private bool skipQuizGeneration = false;
+
     [Header("Quiz Settings")]
     [SerializeField] public string themes;
     [SerializeField] public int roundNumber = 3;
@@ -94,12 +97,28 @@ public class GenerateQuizJSON : MonoBehaviour
             
         }
 
+        if(skipQuizGeneration) {
+
+            Debug.Log("[GenerateQuizJSON] Skipping AI quiz generation. Using local quiz.");
+            StartCoroutine(LoadLocalQuizNextFrame());
+            return;
+
+        }
+
         Debug.Log("[GenerateQuizJSON] Auto-generating quiz with " + roundNumber + " rounds from quiz_info.csv...");
     
         string csvData = ReadQuizCSV();
         csvData = DoubleCheckJSON(csvData);
         string prompt = BuildPrompt(csvData);
         StartCoroutine(SendRequestAndNotify(prompt));
+    }
+
+    private IEnumerator LoadLocalQuizNextFrame()
+    {
+        yield return new WaitForSeconds(0.5f);
+        LoadExistingQuiz();
+        isQuizReady = true;
+        onQuizReady?.Invoke();
     }
 
     private IEnumerator SendRequestAndNotify(string prompt)
