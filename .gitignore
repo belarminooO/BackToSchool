@@ -100,3 +100,6 @@ InitTestScene*.unity*
 
 # Ignore .env file
 .env
+
+# Claude
+.claude/
