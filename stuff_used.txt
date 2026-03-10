@@ -17,7 +17,7 @@ pick up + hold objects: https://www.youtube.com/watch?v=pPcYr3tL3Sc
 
 crosshair: https://kenney-assets.itch.io/crosshair-pack
 
-shader system: https://assetstore.unity.com/packages/vfx/summonstyle-hardline-illustrative-comic-style-control-system-359042
+shader system (skybox): https://assetstore.unity.com/packages/vfx/summonstyle-hardline-illustrative-comic-style-control-system-359042
 https://summonboxstudio.com/docs/smnstylehardline/Usage/API/APIOutline
 
 persistent data storage
@@ -29,3 +29,5 @@ camera stacking
 rpc: https://www.youtube.com/watch?v=h2YRwb0RhcA
 
 change color script: https://www.youtube.com/watch?v=0Szglwf7bAU
+
+outlines: https://github.com/tantaneity/unity-urp-outline-postprocess
