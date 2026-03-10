@@ -468,6 +468,7 @@ MonoBehaviour:
   - {fileID: -6288072647309666549}
   - {fileID: 7518938298396184218}
   - {fileID: -1410297666881709256}
+  - {fileID: 7173098861945057081}
 --- !u!114 &853819529557874667
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -569,6 +570,31 @@ MonoBehaviour:
   highlightsEnd:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &1278580013462158509
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38f3adaab4db4f8f9fbc58713914aa1b, type: 3}
+  m_Name: LightShaft
+  m_EditorClassIdentifier: Assembly-CSharp::Toguchi.Rendering.LightShaft
+  active: 1
+  maxIterations:
+    m_OverrideState: 1
+    m_Value: 64
+  maxDistance:
+    m_OverrideState: 1
+    m_Value: 12
+  minDistance:
+    m_OverrideState: 1
+    m_Value: 0.4
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &1666464333004379222
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -856,6 +882,55 @@ MonoBehaviour:
   intensity:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &6262009667266559944
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1658a329beeb4544810492081323d8b, type: 3}
+  m_Name: HatchingVolume
+  m_EditorClassIdentifier: Assembly-CSharp::HatchingVolume
+  active: 1
+  _UseVolumeComponent:
+    m_OverrideState: 0
+    m_Value: 0
+  _HatchTextures:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+  _HatchTextureTiling:
+    m_OverrideState: 1
+    m_Value: {x: 8, y: 8}
+  _HatchTextureCount:
+    m_OverrideState: 1
+    m_Value: 18
+  _ColorIntensity:
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraBrightness:
+    m_OverrideState: 1
+    m_Value: 0
+  _ExtraBrightnessStrength:
+    m_OverrideState: 1
+    m_Value: 0.25
+  _FresnelPower:
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraFresnelTuning:
+    m_OverrideState: 1
+    m_Value: 1
+  _InvertHatchColour:
+    m_OverrideState: 1
+    m_Value: 0
+  _InvertStrength:
+    m_OverrideState: 1
+    m_Value: 3.1
+  _AnimationCyclesPerSecond:
+    m_OverrideState: 1
+    m_Value: 12
 --- !u!114 &6940869943325143175
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -869,6 +944,55 @@ MonoBehaviour:
   m_Name: VolumeComponentSupportedOnAnySRP
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Editor.Tests:UnityEngine.Rendering.Tests:VolumeComponentEditorSupportedOnTests/VolumeComponentSupportedOnAnySRP
   active: 1
+--- !u!114 &7173098861945057081
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1658a329beeb4544810492081323d8b, type: 3}
+  m_Name: HatchingVolume
+  m_EditorClassIdentifier: Assembly-CSharp::HatchingVolume
+  active: 1
+  _UseVolumeComponent:
+    m_OverrideState: 1
+    m_Value: 0
+  _HatchTextures:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+  _HatchTextureTiling:
+    m_OverrideState: 1
+    m_Value: {x: 8, y: 8}
+  _HatchTextureCount:
+    m_OverrideState: 1
+    m_Value: 18
+  _ColorIntensity:
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraBrightness:
+    m_OverrideState: 1
+    m_Value: 0
+  _ExtraBrightnessStrength:
+    m_OverrideState: 1
+    m_Value: 0.25
+  _FresnelPower:
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraFresnelTuning:
+    m_OverrideState: 1
+    m_Value: 1
+  _InvertHatchColour:
+    m_OverrideState: 1
+    m_Value: 0
+  _InvertStrength:
+    m_OverrideState: 1
+    m_Value: 3.1
+  _AnimationCyclesPerSecond:
+    m_OverrideState: 1
+    m_Value: 12
 --- !u!114 &7173750748008157695
 MonoBehaviour:
   m_ObjectHideFlags: 3

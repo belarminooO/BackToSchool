@@ -31,3 +31,5 @@ rpc: https://www.youtube.com/watch?v=h2YRwb0RhcA
 change color script: https://www.youtube.com/watch?v=0Szglwf7bAU
 
 outlines: https://github.com/tantaneity/unity-urp-outline-postprocess
+
+unity postprocessing urp examples: https://github.com/togucchi/urp-postprocessing-examples/tree/main
