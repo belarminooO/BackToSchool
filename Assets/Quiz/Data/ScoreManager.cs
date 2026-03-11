@@ -45,9 +45,18 @@ public class ScoreManager : NetworkBehaviour
         }
 
         Debug.Log($"[Server] Assigning Teams for {playerCount} players.");
+        
+        int totalTeamsToUse = 2;
 
-        for (int i = 0; i < playerCount; i++){
-            int teamIndex = i / 2; 
+        if (playerCount == 5 || playerCount == 6) {
+            totalTeamsToUse = 3; 
+        }
+        else if (playerCount == 7 || playerCount >= 8) {
+            totalTeamsToUse = 4; 
+        }
+
+        for (int i = 0; i < playerCount; i++) {
+            int teamIndex = i % totalTeamsToUse;
             Team assignedTeam = (Team)teamIndex;
             allPlayers[i].AssignTeam(assignedTeam);
             Debug.Log($"[Server] Assigned {allPlayers[i].gameObject.name} to {assignedTeam}");
