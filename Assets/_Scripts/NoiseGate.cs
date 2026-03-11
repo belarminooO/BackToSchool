@@ -7,8 +7,11 @@ namespace MetaVoiceChat.AudioFilters
 {
     public class NoiseGate : VcInputFilter
     {
+        [Header("MetaVc")]
+        public MetaVc metaVc;
+
         [Header("Threshold (-80 to 0)")]
-        [SerializeField] public float decibelThreshold = -50f;
+        [SerializeField] public float decibelThreshold = -30f;
 
         [Header("Monitor")]
         [SerializeField] public float currentVolumeDB = -80f;
@@ -18,9 +21,10 @@ namespace MetaVoiceChat.AudioFilters
 
         protected override void Filter(int index, ref float[] samples)
         {
-            if (samples == null)
+            if (samples == null || (metaVc != null && metaVc.isInputMuted.Value))
             {
                 currentVolumeDB = -80f;
+                samples = null;
                 return;
             }
 

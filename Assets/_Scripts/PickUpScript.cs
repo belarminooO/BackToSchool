@@ -259,9 +259,77 @@ public class PickUpScript : NetworkBehaviour
         heldObj.layer = 0;
         heldObjRb.isKinematic = false;
         heldObj.transform.parent = null;
-        heldObjRb.AddForce(transform.forward * throwForce);
+
+
+        //heldObjRb.AddForce(transform.forward * throwForce);
+
+        //Vector3 throwDirection = transform.forward + (Vector3.up * 1.5f);
+        //float softerThrowForce = throwForce * 0.2f;
+
+        //heldObjRb.AddForce(throwDirection.normalized * softerThrowForce);
+
+        //heldObj = null;
+
+
+        Vector3 targetPoint;
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        RaycastHit hit;
+
+        float maxThrowDistance = 8f;
+
+        if (Physics.Raycast(ray, out hit, 100f))
+        {
+            float hitDistance = Vector3.Distance(ray.origin, hit.point);
+            if (hitDistance > maxThrowDistance)
+            {
+                targetPoint = ray.origin + ray.direction * maxThrowDistance;
+            }
+            else
+            {
+                targetPoint = hit.point;
+            }
+        }
+        else
+        {
+            targetPoint = ray.origin + ray.direction * maxThrowDistance;
+        }
+
+        float maxHeight = 1.5f; // peak above start
+        Vector3 velocity = CalculateParabolicVelocity(heldObj.transform.position, targetPoint, maxHeight);
+
+        // Clamp the final velocity to completely prevent extreme forces from awkward angles/clipping
+        float maxSpeed = 20f;
+        if (velocity.magnitude > maxSpeed)
+        {
+            velocity = velocity.normalized * maxSpeed;
+        }
+
+        heldObjRb.linearVelocity = velocity;
+
         heldObj = null;
+
     }
+
+    Vector3 CalculateParabolicVelocity(Vector3 start, Vector3 end, float peakHeight)
+    {
+        Vector3 displacement = end - start;
+        Vector3 displacementXZ = new Vector3(displacement.x, 0, displacement.z);
+
+        float height = Mathf.Max(peakHeight, displacement.y + 0.5f); // ensures we don’t sqrt negative
+        float gravity = Physics.gravity.magnitude;
+
+        float timeToPeak = Mathf.Sqrt(2 * height / gravity);
+        float deltaY = height - displacement.y;
+        if (deltaY < 0.01f) deltaY = 0.01f; // avoid negative sqrt
+        float timeFromPeak = Mathf.Sqrt(2 * deltaY / gravity);
+        float totalTime = timeToPeak + timeFromPeak;
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(2 * gravity * height);
+        Vector3 velocityXZ = displacementXZ / totalTime;
+
+        return velocityXZ + velocityY;
+    }
+
     void StopClipping() //function only called when dropping/throwing
     {
         var clipRange = Vector3.Distance(heldObj.transform.position, transform.position); //distance from holdPos to the camera
