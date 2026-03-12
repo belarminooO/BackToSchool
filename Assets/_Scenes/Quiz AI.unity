@@ -5456,6 +5456,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 491107817}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &493648601 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2484356972308427363, guid: 88736373580cf88409371da932de5bc2, type: 3}
+  m_PrefabInstance: {fileID: 4825353383167882019}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8d12ff607e75148b85dc39a00a94ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VigilaWaypoint
 --- !u!1 &495914163
 GameObject:
   m_ObjectHideFlags: 0
@@ -10110,6 +10121,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1079831865 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2672323475670341471, guid: 88736373580cf88409371da932de5bc2, type: 3}
+  m_PrefabInstance: {fileID: 4825353383167882019}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8d12ff607e75148b85dc39a00a94ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VigilaWaypoint
 --- !u!1 &1083178851
 GameObject:
   m_ObjectHideFlags: 0
@@ -12873,6 +12895,17 @@ RectTransform:
   m_AnchoredPosition: {x: 3.85, y: -3.06}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1384617587 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2233729093697872826, guid: 88736373580cf88409371da932de5bc2, type: 3}
+  m_PrefabInstance: {fileID: 4825353383167882019}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8d12ff607e75148b85dc39a00a94ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VigilaWaypoint
 --- !u!1 &1403594596
 GameObject:
   m_ObjectHideFlags: 0
@@ -17648,10 +17681,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Vigia
   waypoints:
-  - {fileID: 1739035376}
-  - {fileID: 840445433}
-  - {fileID: 1487596783}
-  - {fileID: 1440999701}
+  - {fileID: 2054702614}
+  - {fileID: 493648601}
+  - {fileID: 1079831865}
+  - {fileID: 1384617587}
   randomPatrol: 1
   wanderSpeed: 2.5
   investigateSpeed: 4.5
@@ -19394,6 +19427,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2042526194}
   m_CullTransparentMesh: 1
+--- !u!114 &2054702614 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6241376045134509203, guid: 88736373580cf88409371da932de5bc2, type: 3}
+  m_PrefabInstance: {fileID: 4825353383167882019}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8d12ff607e75148b85dc39a00a94ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VigilaWaypoint
 --- !u!1 &2058183412
 GameObject:
   m_ObjectHideFlags: 0
