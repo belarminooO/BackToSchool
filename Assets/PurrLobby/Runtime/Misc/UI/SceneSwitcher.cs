@@ -72,9 +72,26 @@ namespace PurrLobby
             {
                 lobbyManager.SetLobbyStarted();
             }
-            
+
+            // ---------------------------------------- //
+
+            if (NetworkManager.main != null && NetworkManager.main.isServer)
+            {
+                _hasAlreadySwitched = true;
+                PurrLogger.Log($"[Server] Host is loading networked scene: {nextScene}", this);
+                NetworkManager.main.sceneModule.LoadSceneAsync(nextScene);
+            }
+            else if (NetworkManager.main == null || (!NetworkManager.main.isServer && !NetworkManager.main.isClient))
+            {
+                _hasAlreadySwitched = true;
+                SceneManager.LoadSceneAsync(nextScene);
+            }
+
+
+            // ----------------------------------------- //
+
             // Load game scene - ConnectionStarter in new scene will handle network initialization
-            SceneManager.LoadSceneAsync(nextScene);
+            //SceneManager.LoadSceneAsync(nextScene);
         }
     }
 }

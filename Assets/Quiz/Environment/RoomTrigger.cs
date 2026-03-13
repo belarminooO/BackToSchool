@@ -13,7 +13,7 @@ public class RoomTrigger : NetworkBehaviour
         {
             return;
         }
-        if (QuizGameManager.instance.localStateName != "ObstacleRaceState")
+        if (QuizGameManager.instance.currentStateName.value != "ObstacleRaceStateNode")
         {
             return;
         }

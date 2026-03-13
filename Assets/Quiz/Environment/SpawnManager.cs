@@ -8,43 +8,49 @@ public class RoundSpawnData
 {
     public Transform[] spawnPoints;
 }
-public class SpawnManager : MonoBehaviour, IProvideSpawnPoints 
+public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
 {
     [Header("Settings")]
-    [Tooltip("Size is the number of rounds. Element 0 is Round 1, Element 1 is Round 2, etc.")]
     [SerializeField] private RoundSpawnData[] roundSpawns;
-    
-    private PlayerSpawner _playerSpawner;
 
-    private void Start()
+    private PlayerSpawner playerSpawner;
+
+    private void Awake()
     {
-        _playerSpawner = Object.FindFirstObjectByType<PlayerSpawner>();
-        
-        if (_playerSpawner != null)
-        {
-            _playerSpawner.SetRespawnPointProvider(this);
-        }
+        if (playerSpawner == null)
+            playerSpawner = Object.FindFirstObjectByType<PlayerSpawner>();
+
+        if (playerSpawner != null)
+            playerSpawner.SetRespawnPointProvider(this);
+        else
+            Debug.LogError("[SpawnManager] No PlayerSpawner found in scene.");
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
-        if (_playerSpawner != null)
-        {
-            _playerSpawner.ResetSpawnPointProvider();
-        }
+        base.OnDestroy();
+        if (playerSpawner != null)
+            playerSpawner.ResetSpawnPointProvider();
     }
 
     public SpawnPoint NextSpawnPoint(PlayerID player, SceneID scene)
     {
         Debug.Log($"[SpawnManager] PlayerID raw value: {player.id.value}");
-        int playerIndex = (int)(player.id.value - 1);
+        
+        int playerIndex = Mathf.Abs((int)(player.id.value - 1));
         Transform deskTransform = GetSpawnTransform(playerIndex, 1);
+        
         if (deskTransform == null) {
             Debug.LogError("[SpawnManager] Failsafe: Round 1 Spawns not setup properly!");
-            return new SpawnPoint() { position = Vector3.zero, rotation = Quaternion.identity };
+            return new SpawnPoint() { 
+                position = new Vector3(90f, 10f, 0), 
+                rotation = Quaternion.identity 
+            };
         }
+
+        Vector3 safePosition = deskTransform.position + Vector3.up * 0.5f;
         return new SpawnPoint() { 
-            position = deskTransform.position, 
+            position = safePosition, 
             rotation = deskTransform.rotation 
         };
        
@@ -80,15 +86,37 @@ public class SpawnManager : MonoBehaviour, IProvideSpawnPoints
     {
         for (int i = 0; i < allPlayers.Length; i++)
         {
+            
             //allPlayers[i].transform.position = GetSpawnPosition(i, currentRound);
         
             // Specific for Kinematic Controller
-            allPlayers[i].Motor.SetPosition(GetSpawnPosition(i, currentRound));
+            Vector3 pos = GetSpawnPosition(i, currentRound);
+            pos.y += 0.5f;
+            allPlayers[i].Motor.SetPosition(pos);
+            var network = allPlayers[i].GetComponent<NetworkIdentity>();
+            if (network != null && network.owner.HasValue)
+                Rpc_TeleportPlayer(network.owner.Value, pos);
 
-        
         }
         Debug.Log($"[Server] Teleported {allPlayers.Length} players accurately to their desks for Round {currentRound}.");
     }
+
+    [TargetRpc]
+    private void Rpc_TeleportPlayer(PlayerID player, Vector3 position) {
+
+        var allFound = Object.FindObjectsByType<NetworkIdentity>(FindObjectsSortMode.None);
+        foreach (var network in allFound)
+        {
+            if (network.isOwner) {
+                var p = network.GetComponent<MyCharacterController>();
+                if (p != null) {
+                    p.Motor.SetPosition(position);
+                    break;
+                }
+            }
+        }
+    }
+
     public void TeleportStragglersToRound(List<MyCharacterController> stragglers, List<MyCharacterController> allPlayers, int currentRound) 
     {
         for (int i = 0; i < stragglers.Count; i++)

@@ -28,7 +28,7 @@ public class Interactor : MonoBehaviour
     private void OnEnable()
     {
         interactAction.Enable();
-    
+
     }
 
     private void OnDisable()
@@ -57,11 +57,9 @@ public class Interactor : MonoBehaviour
                 canInteract = true;
             }
         }
-       
-        if (canInteract)
-        {
-            e_indicator.SetActive(true);
-        }
+
+        e_indicator.SetActive(canInteract);
+
     }
 
     private void OnInteract(InputAction.CallbackContext context)

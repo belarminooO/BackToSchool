@@ -164,7 +164,7 @@ public class Vigia : MonoBehaviour
             {
                 if (source.currentVolumeDB > noiseThreshold)
                 {
-                    Debug.Log($"<color=blue>Vigia:</color> Ruído detetado em {source.name}!");
+                    //Debug.Log($"<color=blue>Vigia:</color> Ruído detetado em {source.name}!");
                     TriggerInvestigation(source.transform.position);
                     return;
                 }

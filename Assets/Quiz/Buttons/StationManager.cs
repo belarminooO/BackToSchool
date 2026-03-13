@@ -15,7 +15,7 @@ public class StationManager : NetworkBehaviour
     {
         if (!isServer)
         {
-            return; 
+            return;
         }
 
         for (int i = 0; i < stations.Length; i++)
@@ -25,18 +25,25 @@ public class StationManager : NetworkBehaviour
                 Debug.LogWarning($"[StationManager] Station at index {i} is null in round {roundNumber}. Please assign it in the Inspector.");
                 continue;
             }
-            
+
             if (i < activePlayers.Count)
             {
                 stations[i].RPC_SetOwner(activePlayers[i].GetComponent<NetworkIdentity>());
-                stations[i].gameObject.SetActive(true);
+                RPC_SetStationActive(i, true);
             }
             else
             {
                 stations[i].RPC_SetOwner(null);
-                stations[i].gameObject.SetActive(false);
+                RPC_SetStationActive(i, false);
             }
         }
+    }
+
+    [ObserversRpc]
+    private void RPC_SetStationActive(int stationIndex, bool active)
+    {
+        if (stationIndex >= 0 && stationIndex < stations.Length && stations[stationIndex] != null)
+            stations[stationIndex].gameObject.SetActive(active);
     }
 
 }

@@ -26,6 +26,10 @@ public class RoundTimerManager : MonoBehaviour
 
     private void Update()
     {
+        if (gameManager == null) {
+            gameManager = QuizGameManager.instance;
+        }
+        
         if (gameManager == null || timerBar == null) {
            return; 
         } 
@@ -34,23 +38,21 @@ public class RoundTimerManager : MonoBehaviour
 
         if(maximum <= 0f) {
             timerBar.value = 0f;
-            return;
+        } else {
+            timerBar.minValue = 0f;
+            timerBar.maxValue = maximum;
+            timerBar.value = Mathf.Clamp(gameManager.currentTimer.value, 0f, maximum);    
+
         }
 
-        timerBar.minValue = 0f;
-        timerBar.maxValue = maximum;
-        timerBar.value = Mathf.Clamp(gameManager.currentTimer.value, 0f, maximum);    
-
-        if (fillImage != null)
-
-            if (fillImage != null) 
-            {
-                string state = gameManager.localStateName; 
-                if (state == "QuestionState")
+        if (fillImage != null) 
+        {
+                string state = gameManager.currentStateName.value;
+                if (state == "QuestionStateNode")
                     fillImage.color = questionColor;
-                else if (state == "ObstacleRaceState")
+                else if (state == "ObstacleRaceStateNode")
                     fillImage.color = obstacleColor;
-                else if (state == "ChangeRoundState")
+                else if (state == "ChangeRoundStateNode")
                     fillImage.color = changeColor;
                 else
                     fillImage.color = freezeColor;

@@ -1,30 +1,45 @@
 using UnityEngine;
 using PurrNet;
+using PurrNet.StateMachine;
 using GinjaGaming.FinalCharacterController;
 
 public class QuizGameManager : NetworkBehaviour
 {
     public static QuizGameManager instance { get; private set; }
 
-    private IGameState currentState;
+    // private IGameState currentState;
 
-    public FreezeState freezeState { get; private set; }
-    public QuestionState questionState { get; private set; }
-    public ObstacleRaceState obstacleRaceState { get; private set; }
-    public ChangeRoundState changeRoundState { get; private set; }
+    [Header("Lobby Settings")]
+    public int requiredPlayers = 2; // Connect with Steam Lobby System
 
+    [Header("PurrNet State Machine")]
+    public PurrNet.StateMachine.StateMachine stateMachine;
+    public StateNode waitingState;
+    public StateNode freezeState; 
+    public StateNode questionState;
+    public StateNode obstacleRaceState;
+    public StateNode changeRoundState;
+
+    // public WaitingState waitingState { get; private set; }
+    // public FreezeState freezeState { get; private set; }
+    // public QuestionState questionState { get; private set; }
+    // public ObstacleRaceState obstacleRaceState { get; private set; }
+    // public ChangeRoundState changeRoundState { get; private set; }
+
+    [Header("Game Settings (SyncVars)")]
     public SyncVar<float> maxTimer = new SyncVar<float>();
     public SyncVar<int> currentRound = new SyncVar<int>();
     public SyncVar<float> currentTimer = new SyncVar<float>();
     public SyncVar<int> totalRoundsSettings = new SyncVar<int>();
     public SyncVar<int> roundDurationSettings = new SyncVar<int>();
+    public SyncVar<string> currentStateName = new SyncVar<string>("WaitingState");
 
     [Header("Managers")]
     public ScoreManager scoreManager;
     public SpawnManager spawnManager;
     public GenerateQuizJSON quizData;
 
-    [System.NonSerialized] public string localStateName = "FreezeState";
+    public bool quizReady { get; private set; } = false;
 
     private void Awake()
     {
@@ -37,76 +52,61 @@ public class QuizGameManager : NetworkBehaviour
             Destroy(gameObject);
         }
 
-        freezeState = new FreezeState();
-        questionState = new QuestionState();
-        obstacleRaceState = new ObstacleRaceState();
-        changeRoundState = new ChangeRoundState();
     }
 
-    protected override void OnSpawned()
-    {
-        if(isServer) {
-            totalRoundsSettings.value = PlayerPrefs.GetInt("Quiz_RoundNumber", 3);
-            roundDurationSettings.value = PlayerPrefs.GetInt("Quiz_QuestionTimer", 30);
-            currentRound.value = 1;
-            currentTimer.value = 0f;
+    // public void StartGame()
+    // {
+    //     if (!isServer) 
+    //         return;
 
-            freezeState.SetIsGenerating(true);
-            ChangeState(freezeState);
+    //     if (!_quizReady)
+    //     {
+    //         Debug.LogWarning("[Server] Quiz not ready yet! Please wait for generation to complete.");
+    //         return;
+    //     }
 
-            // if (scoreManager) {
-            //     scoreManager.ChooseTeams(); 
-            // }
-        }
-    }
+    //     if (scoreManager != null)
+    //     {
+    //         scoreManager.ChooseTeams();
+
+    //         StationManager[] allRoomManagers = Object.FindObjectsByType<StationManager>(FindObjectsSortMode.None);
+    //         foreach (StationManager rm in allRoomManagers)
+    //         {
+    //             if (rm.roundNumber == 1)
+    //                 rm.AssignStations(new System.Collections.Generic.List<MyCharacterController>(scoreManager.allPlayers));
+    //         }
+    //     }
+
+    //     ChangeState(freezeState);
+    // }
 
     public void OnQuizGenerationComplete()
     {
-        Debug.Log("[Server] Quiz generation complete!");
+        Debug.Log("[GameManager] Quiz ready to start!");
+        quizReady = true;
+    }
 
-        if (scoreManager != null) {
-            scoreManager.ChooseTeams();
-
-            StationManager[] allRoomManagers = Object.FindObjectsByType<StationManager>(FindObjectsSortMode.None);
-
-            foreach (StationManager manager in allRoomManagers) {
-                if (manager.roundNumber == 1)
-                {
-                    manager.AssignStations(new System.Collections.Generic.List<MyCharacterController>(scoreManager.allPlayers));
-                }
-            }
-        }
+    // void Update()
+    // {
+    //     if (!isServer || currentState == null) {
+    //         return;
+    //     }
         
-        freezeState.SetIsGenerating(false);
-        ChangeState(freezeState);
-    }
+    //     currentState.UpdateState(this);
+    // }
 
-    void Update()
-    {
-        if (!isServer || currentState == null) {
-            return;
-        }
-        
-        currentState.UpdateState(this);
-    }
+    // public void ChangeState(IGameState newState)
+    // {
+    //     if (currentState != null) {
+    //         currentState.ExitState(this);
+    //     }
 
-    public void ChangeState(IGameState newState)
-    {
-        if (currentState != null) {
-            currentState.ExitState(this);
-        }
+    //     currentState = newState;
+    //     currentState.EnterState(this);
 
-        currentState = newState;
-        currentState.EnterState(this);
+    //     currentStateName.value = newState.GetType().Name;
+    // }
 
-        RPC_NotifyStateChange(newState.GetType().Name);
-    }
-
-    [ObserversRpc]
-    private void RPC_NotifyStateChange(string stateName)
-    {
-        localStateName = stateName;
-    }
 
     // [ObserversRpc]
     // public void RPC_MoveCanvasToClassroom(int roundNum)
@@ -127,4 +127,99 @@ public class QuizGameManager : NetworkBehaviour
     //         }
     //     }
     // }
+
+    [ObserversRpc]
+    public void RPC_SyncCurrentQuestion(string text, string red, string green, string blue, string yellow, int correctIdx, int roundNum, int questionNum)
+    {
+        if (quizData != null)
+        {
+            quizData.currentQuestionText = text;
+            quizData.redOption = red;
+            quizData.greenOption = green;
+            quizData.blueOption = blue;
+            quizData.yellowOption = yellow;
+            quizData.currentCorrectAnswerIndex = correctIdx;
+            quizData.currentRound = roundNum;
+            quizData.currentQuestion = questionNum;
+        }
+
+        if (QuizUIManager.Instance != null)
+        {
+            Debug.Log($"[QuizGameManager] Syncing question {questionNum} of round {roundNum} to UI");
+            if (QuizUIManager.Instance.quizDataScript == null)
+                QuizUIManager.Instance.quizDataScript = quizData;
+            QuizUIManager.Instance.UpdateUI();
+        }
+    }
+
+
+    [ObserversRpc]
+        private void RPC_NotifyStateChange(string stateName)
+        {
+            if (QuizUIManager.Instance != null)
+            {
+                if (QuizUIManager.Instance.quizDataScript == null)
+                {
+                    QuizUIManager.Instance.quizDataScript = quizData;
+                }
+                QuizUIManager.Instance.OnStateChanged(stateName);
+            }
+        }
+
+        protected override void OnSpawned()
+        {
+            if(isServer) {
+                totalRoundsSettings.value = PlayerPrefs.GetInt("Quiz_RoundNumber", 3);
+                roundDurationSettings.value = PlayerPrefs.GetInt("Quiz_QuestionTimer", 30);
+                currentRound.value = 1;
+
+                if (stateMachine != null && waitingState != null) {
+                    stateMachine.SetState(waitingState);
+                }
+
+                if (stateMachine != null)
+                {
+                    stateMachine.onStateChanged += (prev, next) =>
+                    {
+                        if (next != null) 
+                        {
+                            string safeName = next.GetType().Name;
+                            currentStateName.value = safeName;
+                            RPC_NotifyStateChange(safeName);
+                        }
+                    };
+                }
+
+                //currentTimer.value = 0f;
+
+                //ChangeState(waitingState);
+
+                // freezeState.SetIsGenerating(true);
+                // ChangeState(freezeState);
+
+                // if (scoreManager) {
+                //     scoreManager.ChooseTeams(); 
+                // }
+            }
+        }
+
+
+        public void InitializeGamePlayers()
+        {
+            if (scoreManager != null)
+            {
+                scoreManager.ChooseTeams();
+                StationManager[] allRoomManagers = Object.FindObjectsByType<StationManager>(FindObjectsSortMode.None);
+                foreach (StationManager rm in allRoomManagers)
+                {
+                    if (rm.roundNumber == 1)
+                        rm.AssignStations(new System.Collections.Generic.List<MyCharacterController>(scoreManager.allPlayers));
+                }
+
+                if (spawnManager != null) 
+                {
+                    spawnManager.TeleportAllPlayersToRound(scoreManager.allPlayers.ToArray(), 1);
+                }
+            }
+        }
 }

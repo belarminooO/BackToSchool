@@ -3,7 +3,7 @@ using PurrNet;
 using System.Collections.Generic;
 using GinjaGaming.FinalCharacterController;
 
-public enum Team { Team1, Team2, Team3, Team4, None }
+public enum Team { Team1, Team2, Team3, Team4, Team5, Team6, Team7, Team8, None }
 
 public class ScoreManager : NetworkBehaviour
 {
@@ -11,10 +11,15 @@ public class ScoreManager : NetworkBehaviour
     public SyncVar<int> team2Score = new SyncVar<int>();
     public SyncVar<int> team3Score = new SyncVar<int>();
     public SyncVar<int> team4Score = new SyncVar<int>();
+    public SyncVar<int> team5Score = new SyncVar<int>();
+    public SyncVar<int> team6Score = new SyncVar<int>();
+    public SyncVar<int> team7Score = new SyncVar<int>();
+    public SyncVar<int> team8Score = new SyncVar<int>();
 
     [Header("Players")]
-    public List<MyCharacterController> allPlayers = new List<MyCharacterController>();
+    public SyncList<PlayerID> registeredPlayers = new SyncList<PlayerID>();
     public List<MyCharacterController> arrivedPlayers = new List<MyCharacterController>();
+    public List<MyCharacterController> allPlayers = new List<MyCharacterController>();
 
     [Header("UI")]
     public GameObject regularGameUI;
@@ -34,6 +39,34 @@ public class ScoreManager : NetworkBehaviour
         }
     }
 
+    protected override void OnSpawned()
+    {
+        if (isServer)
+        {
+            foreach (var p in networkManager.players)
+            {
+                if (!registeredPlayers.Contains(p)) {
+                    registeredPlayers.Add(p);
+                    Debug.Log($"[ScoreManager] Player joined: {p}, total: {registeredPlayers.Count}");
+                }
+            }
+
+            // Listeners for new players joining
+            networkManager.onPlayerJoined += (player, isReconnect, asServer) => {
+                if (!registeredPlayers.Contains(player)) {
+                    registeredPlayers.Add(player);
+                    Debug.Log($"[ScoreManager] Player joined: {player}, total: {registeredPlayers.Count}");
+                }
+            };
+
+            // Listeners for players leaving
+            networkManager.onPlayerLeft += (player, asServer) => {
+                registeredPlayers.Remove(player);
+                Debug.Log($"[ScoreManager] Player left: {player}, total: {registeredPlayers.Count}");
+            };
+        }
+    }
+
     public void ChooseTeams() {
         if(!isServer) {
             return;
@@ -46,23 +79,72 @@ public class ScoreManager : NetworkBehaviour
 
         Debug.Log($"[Server] Assigning Teams for {playerCount} players.");
         
-        int totalTeamsToUse = 2;
+        // int totalTeamsToUse = 2;
 
-        if (playerCount == 5 || playerCount == 6) {
-            totalTeamsToUse = 3; 
-        }
-        else if (playerCount == 7 || playerCount >= 8) {
-            totalTeamsToUse = 4; 
-        }
+        // if (playerCount == 5 || playerCount == 6) {
+        //     totalTeamsToUse = 3; 
+        // }
+        // else if (playerCount == 7 || playerCount >= 8) {
+        //     totalTeamsToUse = 4; 
+        // }
+
+        // for (int i = 0; i < playerCount; i++) {
+        //     //int teamIndex = i % totalTeamsToUse;
+        //     Team assignedTeam = (Team)teamIndex;
+        //     allPlayers[i].AssignTeam(assignedTeam);
+
+        //     var network = allPlayers[i].GetComponent<NetworkIdentity>();
+        //     if (network != null) {
+        //         RPC_SyncTeam(network, (int)assignedTeam);
+        //     }
+
+        //     var nameTag = allPlayers[i].GetComponentInChildren<PlayerNameTag>(true);
+        //     if (nameTag != null)
+        //     {
+        //         nameTag.steamName.onChanged += _ => RPC_UpdateLeaderboard();
+
+        //     }
+
+        //     Debug.Log($"[Server] Assigned {allPlayers[i].gameObject.name} to {assignedTeam}");
+        // }
 
         for (int i = 0; i < playerCount; i++) {
-            int teamIndex = i % totalTeamsToUse;
-            Team assignedTeam = (Team)teamIndex;
+            Team assignedTeam = (Team)(i % 8); 
             allPlayers[i].AssignTeam(assignedTeam);
+            var network = allPlayers[i].GetComponent<NetworkIdentity>();
+
+            if (network != null) {
+                RPC_SyncTeam(network, (int)assignedTeam);
+            }
+
+            var nameTag = allPlayers[i].GetComponentInChildren<PlayerNameTag>(true);
+
+            if (nameTag != null)
+            {
+                nameTag.steamName.onChanged += _ => RPC_UpdateLeaderboard();
+            }
+
             Debug.Log($"[Server] Assigned {allPlayers[i].gameObject.name} to {assignedTeam}");
         }
 
         RPC_UpdateLeaderboard();
+    }
+
+    [ObserversRpc]
+    public void RPC_SyncTeam(NetworkIdentity network, int teamIndex) {
+        if (isServer) {
+            return;
+        }
+        var allPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        foreach (var player in allPlayers)
+        {
+            var n = player.GetComponent<NetworkIdentity>();
+            if (n != null && n == network)
+            {
+                player.team = (Team)teamIndex;
+                break;
+            }
+        }
     }
 
     public void PrepareForObstacleRace() {
@@ -112,14 +194,30 @@ public class ScoreManager : NetworkBehaviour
         }
         switch (team)
         {
-            case Team.Team1: team1Score.value += amount; 
-            break;
-            case Team.Team2: team2Score.value += amount; 
-            break;
-            case Team.Team3: team3Score.value += amount; 
-            break;
-            case Team.Team4: team4Score.value += amount; 
-            break;
+            case Team.Team1: 
+                team1Score.value += amount; 
+                break;
+            case Team.Team2: 
+                team2Score.value += amount; 
+                break;
+            case Team.Team3: 
+                team3Score.value += amount; 
+                break;
+            case Team.Team4: 
+                team4Score.value += amount; 
+                break;
+            case Team.Team5: 
+                team5Score.value += amount; 
+                break;
+            case Team.Team6: 
+                team6Score.value += amount; 
+                break;
+            case Team.Team7: 
+                team7Score.value += amount; 
+                break;
+            case Team.Team8: 
+                team8Score.value += amount; 
+                break;
         }
     }
 
@@ -139,6 +237,14 @@ public class ScoreManager : NetworkBehaviour
                 case Team.Team3: team3Score.value += 10; 
                 break;
                 case Team.Team4: team4Score.value += 10; 
+                break;
+                case Team.Team5: team5Score.value += 10; 
+                break;
+                case Team.Team6: team6Score.value += 10; 
+                break;
+                case Team.Team7: team7Score.value += 10; 
+                break;
+                case Team.Team8: team8Score.value += 10; 
                 break;
                 case Team.None: 
                 break;
@@ -172,6 +278,18 @@ public class ScoreManager : NetworkBehaviour
                 case Team.Team4: 
                     team4Score.value -= 2;
                     break;
+                case Team.Team5: 
+                    team5Score.value -= 2;
+                    break;
+                case Team.Team6: 
+                    team6Score.value -= 2;
+                    break;
+                case Team.Team7: 
+                    team7Score.value -= 2;
+                    break;
+                case Team.Team8: 
+                    team8Score.value -= 2;
+                    break;
                 case Team.None: 
                     break;
             }
@@ -182,11 +300,16 @@ public class ScoreManager : NetworkBehaviour
 
     public void UpdateLeaderboard()
     {        
+        allPlayers = new List<MyCharacterController>(FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None));
         
         List<string> team1Names = new List<string>();
         List<string> team2Names = new List<string>();
         List<string> team3Names = new List<string>();
         List<string> team4Names = new List<string>();
+        List<string> team5Names = new List<string>();
+        List<string> team6Names = new List<string>();
+        List<string> team7Names = new List<string>();
+        List<string> team8Names = new List<string>();
 
         foreach (var player in allPlayers)
         {
@@ -207,6 +330,14 @@ public class ScoreManager : NetworkBehaviour
                 break;
                 case Team.Team4: team4Names.Add(nameToDisplay); 
                 break;
+                case Team.Team5: team5Names.Add(nameToDisplay); 
+                break;
+                case Team.Team6: team6Names.Add(nameToDisplay); 
+                break;
+                case Team.Team7: team7Names.Add(nameToDisplay); 
+                break;
+                case Team.Team8: team8Names.Add(nameToDisplay); 
+                break;
                 case Team.None: 
                 break;
             }
@@ -225,11 +356,23 @@ public class ScoreManager : NetworkBehaviour
         if (leaderboardText == null) {
             return;
         }
-        string text = $"Leaderboard:\n" +
-            $"{GetTeamString(team1Names, "Team 1")}: {team1Score.value} pts\n" +
-            $"{GetTeamString(team2Names, "Team 2")}: {team2Score.value} pts\n" +
-            $"{GetTeamString(team3Names, "Team 3")}: {team3Score.value} pts\n" +
-            $"{GetTeamString(team4Names, "Team 4")}: {team4Score.value} pts";
+        string text = $"Leaderboard:\n";
+        
+        if (team1Names.Count > 0) 
+            text += $"{GetTeamString(team1Names, "")}: {team1Score.value} pts\n";
+        if (team2Names.Count > 0) 
+            text += $"{GetTeamString(team2Names, "")}: {team2Score.value} pts\n";
+        if (team3Names.Count > 0) 
+            text += $"{GetTeamString(team3Names, "")}: {team3Score.value} pts\n";
+        if (team4Names.Count > 0) 
+            text += $"{GetTeamString(team4Names, "")}: {team4Score.value} pts\n";
+        if (team5Names.Count > 0) 
+            text += $"{GetTeamString(team5Names, "")}: {team5Score.value} pts\n";
+        if (team6Names.Count > 0) 
+            text += $"{GetTeamString(team6Names, "")}: {team6Score.value} pts\n";
+        if (team7Names.Count > 0) 
+            text += $"{GetTeamString(team7Names, "")}: {team7Score.value} pts\n";
+        if (team8Names.Count > 0) text += $"{GetTeamString(team8Names, "")}: {team8Score.value} pts\n";
 
         if (leaderboardText != null) 
             leaderboardText.text = text;
@@ -240,6 +383,10 @@ public class ScoreManager : NetworkBehaviour
     [ObserversRpc]
     public void RPC_UpdateLeaderboard() 
     {
+        if (!isServer)
+        {
+            allPlayers = new List<MyCharacterController>(Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None));
+        }
         UpdateLeaderboard();
     }
 
@@ -280,5 +427,10 @@ public class ScoreManager : NetworkBehaviour
         }
         
         UnityEngine.SceneManagement.SceneManager.LoadScene("LobbySample");
+    }
+    
+    public int GetPlayerIndex(PlayerID id)
+    {
+        return registeredPlayers.IndexOf(id);
     }
 }
