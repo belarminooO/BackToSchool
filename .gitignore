@@ -103,3 +103,13 @@ InitTestScene*.unity*
 
 # Claude
 .claude/
+
+
+My project/Library/
+My project/Temp/
+My project/UserSettings/
+My project/Logs/
+My project/obj/
+ProjectSettings/
+My project/ProjectSettings/
+Assets/_Recovery/
