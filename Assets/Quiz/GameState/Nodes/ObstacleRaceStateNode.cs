@@ -12,6 +12,10 @@ public class ObstacleRaceStateNode : StateNode
             manager.maxTimer.value = 30f;
             if (manager.scoreManager != null) 
                 manager.scoreManager.PrepareForObstacleRace();
+
+            if (manager.spawnManager != null && manager.scoreManager != null)
+                manager.spawnManager.TeleportAllPlayersToOutside(manager.scoreManager.allPlayers.ToArray(), manager.currentRound.value);
+
         }
     }
     public override void StateUpdate(bool asServer)

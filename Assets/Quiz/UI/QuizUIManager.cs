@@ -34,12 +34,12 @@ public class QuizUIManager : MonoBehaviour
             Instance = this;
     }
 
-    private RoundBoardRefs GetCurrentBoard()
+    private RoundBoardRefs GetCurrentBoard(int specificRound = -1)
     {
         if (roundBoards == null || roundBoards.Length == 0)
             return null;
 
-        int round = QuizGameManager.instance != null ? QuizGameManager.instance.currentRound.value : 1;
+        int round = specificRound != -1 ? specificRound : (QuizGameManager.instance != null ? QuizGameManager.instance.currentRound.value : 1);
         int index = Mathf.Clamp(round - 1, 0, roundBoards.Length - 1);
         return roundBoards[index];
     }
@@ -83,7 +83,7 @@ public class QuizUIManager : MonoBehaviour
         }
     }
 
-    public void UpdateUI()
+    public void UpdateUI(int specificRound = -1)
     {
         if (quizDataScript == null)
         {
@@ -94,7 +94,7 @@ public class QuizUIManager : MonoBehaviour
         if (roundNumberText != null)
             roundNumberText.text = "Round " + quizDataScript.currentRound.ToString();
 
-        RoundBoardRefs board = GetCurrentBoard();
+        RoundBoardRefs board = GetCurrentBoard(specificRound);
         if (board == null)
         {
             Debug.LogWarning("[QuizUIManager] No board configured for current round.");

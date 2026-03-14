@@ -41,7 +41,17 @@ public class QuestionStateNode : StateNode
             }
             else
             {
-                machine.SetState(nextPhase);
+                if (manager.currentRound.value >= manager.totalRoundsSettings.value)
+                {
+                    manager.currentTimer.value = 999f;
+                    if (manager.scoreManager != null) {
+                        manager.scoreManager.RPC_ShowEndGameScreen();
+                    }
+                }
+                else
+                {
+                    machine.SetState(nextPhase);
+                }
             }
         }
     }

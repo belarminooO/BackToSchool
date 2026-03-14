@@ -143,26 +143,36 @@ public class QuizGameManager : NetworkBehaviour
             quizData.currentQuestion = questionNum;
         }
 
-        if (QuizUIManager.Instance != null)
+        QuizUIManager[] allUIs = Object.FindObjectsByType<QuizUIManager>(FindObjectsSortMode.None);
+        foreach (var ui in allUIs)
         {
-            Debug.Log($"[QuizGameManager] Syncing question {questionNum} of round {roundNum} to UI");
-            if (QuizUIManager.Instance.quizDataScript == null)
-                QuizUIManager.Instance.quizDataScript = quizData;
-            QuizUIManager.Instance.UpdateUI();
+            if (ui.quizDataScript == null)
+                ui.quizDataScript = quizData;
+                
+            ui.UpdateUI(roundNum);
         }
+    }
+
+    [ObserversRpc]
+    public void RPC_ResetJailedPlayers()
+    {
+        var allPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        foreach (var player in allPlayers)
+            player.isJailed = false;
     }
 
 
     [ObserversRpc]
-        private void RPC_NotifyStateChange(string stateName)
+        private void RPC_NotifyStateChange(string stateName) 
         {
-            if (QuizUIManager.Instance != null)
+            QuizUIManager[] allUIs = Object.FindObjectsByType<QuizUIManager>(FindObjectsSortMode.None);
+            foreach (var ui in allUIs)
             {
-                if (QuizUIManager.Instance.quizDataScript == null)
+                if (ui.quizDataScript == null)
                 {
-                    QuizUIManager.Instance.quizDataScript = quizData;
+                    ui.quizDataScript = quizData;
                 }
-                QuizUIManager.Instance.OnStateChanged(stateName);
+                ui.OnStateChanged(stateName);
             }
         }
 

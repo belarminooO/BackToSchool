@@ -10,10 +10,15 @@ public class RoundSpawnData
 }
 public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
 {
-    [Header("Settings")]
+    [Header("Inside Room Spawnpoints")]
     [SerializeField] private RoundSpawnData[] roundSpawns;
 
+    [Header("Outside Room Spawnpoints")]
+    [SerializeField] private RoundSpawnData[] outsideRoundSpawns;
     private PlayerSpawner playerSpawner;
+    
+    [Header("Jail Spawnpoints")]
+    [SerializeField] private Transform[] jailSpawns;
 
     private void Awake()
     {
@@ -86,19 +91,84 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
     {
         for (int i = 0; i < allPlayers.Length; i++)
         {
-            
-            //allPlayers[i].transform.position = GetSpawnPosition(i, currentRound);
+            int originalIndex = i; 
+            if (originalIndex != -1) {
+                //allPlayers[i].transform.position = GetSpawnPosition(i, currentRound);
         
-            // Specific for Kinematic Controller
-            Vector3 pos = GetSpawnPosition(i, currentRound);
-            pos.y += 0.5f;
+                // Specific for Kinematic Controller
+                Vector3 pos = GetSpawnPosition(originalIndex, currentRound);
+                pos.y += 0.5f;
+                allPlayers[i].Motor.SetPosition(pos);
+
+                var network = allPlayers[i].GetComponent<NetworkIdentity>();
+                if (network != null && network.owner.HasValue)
+                    Rpc_TeleportPlayer(network.owner.Value, pos);
+            }
+        }
+        Debug.Log($"[Server] Teleported {allPlayers.Length} players accurately to their desks for Round {currentRound}.");
+    }
+
+    public void TeleportAllPlayersToOutside(MyCharacterController[] allPlayers, int currentRound)
+    {
+        if (outsideRoundSpawns == null || outsideRoundSpawns.Length == 0)
+        {
+            Debug.LogWarning("[SpawnManager] No outside spawn points configured!");
+            return;
+        }
+
+        int arrayIndex = Mathf.Clamp(currentRound - 1, 0, outsideRoundSpawns.Length - 1);
+        Transform[] spawnPoints = outsideRoundSpawns[arrayIndex].spawnPoints;
+
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogWarning($"[SpawnManager] No outside spawn points for round {currentRound}!");
+            return;
+        }
+        
+        for (int i = 0; i < allPlayers.Length; i++)
+        {
+            Transform spawn = spawnPoints[i % spawnPoints.Length];
+            Vector3 pos = spawn.position + Vector3.up * 0.5f;
             allPlayers[i].Motor.SetPosition(pos);
             var network = allPlayers[i].GetComponent<NetworkIdentity>();
             if (network != null && network.owner.HasValue)
                 Rpc_TeleportPlayer(network.owner.Value, pos);
-
         }
-        Debug.Log($"[Server] Teleported {allPlayers.Length} players accurately to their desks for Round {currentRound}.");
+
+        Debug.Log($"[SpawnManager] Teleported {allPlayers.Length} players to outside room for round {currentRound}.");
+    }
+
+    public void TeleportPlayerToOutside(MyCharacterController player, int currentRound)
+    {
+        if (outsideRoundSpawns == null || outsideRoundSpawns.Length == 0) 
+        {
+            return;
+        }
+            
+        int arrayIndex = Mathf.Clamp(currentRound - 1, 0, outsideRoundSpawns.Length - 1);
+
+        Transform[] spawnPoints = outsideRoundSpawns[arrayIndex].spawnPoints;
+        if (spawnPoints == null || spawnPoints.Length == 0) {
+            return;
+        }
+       
+        var scoreManager = QuizGameManager.instance?.scoreManager;
+        if (scoreManager == null) {
+           return; 
+        } 
+        
+        int playerIndex = scoreManager.allPlayers.IndexOf(player);
+        if (playerIndex == -1) {
+            return;
+        }
+
+        Transform spawn = spawnPoints[playerIndex % spawnPoints.Length];
+        Vector3 pos = spawn.position + Vector3.up * 0.5f;
+        
+        player.Motor.SetPosition(pos);
+        var network = player.GetComponent<NetworkIdentity>();
+        if (network != null && network.owner.HasValue)
+            Rpc_TeleportPlayer(network.owner.Value, pos);
     }
 
     [TargetRpc]
@@ -131,5 +201,19 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
                 stragglers[i].Motor.SetPosition(GetSpawnPosition(originalIndex, currentRound));            
             }
         }
+    }
+
+    public Vector3 GetJailPosition(int currentRound)
+    {
+        if (jailSpawns == null || jailSpawns.Length == 0) 
+            return Vector3.zero;
+        
+        int arrayIndex = Mathf.Clamp(currentRound - 1, 0, jailSpawns.Length - 1);
+        Transform point = jailSpawns[arrayIndex];
+        
+        if (point == null) 
+            return Vector3.zero;
+        
+        return point.position;
     }
 }

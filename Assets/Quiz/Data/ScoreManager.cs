@@ -64,7 +64,16 @@ public class ScoreManager : NetworkBehaviour
                 registeredPlayers.Remove(player);
                 Debug.Log($"[ScoreManager] Player left: {player}, total: {registeredPlayers.Count}");
             };
+
         }
+        team1Score.onChanged += (val) => UpdateLeaderboard();
+        team2Score.onChanged += (val) => UpdateLeaderboard();
+        team3Score.onChanged += (val) => UpdateLeaderboard();
+        team4Score.onChanged += (val) => UpdateLeaderboard();
+        team5Score.onChanged += (val) => UpdateLeaderboard();
+        team6Score.onChanged += (val) => UpdateLeaderboard();
+        team7Score.onChanged += (val) => UpdateLeaderboard();
+        team8Score.onChanged += (val) => UpdateLeaderboard();
     }
 
     public void ChooseTeams() {
@@ -127,7 +136,7 @@ public class ScoreManager : NetworkBehaviour
             Debug.Log($"[Server] Assigned {allPlayers[i].gameObject.name} to {assignedTeam}");
         }
 
-        RPC_UpdateLeaderboard();
+        //RPC_UpdateLeaderboard();
     }
 
     [ObserversRpc]
@@ -251,7 +260,7 @@ public class ScoreManager : NetworkBehaviour
             }
         }
 
-        RPC_UpdateLeaderboard();
+        //RPC_UpdateLeaderboard();
     }
 
     public void PenalizePlayers()
@@ -295,7 +304,7 @@ public class ScoreManager : NetworkBehaviour
             }
         }
 
-        RPC_UpdateLeaderboard();
+        //RPC_UpdateLeaderboard();
     }
 
     public void UpdateLeaderboard()

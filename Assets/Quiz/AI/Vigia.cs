@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
+using PurrNet;
 using MetaVoiceChat.AudioFilters; // Para o NoiseGate
 
 /// <summary>
@@ -11,7 +12,7 @@ using MetaVoiceChat.AudioFilters; // Para o NoiseGate
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
 [HelpURL("https://github.com/migboss/BackToSchool")]
-public class Vigia : MonoBehaviour
+public class Vigia : NetworkBehaviour
 {
     [Header("Patrol Settings")]
     [Tooltip("Lista de waypoints para patrulha. Se vazia, tenta encontrar na cena.")]
@@ -31,7 +32,7 @@ public class Vigia : MonoBehaviour
 
     [Header("Hearing Settings")]
     [Tooltip("Volume em dB acima do qual o vigia ouve o jogador.")]
-    public float noiseThreshold = -45f;
+    public float noiseThreshold = -35f;
     public float hearingRadius = 15f;
 
     [Header("Debug Visuals")]
@@ -40,22 +41,34 @@ public class Vigia : MonoBehaviour
     [Tooltip("Mostra a linha de ligação entre os waypoints.")]
     public bool showPatrolPath = true;
 
-    [Header("Status (Read Only)")]
-    [SerializeField] private VigiaState _currentState = VigiaState.Wandering;
-    public VigiaState CurrentState => _currentState;
-
     private NavMeshAgent agent;
     private Animator animator;
     private int currentWaypointIndex = 0;
     private bool isWaiting = false;
     private Vector3 investigationTarget;
 
-    // Hashes de animação (FinalCharacterController Part 7)
+    private MyCharacterController _currentDetectionTarget;
+    private float _gracePeriodTimer = 0f;
+
+    public SyncVar<VigiaState> CurrentState = new SyncVar<VigiaState>(VigiaState.Wandering);
+    public SyncVar<float> SyncedSpeed = new SyncVar<float>(0f);
+
+    // Hashes de animação
     private static int inputXHash = Animator.StringToHash("inputX");
     private static int inputYHash = Animator.StringToHash("inputY");
     private static int inputMagnitudeHash = Animator.StringToHash("inputMagnitude");
     private static int isIdlingHash = Animator.StringToHash("isIdling");
     private static int isGroundedHash = Animator.StringToHash("isGrounded");
+
+    [Header("Jail Settings")]
+    public float jailDetectionTime = 2f;
+    public float jailDetectionRadius = 2.5f; 
+    public float voiceGracePeriod = 0.5f;
+
+    [Header("Detection Bar UI")]
+    public GameObject detectionBarRoot;
+    public UnityEngine.UI.Slider detectionSlider;
+    public SyncVar<float> DetectionProgress = new SyncVar<float>(0f);
 
     public enum VigiaState
     {
@@ -69,7 +82,6 @@ public class Vigia : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        // Força o objeto a não ser estático para garantir que o NavMeshAgent funciona
         gameObject.isStatic = false;
 
         if (waypoints == null || waypoints.Count == 0)
@@ -86,21 +98,44 @@ public class Vigia : MonoBehaviour
         }
     }
 
+    private bool IsActiveDetectionState()
+    {
+        if (QuizGameManager.instance == null || QuizGameManager.instance.currentStateName == null) 
+            return false;
+
+        return QuizGameManager.instance.currentStateName.value == "QuestionStateNode";
+    }
+
     private void Update()
     {
-        // O vigia está sempre atento, mesmo quando parado ou a vaguear.
-        UpdatePassivePerception();
-        UpdateStateMachine();
+        if (isServer) 
+        {
+            if (IsActiveDetectionState())
+            {
+                UpdatePassivePerception();
+                UpdateJailDetection();
+            }
+            else
+            {
+                DecayDetectionProgress(); 
+            }
+
+            UpdateStateMachine();
+            SyncedSpeed.value = agent.velocity.magnitude;
+            
+        }
+
         UpdateAnimations();
+        UpdateDetectionUI();
     }
 
     private void OnValidate()
     {
-        // Auto-configuração de layers no editor para facilitar a vida do utilizador
-        if (playerMask.value == 0) playerMask = LayerMask.GetMask("Player");
-        if (visionMask.value == 0) visionMask = LayerMask.GetMask("Default", "Environment", "Ground");
+        if (playerMask.value == 0) 
+            playerMask = LayerMask.GetMask("Player");
+        if (visionMask.value == 0) 
+            visionMask = LayerMask.GetMask("Default", "Environment", "Ground");
         
-        // Configurações sugeridas para o NavMeshAgent
         NavMeshAgent nav = GetComponent<NavMeshAgent>();
         if (nav != null)
         {
@@ -120,8 +155,6 @@ public class Vigia : MonoBehaviour
 
     private void UpdatePassivePerception()
     {
-        // Se já estivermos a investigar algo muito perto, não precisamos de procurar novamente
-        // Mas se estivermos a patrulhar, qualquer som ou visão interrompe.
         CheckVision();
         CheckHearing();
     }
@@ -132,19 +165,20 @@ public class Vigia : MonoBehaviour
 
         foreach (var target in targets)
         {
+            var p = target.GetComponentInParent<MyCharacterController>();
+            if (p != null && p.isJailed) 
+                continue;
+
             Vector3 dirToTarget = (target.transform.position - transform.position).normalized;
             float angleToTarget = Vector3.Angle(transform.forward, dirToTarget);
 
             if (angleToTarget < viewAngle / 2f)
             {
-                // Raycast para verificar se não há paredes no meio
-                // Offset de 1.5m para os olhos
                 Vector3 startPos = transform.position + Vector3.up * 1.6f;
                 Vector3 endPos = target.transform.position + Vector3.up * 1.6f;
                 
                 if (!Physics.Linecast(startPos, endPos, visionMask))
                 {
-                    Debug.Log($"<color=red>Vigia:</color> Jogador {target.name} visto!");
                     TriggerInvestigation(target.transform.position);
                     return;
                 }
@@ -154,18 +188,19 @@ public class Vigia : MonoBehaviour
 
     private void CheckHearing()
     {
-        // Otimização: Apenas verifica se houver fontes de ruído
-        NoiseGate[] noiseSources = Object.FindObjectsByType<NoiseGate>(FindObjectsSortMode.None);
-        
-        foreach (var source in noiseSources)
+        PlayerVoiceState[] playerVoices = Object.FindObjectsByType<PlayerVoiceState>(FindObjectsSortMode.None);         
+        foreach (var playerVoice in playerVoices)
         {
-            float dist = Vector3.Distance(transform.position, source.transform.position);
+            var p = playerVoice.GetComponentInParent<MyCharacterController>();
+            if (p != null && p.isJailed) 
+                continue;
+
+            float dist = Vector3.Distance(transform.position, playerVoice.transform.position);
             if (dist <= hearingRadius)
             {
-                if (source.currentVolumeDB > noiseThreshold)
+                if (playerVoice.isTalking.value)
                 {
-                    //Debug.Log($"<color=blue>Vigia:</color> Ruído detetado em {source.name}!");
-                    TriggerInvestigation(source.transform.position);
+                    TriggerInvestigation(playerVoice.transform.position);
                     return;
                 }
             }
@@ -174,12 +209,11 @@ public class Vigia : MonoBehaviour
 
     private void TriggerInvestigation(Vector3 origin)
     {
-        // Se já estivermos a investigar muito perto desta origem, ignora para não "tremer"
-        if (_currentState == VigiaState.Investigating && Vector3.Distance(agent.destination, origin) < 2f)
+        if (CurrentState.value == VigiaState.Investigating && Vector3.Distance(agent.destination, origin) < 0.5f)
             return;
 
         investigationTarget = origin;
-        _currentState = VigiaState.Investigating;
+        CurrentState.value = VigiaState.Investigating; 
         StopAllCoroutines();
         isWaiting = false;
         
@@ -190,7 +224,7 @@ public class Vigia : MonoBehaviour
 
     private void UpdateStateMachine()
     {
-        switch (_currentState)
+        switch (CurrentState.value)
         {
             case VigiaState.Wandering:
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
@@ -200,23 +234,46 @@ public class Vigia : MonoBehaviour
                 break;
 
             case VigiaState.Waiting:
-                // Aguarda na corrotina
                 break;
 
             case VigiaState.Investigating:
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
                 {
-                    StartCoroutine(WaitAfterInvestigation());
+                    if (!HasActiveJailCandidate())
+                    {
+                        StartCoroutine(WaitAfterInvestigation());
+                    }
                 }
                 break;
         }
+    }
+
+    private bool HasActiveJailCandidate()
+    {
+        var nearbyPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        foreach (var player in nearbyPlayers)
+        {
+            if (player == null || player.isJailed)
+                continue;
+
+            float dist = Vector3.Distance(transform.position, player.transform.position);
+            if (dist <= jailDetectionRadius)
+            {
+                var voiceState = player.GetComponent<PlayerVoiceState>();
+                if (voiceState != null && voiceState.isTalking.value)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private IEnumerator WaitAtWaypoint()
     {
         if (isWaiting) yield break;
         isWaiting = true;
-        _currentState = VigiaState.Waiting;
+        CurrentState.value = VigiaState.Waiting;
 
         float waitTime = 1f;
         if (waypoints != null && currentWaypointIndex < waypoints.Count)
@@ -252,9 +309,8 @@ public class Vigia : MonoBehaviour
     {
         if (isWaiting) yield break;
         isWaiting = true;
-        _currentState = VigiaState.Waiting;
+        CurrentState.value = VigiaState.Waiting;
 
-        // Fica a "scrutar" o ambiente
         yield return new WaitForSeconds(4f);
 
         GoToNextWaypoint();
@@ -265,7 +321,7 @@ public class Vigia : MonoBehaviour
     {
         if (waypoints == null || waypoints.Count == 0) return;
 
-        _currentState = VigiaState.Wandering;
+        CurrentState.value = VigiaState.Wandering;
         agent.isStopped = false;
         agent.speed = wanderSpeed;
         agent.SetDestination(waypoints[currentWaypointIndex].transform.position);
@@ -275,12 +331,10 @@ public class Vigia : MonoBehaviour
     {
         if (animator == null) return;
 
-        float currentSpeed = agent.velocity.magnitude;
-        // Normaliza a magnitude baseado na velocidade máxima atual
-        float maxSpeed = (_currentState == VigiaState.Investigating) ? investigateSpeed : wanderSpeed;
+        float currentSpeed = isServer ? agent.velocity.magnitude : SyncedSpeed.value;
+        float maxSpeed = (CurrentState.value == VigiaState.Investigating) ? investigateSpeed : wanderSpeed;
         float magnitude = Mathf.Clamp01(currentSpeed / maxSpeed);
 
-        // Parâmetros do FinalCharacterController Part 7
         animator.SetFloat(inputXHash, 0f);
         animator.SetFloat(inputYHash, magnitude);
         animator.SetFloat(inputMagnitudeHash, magnitude);
@@ -288,9 +342,140 @@ public class Vigia : MonoBehaviour
         animator.SetBool(isGroundedHash, true);
     }
 
+    private void UpdateJailDetection()
+    {
+        if (CurrentState.value != VigiaState.Investigating)
+        {
+            DecayDetectionProgress();
+            return;
+        }
+
+        var nearbyPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        MyCharacterController talkingPlayer = null;
+
+        foreach (var player in nearbyPlayers)
+        {
+            if (player == null || player.isJailed) 
+                continue;
+
+            float dist = Vector3.Distance(transform.position, player.transform.position);
+            if (dist <= jailDetectionRadius)
+            {
+                var voiceState = player.GetComponent<PlayerVoiceState>();
+                if (voiceState != null && voiceState.isTalking.value)
+                {
+                    talkingPlayer = player;
+                    break;
+                }
+            }
+        }
+
+        if (talkingPlayer != null)
+        {
+            _gracePeriodTimer = 0f;
+            _currentDetectionTarget = talkingPlayer;
+            DetectionProgress.value = Mathf.Min(DetectionProgress.value + Time.deltaTime, jailDetectionTime);
+
+            if (DetectionProgress.value >= jailDetectionTime)
+            {
+                SendPlayerToJail(_currentDetectionTarget);
+                DetectionProgress.value = 0f;
+                _currentDetectionTarget = null;
+            }
+        }
+        else if (DetectionProgress.value > 0f)
+        {
+            _gracePeriodTimer += Time.deltaTime;
+
+            if (_gracePeriodTimer > voiceGracePeriod)
+                DecayDetectionProgress();
+        }
+    }
+
+    private void DecayDetectionProgress()
+    {
+        if (DetectionProgress.value > 0f)
+        {
+            DetectionProgress.value = Mathf.MoveTowards(DetectionProgress.value, 0f, Time.deltaTime);
+            if (DetectionProgress.value <= 0f)
+            {
+                _currentDetectionTarget = null;
+                _gracePeriodTimer = 0f;
+            }
+        }
+    }
+    
+    private void SendPlayerToJail(MyCharacterController player) 
+    {
+        if (player == null) 
+            return;
+
+        int currentRound = QuizGameManager.instance != null ? QuizGameManager.instance.currentRound.value : 1;
+        Vector3 jailPos = Vector3.zero;
+        if (QuizGameManager.instance != null && QuizGameManager.instance.spawnManager != null)
+        {
+            jailPos = QuizGameManager.instance.spawnManager.GetJailPosition(currentRound);
+        }
+
+        if (jailPos == Vector3.zero)
+        {
+            Debug.LogError($"[Vigia] No Jail Position found for Round {currentRound}!");
+            return;
+        }
+
+        jailPos += new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
+        
+        player.Motor.SetPosition(jailPos);
+        player.isJailed = true;
+
+        var network = player.GetComponent<NetworkIdentity>();
+        if (network != null && network.owner.HasValue)
+            Rpc_JailPlayer(network.owner.Value, jailPos);
+
+        StopAllCoroutines();
+        isWaiting = false;
+        GoToNextWaypoint();
+        Debug.Log($"[Vigia] Jailed {player.name}!");
+    }
+
+    [TargetRpc]
+    private void Rpc_JailPlayer(PlayerID player, Vector3 jailPosition)
+    {
+        var allPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        foreach (var p in allPlayers)
+        {
+            var net = p.GetComponent<NetworkIdentity>();
+            if (net != null && net.isOwner)
+            {
+                p.Motor.SetPosition(jailPosition);
+                p.isJailed = true;
+                break;
+            }
+        }
+    }
+
+    private void UpdateDetectionUI()
+    {
+        if (detectionBarRoot == null) return;
+
+        bool showBar = DetectionProgress.value > 0.001f;
+        if (detectionBarRoot.activeSelf != showBar)
+            detectionBarRoot.SetActive(showBar);
+
+        if (showBar)
+        {
+            if (detectionSlider != null)
+                detectionSlider.value = DetectionProgress.value / jailDetectionTime;
+
+            if (Camera.main != null)
+            {
+                detectionBarRoot.transform.rotation = Camera.main.transform.rotation;
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
-        // Desenha o caminho da patrulha (sempre visível se ativado)
         if (showPatrolPath && waypoints != null && waypoints.Count > 1)
         {
             Gizmos.color = new Color(0, 1, 1, 0.5f);
@@ -303,12 +488,10 @@ public class Vigia : MonoBehaviour
 
                 if (randomPatrol)
                 {
-                    // No modo aleatório, apenas desenha pequenas esferas nos pontos
                     Gizmos.DrawWireSphere(current, 0.3f);
                 }
                 else
                 {
-                    // Desenha linha para o próximo WP
                     int nextIndex = (i + 1) % waypoints.Count;
                     if (waypoints[nextIndex] != null)
                     {
@@ -324,7 +507,6 @@ public class Vigia : MonoBehaviour
     {
         if (!showDebugGizmos) return;
 
-        // Cone de Visão
         Gizmos.color = new Color(1, 0.92f, 0.016f, 0.3f);
         Gizmos.DrawSphere(transform.position + Vector3.up * 1.6f, 0.2f);
         
@@ -336,11 +518,10 @@ public class Vigia : MonoBehaviour
         Gizmos.DrawLine(transform.position + Vector3.up * 1.6f, transform.position + Vector3.up * 1.6f + leftDir * viewDistance);
         Gizmos.DrawLine(transform.position + Vector3.up * 1.6f, transform.position + Vector3.up * 1.6f + rightDir * viewDistance);
 
-        // Raio de Escuta
         Gizmos.color = new Color(0, 0, 1, 0.2f);
         Gizmos.DrawWireSphere(transform.position, hearingRadius);
         
-        if (_currentState == VigiaState.Investigating)
+        if (CurrentState.value == VigiaState.Investigating)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, investigationTarget);
@@ -348,4 +529,3 @@ public class Vigia : MonoBehaviour
         }
     }
 }
-

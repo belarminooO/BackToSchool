@@ -350,7 +350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MetaVoiceChat.AudioFilters.NoiseGate
   optionalNextInputFilter: {fileID: 0}
   metaVc: {fileID: 8964650326567704555}
-  decibelThreshold: -30
+  decibelThreshold: -45
   currentVolumeDB: 0
 --- !u!1 &1511745286854303199
 GameObject:
@@ -433,6 +433,8 @@ GameObject:
   - component: {fileID: 2671027803883334389}
   - component: {fileID: 4192878528887067859}
   - component: {fileID: 8254915334436221065}
+  - component: {fileID: 768042934831481711}
+  - component: {fileID: 7296226770784009594}
   m_Layer: 0
   m_Name: '@Player'
   m_TagString: Untagged
@@ -479,7 +481,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.35
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -496,7 +498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Capsule: {fileID: 4079030050225049359}
-  CapsuleRadius: 0.5
+  CapsuleRadius: 0.35
   CapsuleHeight: 2
   CapsuleYOffset: 1
   CapsulePhysicsMaterial: {fileID: 0}
@@ -509,9 +511,9 @@ MonoBehaviour:
   StepHandling: 1
   MaxStepHeight: 0.5
   AllowSteppingWithoutStableGrounding: 0
-  MinRequiredStepDepth: 0.1
+  MinRequiredStepDepth: 0
   LedgeAndDenivelationHandling: 1
-  MaxStableDistanceFromLedge: 0.5
+  MaxStableDistanceFromLedge: 0
   MaxVelocityForLedgeSnap: 0
   MaxStableDenivelationAngle: 180
   InteractiveRigidbodyHandling: 1
@@ -615,6 +617,7 @@ MonoBehaviour:
   LookSensitivity: 0.1
   MinPitch: -60
   MaxPitch: 60
+  isJailed: 0
 --- !u!114 &3419042655337813835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -638,7 +641,7 @@ MonoBehaviour:
   _visitiblityRules: {fileID: 0}
   _syncPosition: 1
   _syncRotation: 1
-  _syncScale: 1
+  _syncScale: 0
   _syncParent: 1
   _interpolateSettings: 7
   _minBufferSize: 1
@@ -722,6 +725,54 @@ MonoBehaviour:
   InteractorSource: {fileID: 3975804157170368477}
   InteractRange: 5
   e_indicator: {fileID: 3669578496183915834}
+--- !u!114 &768042934831481711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704014394818528818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c522c057ec12825458eb54796e162f06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerVoiceState
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  talkingThreshold: -45
+  talkingHangTime: 0.5
+  isTalking:
+    _value: 0
+    _ownerAuth: 1
+    _sendIntervalInSeconds: 0
+--- !u!114 &7296226770784009594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704014394818528818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
 --- !u!1 &1762099589770950720
 GameObject:
   m_ObjectHideFlags: 0
@@ -1481,7 +1532,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 1, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8263607560533292131}

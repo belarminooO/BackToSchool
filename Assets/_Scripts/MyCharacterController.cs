@@ -54,6 +54,8 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     private float _targetYaw;
     private bool _jumpRequested;
 
+    public bool isJailed = false;
+
     private void Awake()
     {
         if (Motor == null) Motor = GetComponent<KinematicCharacterMotor>();
@@ -170,6 +172,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
             StaticCamera.Priority = 0;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
         }
         else
         {
