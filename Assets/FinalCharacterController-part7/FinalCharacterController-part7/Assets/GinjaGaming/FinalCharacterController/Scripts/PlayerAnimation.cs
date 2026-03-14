@@ -24,6 +24,7 @@ namespace GinjaGaming.FinalCharacterController
         private static int isGroundedHash = Animator.StringToHash("isGrounded");
         private static int isFallingHash = Animator.StringToHash("isFalling");
         private static int isJumpingHash = Animator.StringToHash("isJumping");
+        private static int isCrouchingHash = Animator.StringToHash("isCrouching");
 
         // Actions
         private static int isAttackingHash = Animator.StringToHash("isAttacking");
@@ -63,8 +64,19 @@ namespace GinjaGaming.FinalCharacterController
             bool isSprinting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
             bool isJumping = _playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping;
             bool isFalling = _playerState.CurrentPlayerMovementState == PlayerMovementState.Falling;
+            bool isCrouching = _playerState.CurrentPlayerMovementState == PlayerMovementState.Crouching;
             bool isGrounded = _playerState.InGroundedState();
             bool isPlayingAction = actionHashes.Any(hash => _animator.GetBool(hash));
+
+            // DEBUG
+            // if (isCrouching || _playerLocomotionInput.CrouchToggledOn)
+            // {
+            //     Debug.Log($"[CrouchDebug] State: {_playerState.CurrentPlayerMovementState}, InputToggle: {_playerLocomotionInput.CrouchToggledOn}, isGrounded: {isGrounded}");
+            // }
+
+            if (isCrouching) {
+                Debug.Log($"[CrouchInput] MovementInput: {_playerLocomotionInput.MovementInput}");
+            }
 
             bool isRunBlendValue = isRunning || isJumping || isFalling;
 
@@ -78,6 +90,7 @@ namespace GinjaGaming.FinalCharacterController
             _animator.SetBool(isIdlingHash, isIdling);
             _animator.SetBool(isFallingHash, isFalling);
             _animator.SetBool(isJumpingHash, isJumping);
+            _animator.SetBool(isCrouchingHash, isCrouching);
             _animator.SetBool(isRotatingToTargetHash, _playerController.IsRotatingToTarget);
             _animator.SetBool(isAttackingHash, _playerActionsInput.AttackPressed);
             _animator.SetBool(isGatheringHash, _playerActionsInput.GatherPressed);

@@ -27,6 +27,8 @@ namespace GinjaGaming.FinalCharacterController
         public float runSpeed = 4f;
         public float sprintAcceleration = 50f;
         public float sprintSpeed = 7f;
+        public float crouchAcceleration = 45f; // Boosted even more
+        public float crouchSpeed = 2.0f; // Slightly faster for testing
         public float inAirAcceleration = 25f;
         public float drag = 20f;
         public float inAirDrag = 5f;
@@ -35,6 +37,12 @@ namespace GinjaGaming.FinalCharacterController
         public float jumpSpeed = 0.8f;
         public float movingThreshold = 0.01f;
 
+        [Header("Height Settings")]
+        public float standingHeight = 1.8f;
+        public float crouchingHeight = 1.2f;
+
+        [Header("State Data")]
+        public PlayerMovementState playerMovementState;
         [Header("Animation")]
         public float playerModelRotationSpeed = 10f;
         public float rotateToTargetTime = 0.67f;
@@ -50,6 +58,7 @@ namespace GinjaGaming.FinalCharacterController
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
 
+        private Vector3 _velocity = Vector3.zero;
         private Vector2 _cameraRotation = Vector2.zero;
         private Vector2 _playerTargetRotation = Vector2.zero;
 
@@ -93,13 +102,23 @@ namespace GinjaGaming.FinalCharacterController
             bool isMovingLaterally = IsMovingLaterally();                                            //matters
             bool isSprinting = _playerLocomotionInput.SprintToggledOn && isMovingLaterally;          //order
             bool isWalking = isMovingLaterally && (!canRun || _playerLocomotionInput.WalkToggledOn); //matters
+            bool isCrouching = _playerLocomotionInput.CrouchToggledOn;
             bool isGrounded = IsGrounded();
 
-            PlayerMovementState lateralState = isWalking ? PlayerMovementState.Walking :
+            PlayerMovementState lateralState = isCrouching ? PlayerMovementState.Crouching :
+                                               isWalking ? PlayerMovementState.Walking :
                                                isSprinting ? PlayerMovementState.Sprinting :
                                                isMovingLaterally || isMovementInput ? PlayerMovementState.Running : PlayerMovementState.Idling;
 
             _playerState.SetPlayerMovementState(lateralState);
+            playerMovementState = _playerState.CurrentPlayerMovementState;
+
+            if (_playerLocomotionInput.CrouchToggledOn)
+            {
+                // Temporarily disable airborne overwrite when crouching to test consistency
+                // (or just log it)
+                // Debug.Log($"[StateDebug] isCrouching Input: true, lateralState: {lateralState}, finalState: {_playerState.CurrentPlayerMovementState}, isGrounded: {isGrounded}");
+            }
 
             // Control Airborn State
             if ((!isGrounded || _jumpedLastFrame) && _characterController.velocity.y > 0f)
@@ -153,13 +172,16 @@ namespace GinjaGaming.FinalCharacterController
             bool isSprinting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
             bool isGrounded = _playerState.InGroundedState();
             bool isWalking = _playerState.CurrentPlayerMovementState == PlayerMovementState.Walking;
+            bool isCrouching = _playerState.CurrentPlayerMovementState == PlayerMovementState.Crouching; // Added for consistency
 
             // State dependent acceleration and speed
             float lateralAcceleration = !isGrounded ? inAirAcceleration :
+                                        isCrouching ? crouchAcceleration :
                                         isWalking ? walkAcceleration :
                                         isSprinting ? sprintAcceleration : runAcceleration;
 
             float clampLateralMagnitude = !isGrounded ? sprintSpeed :
+                                          isCrouching ? crouchSpeed :
                                           isWalking ? walkSpeed :
                                           isSprinting ? sprintSpeed : runSpeed;
 
@@ -167,19 +189,34 @@ namespace GinjaGaming.FinalCharacterController
             Vector3 cameraRightXZ = new Vector3(_playerCamera.transform.right.x, 0f, _playerCamera.transform.right.z).normalized;
             Vector3 movementDirection = cameraRightXZ * _playerLocomotionInput.MovementInput.x + cameraForwardXZ * _playerLocomotionInput.MovementInput.y;
 
-            Vector3 movementDelta = movementDirection * lateralAcceleration * Time.deltaTime;
-            Vector3 newVelocity = _characterController.velocity + movementDelta;
+            _velocity.y = 0;
+            _velocity += movementDirection * lateralAcceleration * Time.deltaTime;
 
-            // Add drag to player
             float dragMagnitude = isGrounded ? drag : inAirDrag;
-            Vector3 currentDrag = newVelocity.normalized * dragMagnitude * Time.deltaTime;
-            newVelocity = (newVelocity.magnitude > dragMagnitude * Time.deltaTime) ? newVelocity - currentDrag : Vector3.zero;
-            newVelocity = Vector3.ClampMagnitude(new Vector3(newVelocity.x, 0f, newVelocity.z), clampLateralMagnitude);
-            newVelocity.y += _verticalVelocity;
-            newVelocity = !isGrounded ? HandleSteepWalls(newVelocity) : newVelocity;
+            Vector3 currentDrag = _velocity.normalized * dragMagnitude * Time.deltaTime;
+            _velocity = (_velocity.magnitude > dragMagnitude * Time.deltaTime) ? _velocity - currentDrag : Vector3.zero;
+            _velocity = Vector3.ClampMagnitude(_velocity, clampLateralMagnitude);
+
+            Vector3 finalVelocity = _velocity;
+            finalVelocity.y = _verticalVelocity;
+            finalVelocity = !isGrounded ? HandleSteepWalls(finalVelocity) : finalVelocity;
 
             // Move character (Unity suggests only calling this once per tick)
-            _characterController.Move(newVelocity * Time.deltaTime);
+            Debug.Log($"[PhysicsDebug] finalVelocity: {finalVelocity} | dt: {Time.deltaTime}");
+            _characterController.Move(finalVelocity * Time.deltaTime);
+            
+            // Sync internal velocity with real velocity if we hit something
+            // if (_characterController.velocity.magnitude < _velocity.magnitude * 0.5f)
+            // {
+            //     _velocity = _characterController.velocity;
+            //     _velocity.y = 0;
+            // }
+
+            // Handle CharacterController height
+            bool isCrouchingState = playerMovementState == PlayerMovementState.Crouching;
+            float targetHeight = isCrouchingState ? crouchingHeight : standingHeight;
+            _characterController.height = Mathf.MoveTowards(_characterController.height, targetHeight, 10f * Time.deltaTime);
+            _characterController.center = Vector3.up * (_characterController.height / 2f);
         }
 
         private Vector3 HandleSteepWalls(Vector3 velocity)

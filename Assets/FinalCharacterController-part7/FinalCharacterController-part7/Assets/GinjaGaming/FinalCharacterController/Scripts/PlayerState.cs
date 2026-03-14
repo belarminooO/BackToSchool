@@ -23,7 +23,8 @@ namespace GinjaGaming.FinalCharacterController
             return movementState == PlayerMovementState.Idling ||
                    movementState == PlayerMovementState.Walking ||
                    movementState == PlayerMovementState.Running ||
-                   movementState == PlayerMovementState.Sprinting;
+                   movementState == PlayerMovementState.Sprinting ||
+                   movementState == PlayerMovementState.Crouching;
         }
     }
     public enum PlayerMovementState
@@ -35,5 +36,6 @@ namespace GinjaGaming.FinalCharacterController
         Jumping = 4,
         Falling = 5,
         Strafing = 6,
+        Crouching = 7,
     }
 }

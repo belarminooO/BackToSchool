@@ -15,6 +15,7 @@ namespace GinjaGaming.FinalCharacterController
         public bool JumpPressed { get; private set; }
         public bool SprintToggledOn { get; private set; }
         public bool WalkToggledOn { get; private set; }
+        public bool CrouchToggledOn { get; private set; }
         #endregion
 
         #region Startup
@@ -87,6 +88,16 @@ namespace GinjaGaming.FinalCharacterController
                 return;
 
             WalkToggledOn = !WalkToggledOn;
+        }
+
+        public void OnCrouch(InputAction.CallbackContext context)
+        {
+            Debug.Log($"[InputDebug] OnCrouch called with phase: {context.phase}");
+            if (context.performed)
+            {
+                CrouchToggledOn = !CrouchToggledOn;
+                Debug.Log($"[InputDebug] CrouchToggledOn is now: {CrouchToggledOn}");
+            }
         }
         #endregion
     }
