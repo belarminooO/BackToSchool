@@ -12,6 +12,8 @@ namespace GinjaGaming.FinalCharacterController
         public Team team = Team.None;
         public bool hasAnswered = false;
         public int score = 0;
+        public GameObject vignetteObject;
+        public ChangeColor changeColorScript;
 
         #region Class Variables
         [Header("Components")]
@@ -54,10 +56,12 @@ namespace GinjaGaming.FinalCharacterController
 
         [Header("Environment Details")]
         [SerializeField] private LayerMask _groundLayers;
+        [SerializeField] private float _interactionRadius = 1.2f;
 
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerActionsInput _playerActionsInput;
         private PlayerState _playerState;
+        private ChairInteraction _currentChair;
 
         private Vector3 _velocity = Vector3.zero;
         private Vector2 _cameraRotation = Vector2.zero;
@@ -71,6 +75,7 @@ namespace GinjaGaming.FinalCharacterController
         private float _stepOffset;
 
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
+        private float _interactionCooldownTimer = 0f;
         #endregion
 
         #region Startup
@@ -94,7 +99,6 @@ namespace GinjaGaming.FinalCharacterController
                 return;
 
             UpdateMovementState();
-            print(_characterController.velocity);
 
             HandleVerticalMovement();
             HandleLateralMovement();
@@ -102,28 +106,52 @@ namespace GinjaGaming.FinalCharacterController
 
         private void HandleInteraction()
         {
+            if (_interactionCooldownTimer > 0)
+            {
+                _interactionCooldownTimer -= Time.deltaTime;
+            }
+
             if (_playerActionsInput.GatherPressed)
             {
-                _playerActionsInput.SetGatherPressedFalse();
+                if (_interactionCooldownTimer > 0)
+                {
+                    _playerActionsInput.SetGatherPressedFalse();
+                    return;
+                }
 
-                // If already sitting, stand up
+                _playerActionsInput.SetGatherPressedFalse();
+                _interactionCooldownTimer = 0.4f; // Small buffer to prevent double-click issues
+
+                // If already sitting, stand up using the registered chair
                 if (_playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
                 {
-                    ChairInteraction chair = FindFirstObjectByType<ChairInteraction>(); // Simple search for demo, ideally we track which chair we sit on
-                    if (chair != null)
+                    if (_currentChair != null)
                     {
-                        chair.StandUp();
+                        _currentChair.Interact(this);
+                        _currentChair = null; // Clear reference
+                    }
+                    else
+                    {
+                        // Emergency fallback if we lost the chair reference
+                        ChairInteraction[] chairs = FindObjectsByType<ChairInteraction>(FindObjectsSortMode.None);
+                        foreach (var chair in chairs)
+                        {
+                            // We don't have a direct way to check who is sitting without making the field public, 
+                            // but StandUp has its own check.
+                            chair.StandUp();
+                        }
                     }
                     return;
                 }
 
                 // Try to find a chair nearby
-                Collider[] colliders = Physics.OverlapSphere(transform.position, 2.0f);
+                Collider[] colliders = Physics.OverlapSphere(transform.position, _interactionRadius); 
                 foreach (var collider in colliders)
                 {
                     ChairInteraction chair = collider.GetComponentInParent<ChairInteraction>();
                     if (chair != null)
                     {
+                        _currentChair = chair;
                         chair.Interact(this);
                         break;
                     }
@@ -240,7 +268,6 @@ namespace GinjaGaming.FinalCharacterController
             finalVelocity = !isGrounded ? HandleSteepWalls(finalVelocity) : finalVelocity;
 
             // Move character (Unity suggests only calling this once per tick)
-            Debug.Log($"[PhysicsDebug] finalVelocity: {finalVelocity} | dt: {Time.deltaTime}");
             _characterController.Move(finalVelocity * Time.deltaTime);
             
             // Sync internal velocity with real velocity if we hit something

@@ -19,7 +19,11 @@ namespace GinjaGaming.FinalCharacterController
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            
+            if (transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
 
         private void OnEnable()

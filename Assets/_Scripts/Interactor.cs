@@ -43,13 +43,24 @@ public class Interactor : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (InteractorSource == null || e_indicator == null)
+        if (e_indicator == null)
+        {
+            return;
+        }
+
+        Transform source = InteractorSource;
+        if (source == null && Camera.main != null)
+        {
+            source = Camera.main.transform;
+        }
+
+        if (source == null)
         {
             return;
         }
 
         bool canInteract = false;
-        Ray r = new Ray(InteractorSource.position, InteractorSource.forward);
+        Ray r = new Ray(source.position, source.forward);
         if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange))
         {
             if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interacatObj))
@@ -64,12 +75,18 @@ public class Interactor : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext context)
     {
-        if (InteractorSource == null)
+        Transform source = InteractorSource;
+        if (source == null && Camera.main != null)
+        {
+            source = Camera.main.transform;
+        }
+
+        if (source == null)
         {
             return;
         }
 
-        Ray r = new Ray(InteractorSource.position, InteractorSource.forward);
+        Ray r = new Ray(source.position, source.forward);
         if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange))
         {
             if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interacatObj))

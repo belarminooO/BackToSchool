@@ -23,7 +23,14 @@ namespace GinjaGaming.FinalCharacterController
         #region Startup
         private void Awake()
         {
-            _thirdPersonFollow = _virtualCamera.GetComponent<CinemachineThirdPersonFollow>();
+            if (_virtualCamera != null)
+            {
+                _thirdPersonFollow = _virtualCamera.GetComponent<CinemachineThirdPersonFollow>();
+            }
+            else
+            {
+                Debug.LogWarning("ThirdPersonInput: _virtualCamera is not assigned on " + gameObject.name);
+            }
         }
         private void OnEnable()
         {
@@ -53,7 +60,10 @@ namespace GinjaGaming.FinalCharacterController
         #region Update
         private void Update()
         {
-            _thirdPersonFollow.CameraDistance = Mathf.Clamp(_thirdPersonFollow.CameraDistance + ScrollInput.y, _cameraMinZoom, _cameraMaxZoom);
+            if (_thirdPersonFollow != null)
+            {
+                _thirdPersonFollow.CameraDistance = Mathf.Clamp(_thirdPersonFollow.CameraDistance + ScrollInput.y, _cameraMinZoom, _cameraMaxZoom);
+            }
         }
 
         private void LateUpdate()

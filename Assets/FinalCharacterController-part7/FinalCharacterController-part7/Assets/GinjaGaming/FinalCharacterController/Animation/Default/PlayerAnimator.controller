@@ -418,6 +418,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 3
     m_ConditionEvent: rotationMismatch
     m_EventTreshold: 90
+  - m_ConditionMode: 2
+    m_ConditionEvent: isSittingBool
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8943134728211526406}
   m_Solo: 0
@@ -590,6 +593,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: rotationMismatch
     m_EventTreshold: -90
+  - m_ConditionMode: 2
+    m_ConditionEvent: isSittingBool
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4429230119742470762}
   m_Solo: 0
@@ -803,7 +809,7 @@ AnimatorStateTransition:
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
+  m_CanTransitionToSelf: 0
 --- !u!1109 &1915062535029485793
 AnimatorTransition:
   m_ObjectHideFlags: 1

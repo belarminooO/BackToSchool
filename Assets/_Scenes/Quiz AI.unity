@@ -2978,7 +2978,6 @@ Transform:
   - {fileID: 1480852220}
   - {fileID: 2134397004}
   - {fileID: 944098758}
-  - {fileID: 719205243}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -270, z: 0}
 --- !u!1 &549349647
@@ -11714,7 +11713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8945561823991203428, guid: cc81a9fb3f423764396898d0bb4a6e6d, type: 3}
       propertyPath: investigateSpeed
-      value: 0.5
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
