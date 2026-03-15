@@ -3572,9 +3572,9 @@ MonoBehaviour:
   walkAcceleration: 25
   walkSpeed: 2
   runAcceleration: 35
-  runSpeed: 4
+  runSpeed: 2
   sprintAcceleration: 50
-  sprintSpeed: 7
+  sprintSpeed: 4
   crouchAcceleration: 25
   crouchSpeed: 1.5
   inAirAcceleration: 25
@@ -3916,9 +3916,9 @@ MonoBehaviour:
   walkAcceleration: 25
   walkSpeed: 2
   runAcceleration: 35
-  runSpeed: 4
+  runSpeed: 2
   sprintAcceleration: 50
-  sprintSpeed: 7
+  sprintSpeed: 4
   crouchAcceleration: 25
   crouchSpeed: 1.5
   inAirAcceleration: 25
@@ -3929,7 +3929,7 @@ MonoBehaviour:
   jumpSpeed: 0.8
   movingThreshold: 0.01
   standingHeight: 1.8
-  crouchingHeight: 1.2
+  crouchingHeight: 1.45
   playerMovementState: 0
   playerModelRotationSpeed: 10
   rotateToTargetTime: 0.68
