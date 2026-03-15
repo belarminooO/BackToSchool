@@ -2,14 +2,16 @@ using UnityEngine;
 using PurrNet.StateMachine;
 public class ObstacleRaceStateNode : StateNode
 {
+    [SerializeField] private float obstacleRaceTime = 45f;
     public StateNode nextState; // Connects to ChangeRoundStateNode
     public override void Enter(bool asServer)
     {
         if (asServer)
         {
             var manager = QuizGameManager.instance;
-            manager.currentTimer.value = 30f;
-            manager.maxTimer.value = 30f;
+            manager.currentTimer.value = obstacleRaceTime;
+            manager.maxTimer.value = obstacleRaceTime;
+            
             if (manager.scoreManager != null) 
                 manager.scoreManager.PrepareForObstacleRace();
 

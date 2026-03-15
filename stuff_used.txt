@@ -35,3 +35,5 @@ outlines: https://github.com/tantaneity/unity-urp-outline-postprocess
 unity postprocessing urp examples: https://github.com/togucchi/urp-postprocessing-examples/tree/main
 
 classroom objects: https://styloo.itch.io/classroom-asset-pack
+
+new skybox: https://assetstore.unity.com/packages/vfx/shaders/free-skybox-extended-shader-107400?srsltid=AfmBOopskbcJzwj6yYDctAoz0L5Uur7lGPQUNFzRs22VjgmL6VIpFQy1
