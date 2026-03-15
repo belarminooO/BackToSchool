@@ -25,6 +25,7 @@ namespace GinjaGaming.FinalCharacterController
         private static int isFallingHash = Animator.StringToHash("isFalling");
         private static int isJumpingHash = Animator.StringToHash("isJumping");
         private static int isCrouchingHash = Animator.StringToHash("isCrouching");
+        private static int isSittingHash = Animator.StringToHash("isSittingBool");
 
         // Actions
         private static int isAttackingHash = Animator.StringToHash("isAttacking");
@@ -65,6 +66,7 @@ namespace GinjaGaming.FinalCharacterController
             bool isJumping = _playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping;
             bool isFalling = _playerState.CurrentPlayerMovementState == PlayerMovementState.Falling;
             bool isCrouching = _playerState.CurrentPlayerMovementState == PlayerMovementState.Crouching;
+            bool isSitting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting;
             bool isGrounded = _playerState.InGroundedState();
             bool isPlayingAction = actionHashes.Any(hash => _animator.GetBool(hash));
 
@@ -91,6 +93,7 @@ namespace GinjaGaming.FinalCharacterController
             _animator.SetBool(isFallingHash, isFalling);
             _animator.SetBool(isJumpingHash, isJumping);
             _animator.SetBool(isCrouchingHash, isCrouching);
+            _animator.SetBool(isSittingHash, isSitting);
             _animator.SetBool(isRotatingToTargetHash, _playerController.IsRotatingToTarget);
             _animator.SetBool(isAttackingHash, _playerActionsInput.AttackPressed);
             _animator.SetBool(isGatheringHash, _playerActionsInput.GatherPressed);

@@ -332,8 +332,9 @@ public class Vigia : NetworkBehaviour
         if (animator == null) return;
 
         float currentSpeed = isServer ? agent.velocity.magnitude : SyncedSpeed.value;
+        float targetAnimValue = (CurrentState.value == VigiaState.Investigating) ? 1.5f : 0.5f;
         float maxSpeed = (CurrentState.value == VigiaState.Investigating) ? investigateSpeed : wanderSpeed;
-        float magnitude = Mathf.Clamp01(currentSpeed / maxSpeed);
+        float magnitude = (maxSpeed > 0.01f) ? (currentSpeed / maxSpeed) * targetAnimValue : 0f;
 
         animator.SetFloat(inputXHash, 0f);
         animator.SetFloat(inputYHash, magnitude);

@@ -83,7 +83,7 @@ namespace GinjaGaming.FinalCharacterController
             if (!context.performed)
                 return;
 
-            AttackPressed = true;
+            // AttackPressed = true; // Disabled for now
         }
         #endregion
     }

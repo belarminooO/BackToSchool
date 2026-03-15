@@ -56,6 +56,7 @@ namespace GinjaGaming.FinalCharacterController
         [SerializeField] private LayerMask _groundLayers;
 
         private PlayerLocomotionInput _playerLocomotionInput;
+        private PlayerActionsInput _playerActionsInput;
         private PlayerState _playerState;
 
         private Vector3 _velocity = Vector3.zero;
@@ -76,6 +77,7 @@ namespace GinjaGaming.FinalCharacterController
         private void Awake()
         {
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
+            _playerActionsInput = GetComponent<PlayerActionsInput>();
             _playerState = GetComponent<PlayerState>();
 
             _antiBump = sprintSpeed;
@@ -86,11 +88,47 @@ namespace GinjaGaming.FinalCharacterController
         #region Update Logic
         private void Update()
         {
+            HandleInteraction();
+
+            if (_playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
+                return;
+
             UpdateMovementState();
             print(_characterController.velocity);
 
             HandleVerticalMovement();
             HandleLateralMovement();
+        }
+
+        private void HandleInteraction()
+        {
+            if (_playerActionsInput.GatherPressed)
+            {
+                _playerActionsInput.SetGatherPressedFalse();
+
+                // If already sitting, stand up
+                if (_playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
+                {
+                    ChairInteraction chair = FindFirstObjectByType<ChairInteraction>(); // Simple search for demo, ideally we track which chair we sit on
+                    if (chair != null)
+                    {
+                        chair.StandUp();
+                    }
+                    return;
+                }
+
+                // Try to find a chair nearby
+                Collider[] colliders = Physics.OverlapSphere(transform.position, 2.0f);
+                foreach (var collider in colliders)
+                {
+                    ChairInteraction chair = collider.GetComponentInParent<ChairInteraction>();
+                    if (chair != null)
+                    {
+                        chair.Interact(this);
+                        break;
+                    }
+                }
+            }
         }
 
         private void UpdateMovementState()
@@ -246,11 +284,16 @@ namespace GinjaGaming.FinalCharacterController
             _playerTargetRotation.x += transform.eulerAngles.x + lookSenseH * _playerLocomotionInput.LookInput.x;
 
             float rotationTolerance = 90f;
+            bool isSitting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting;
             bool isIdling = _playerState.CurrentPlayerMovementState == PlayerMovementState.Idling;
             IsRotatingToTarget = _rotatingToTargetTimer > 0;
 
+            if (isSitting)
+            {
+                // Skip player rotation while sitting
+            }
             // ROTATE if we're not idling
-            if (!isIdling)
+            else if (!isIdling)
             {
                 RotatePlayerToTarget();
             }

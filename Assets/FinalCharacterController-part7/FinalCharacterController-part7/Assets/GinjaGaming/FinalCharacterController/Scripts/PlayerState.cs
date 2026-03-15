@@ -37,5 +37,6 @@ namespace GinjaGaming.FinalCharacterController
         Falling = 5,
         Strafing = 6,
         Crouching = 7,
+        Sitting = 8,
     }
 }
