@@ -5672,7 +5672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.PlayerSpawner
   playerPrefab: {fileID: 0}
-  _playerPrefab: {fileID: 1704014394818528818, guid: 13500f41ee27d00438c7ffc4776b29f2, type: 3}
+  _playerPrefab: {fileID: 1145572536574463470, guid: 7d62cedf62e9d4a44a8ec018a22d8d0e, type: 3}
   _ignoreNetworkRules: 0
   spawnPoints: []
 --- !u!114 &1162989173
@@ -6537,7 +6537,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1287641072}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1287641074
 Camera:
   m_ObjectHideFlags: 0

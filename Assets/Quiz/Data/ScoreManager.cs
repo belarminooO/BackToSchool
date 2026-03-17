@@ -2,6 +2,7 @@ using UnityEngine;
 using PurrNet;
 using System.Collections.Generic;
 using GinjaGaming.FinalCharacterController;
+using System.Linq;
 
 public enum Team { Team1, Team2, Team3, Team4, Team5, Team6, Team7, Team8, None }
 
@@ -18,8 +19,8 @@ public class ScoreManager : NetworkBehaviour
 
     [Header("Players")]
     public SyncList<PlayerID> registeredPlayers = new SyncList<PlayerID>();
-    public List<MyCharacterController> arrivedPlayers = new List<MyCharacterController>();
-    public List<MyCharacterController> allPlayers = new List<MyCharacterController>();
+    public List<IPlayerController> arrivedPlayers = new List<IPlayerController>();
+    public List<IPlayerController> allPlayers = new List<IPlayerController>();
 
     [Header("UI")]
     public GameObject regularGameUI;
@@ -80,7 +81,7 @@ public class ScoreManager : NetworkBehaviour
         if(!isServer) {
             return;
         }
-        allPlayers = new List<MyCharacterController>(FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None));
+        allPlayers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>().ToList();
         int playerCount = allPlayers.Count;
         if (playerCount == 0) {
             return;
@@ -120,13 +121,13 @@ public class ScoreManager : NetworkBehaviour
         for (int i = 0; i < playerCount; i++) {
             Team assignedTeam = (Team)(i % 8); 
             allPlayers[i].AssignTeam(assignedTeam);
-            var network = allPlayers[i].GetComponent<NetworkIdentity>();
+            var network = allPlayers[i].gameObject.GetComponent<NetworkIdentity>();
 
             if (network != null) {
                 RPC_SyncTeam(network, (int)assignedTeam);
             }
 
-            var nameTag = allPlayers[i].GetComponentInChildren<PlayerNameTag>(true);
+            var nameTag = allPlayers[i].gameObject.GetComponentInChildren<PlayerNameTag>(true);
 
             if (nameTag != null)
             {
@@ -144,10 +145,10 @@ public class ScoreManager : NetworkBehaviour
         if (isServer) {
             return;
         }
-        var allPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        var allPlayers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>();
         foreach (var player in allPlayers)
         {
-            var n = player.GetComponent<NetworkIdentity>();
+            var n = player.gameObject.GetComponent<NetworkIdentity>();
             if (n != null && n == network)
             {
                 player.team = (Team)teamIndex;
@@ -160,7 +161,7 @@ public class ScoreManager : NetworkBehaviour
         arrivedPlayers.Clear();
     }
 
-    public void PlayerArrived(MyCharacterController player) {
+    public void PlayerArrived(IPlayerController player) {
         if(!isServer) {
             return;
         }
@@ -181,8 +182,8 @@ public class ScoreManager : NetworkBehaviour
         return arrivedPlayers.Count >= allPlayers.Count;
     }
 
-    public List<MyCharacterController> GetPenalizedPlayers() {
-        List<MyCharacterController> penalized = new List<MyCharacterController>();
+    public List<IPlayerController> GetPenalizedPlayers() {
+        List<IPlayerController> penalized = new List<IPlayerController>();
 
         if (!isServer) {
             return penalized;
@@ -269,7 +270,7 @@ public class ScoreManager : NetworkBehaviour
             return;
         }
 
-        List<MyCharacterController> stragglers = GetPenalizedPlayers();
+        List<IPlayerController> stragglers = GetPenalizedPlayers();
         
         foreach (var player in stragglers)
         {
@@ -309,7 +310,7 @@ public class ScoreManager : NetworkBehaviour
 
     public void UpdateLeaderboard()
     {        
-        allPlayers = new List<MyCharacterController>(FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None));
+        allPlayers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>().ToList();
         
         List<string> team1Names = new List<string>();
         List<string> team2Names = new List<string>();
@@ -324,7 +325,7 @@ public class ScoreManager : NetworkBehaviour
         {
             string nameToDisplay = "Null";
 
-            PlayerNameTag nametag = player.GetComponentInChildren<PlayerNameTag>(true);
+            PlayerNameTag nametag = player.gameObject.GetComponentInChildren<PlayerNameTag>(true);
             if (nametag != null && !string.IsNullOrEmpty(nametag.steamName.value)) {
                 nameToDisplay = nametag.steamName.value;
             }
@@ -394,7 +395,7 @@ public class ScoreManager : NetworkBehaviour
     {
         if (!isServer)
         {
-            allPlayers = new List<MyCharacterController>(Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None));
+            allPlayers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>().ToList();
         }
         UpdateLeaderboard();
     }
@@ -411,7 +412,7 @@ public class ScoreManager : NetworkBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        var controllers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        var controllers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>();
         foreach (var controller in controllers)
         {
             controller.IsMovementEnabled = false;

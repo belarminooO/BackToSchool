@@ -1,7 +1,7 @@
 using UnityEngine;
 using PurrNet;
 using PurrNet.StateMachine;
-using GinjaGaming.FinalCharacterController;
+using System.Linq;
 
 public class QuizGameManager : NetworkBehaviour
 {
@@ -73,7 +73,7 @@ public class QuizGameManager : NetworkBehaviour
     //         foreach (StationManager rm in allRoomManagers)
     //         {
     //             if (rm.roundNumber == 1)
-    //                 rm.AssignStations(new System.Collections.Generic.List<MyCharacterController>(scoreManager.allPlayers));
+    //                 rm.AssignStations(new System.Collections.Generic.List<IPlayerController>(scoreManager.allPlayers));
     //         }
     //     }
 
@@ -156,7 +156,7 @@ public class QuizGameManager : NetworkBehaviour
     [ObserversRpc]
     public void RPC_ResetJailedPlayers()
     {
-        var allPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        var allPlayers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>();
         foreach (var player in allPlayers)
             player.isJailed = false;
     }
@@ -223,7 +223,7 @@ public class QuizGameManager : NetworkBehaviour
                 foreach (StationManager rm in allRoomManagers)
                 {
                     if (rm.roundNumber == 1)
-                        rm.AssignStations(new System.Collections.Generic.List<MyCharacterController>(scoreManager.allPlayers));
+                        rm.AssignStations(new System.Collections.Generic.List<IPlayerController>(scoreManager.allPlayers));
                 }
 
                 if (spawnManager != null) 

@@ -87,7 +87,7 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
         Transform specificSpawn = currentSpawnPoints[playerIndex % currentSpawnPoints.Length];
         return specificSpawn.position;
     }
-    public void TeleportAllPlayersToRound(MyCharacterController[] allPlayers, int currentRound)
+    public void TeleportAllPlayersToRound(IPlayerController[] allPlayers, int currentRound)
     {
         for (int i = 0; i < allPlayers.Length; i++)
         {
@@ -95,12 +95,11 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
             if (originalIndex != -1) {
                 //allPlayers[i].transform.position = GetSpawnPosition(i, currentRound);
         
-                // Specific for Kinematic Controller
                 Vector3 pos = GetSpawnPosition(originalIndex, currentRound);
                 pos.y += 0.5f;
-                allPlayers[i].Motor.SetPosition(pos);
+                allPlayers[i].TeleportTo(pos);
 
-                var network = allPlayers[i].GetComponent<NetworkIdentity>();
+                var network = allPlayers[i].gameObject.GetComponent<NetworkIdentity>();
                 if (network != null && network.owner.HasValue)
                     Rpc_TeleportPlayer(network.owner.Value, pos);
             }
@@ -108,7 +107,8 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
         Debug.Log($"[Server] Teleported {allPlayers.Length} players accurately to their desks for Round {currentRound}.");
     }
 
-    public void TeleportAllPlayersToOutside(MyCharacterController[] allPlayers, int currentRound)
+    public void TeleportAllPlayersToOutside(IPlayerController
+    [] allPlayers, int currentRound)
     {
         if (outsideRoundSpawns == null || outsideRoundSpawns.Length == 0)
         {
@@ -129,8 +129,8 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
         {
             Transform spawn = spawnPoints[i % spawnPoints.Length];
             Vector3 pos = spawn.position + Vector3.up * 0.5f;
-            allPlayers[i].Motor.SetPosition(pos);
-            var network = allPlayers[i].GetComponent<NetworkIdentity>();
+            allPlayers[i].TeleportTo(pos);
+            var network = allPlayers[i].gameObject.GetComponent<NetworkIdentity>();
             if (network != null && network.owner.HasValue)
                 Rpc_TeleportPlayer(network.owner.Value, pos);
         }
@@ -138,7 +138,7 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
         Debug.Log($"[SpawnManager] Teleported {allPlayers.Length} players to outside room for round {currentRound}.");
     }
 
-    public void TeleportPlayerToOutside(MyCharacterController player, int currentRound)
+    public void TeleportPlayerToOutside(IPlayerController player, int currentRound)
     {
         if (outsideRoundSpawns == null || outsideRoundSpawns.Length == 0) 
         {
@@ -165,8 +165,8 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
         Transform spawn = spawnPoints[playerIndex % spawnPoints.Length];
         Vector3 pos = spawn.position + Vector3.up * 0.5f;
         
-        player.Motor.SetPosition(pos);
-        var network = player.GetComponent<NetworkIdentity>();
+        player.TeleportTo(pos);
+        var network = player.gameObject.GetComponent<NetworkIdentity>();
         if (network != null && network.owner.HasValue)
             Rpc_TeleportPlayer(network.owner.Value, pos);
     }
@@ -178,16 +178,17 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
         foreach (var network in allFound)
         {
             if (network.isOwner) {
-                var p = network.GetComponent<MyCharacterController>();
-                if (p != null) {
-                    p.Motor.SetPosition(position);
-                    break;
+                var p = network.GetComponent<IPlayerController>();
+                if (p != null) 
+                {
+                    p.TeleportTo(position); 
+                    break; 
                 }
             }
         }
     }
 
-    public void TeleportStragglersToRound(List<MyCharacterController> stragglers, List<MyCharacterController> allPlayers, int currentRound) 
+    public void TeleportStragglersToRound(List<IPlayerController> stragglers, List<IPlayerController> allPlayers, int currentRound) 
     {
         for (int i = 0; i < stragglers.Count; i++)
         {
@@ -197,8 +198,7 @@ public class SpawnManager : NetworkBehaviour, IProvideSpawnPoints
             {
                 //stragglers[i].transform.position = GetSpawnPosition(originalIndex, currentRound);
             
-                // Specific for Kinematic Controller
-                stragglers[i].Motor.SetPosition(GetSpawnPosition(originalIndex, currentRound));            
+                stragglers[i].TeleportTo(GetSpawnPosition(originalIndex, currentRound));            
             }
         }
     }

@@ -18,7 +18,7 @@ public class RoomTrigger : NetworkBehaviour
             return;
         }
 
-        MyCharacterController player = other.GetComponentInParent<MyCharacterController>();
+        IPlayerController player = other.GetComponentInParent<IPlayerController>();
         if (player != null)
         {
             int targetRoomIndex = QuizGameManager.instance.currentRound.value;

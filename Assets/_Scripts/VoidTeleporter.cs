@@ -5,7 +5,7 @@ public class VoidTeleporter : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        MyCharacterController player = other.GetComponentInParent<MyCharacterController>();
+        IPlayerController player = other.GetComponentInParent<IPlayerController>();
 
         if (player != null)
         {
@@ -17,7 +17,7 @@ public class VoidTeleporter : MonoBehaviour
                 int currentRound = host.currentRound.value;
 
                 host.spawnManager.TeleportPlayerToOutside(player, currentRound);
-                Debug.Log($"[VoidTeleporter] {player.name} fell in the void! Sent back to the start of obstacle race {currentRound}.");
+                Debug.Log($"[VoidTeleporter] {player.gameObject.name} fell in the void! Sent back to the start of obstacle race {currentRound}.");
             }
         }
     }

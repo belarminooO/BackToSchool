@@ -1,114 +1,88 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System.Collections;
 using UnityEngine.InputSystem;
+using GinjaGaming.FinalCharacterController;
 
 public interface IInteractable
 {
     void Interact(GameObject interactor);
 }
 
-
 public class Interactor : MonoBehaviour
 {
+    [Header("References")]
     public Transform InteractorSource;
     public float InteractRange = 5f;
     public GameObject e_indicator;
 
+    [Header("Layer Settings")]
+    public LayerMask interactableLayers;
     private InputAction interactAction;
+
+    private PlayerController _playerController;
+    private PlayerState _playerState;
 
     private void Awake()
     {
-        interactAction = new InputAction("Interact", InputActionType.Button, "<Keyboard>/e");
+        _playerController = GetComponentInParent<PlayerController>() ?? GetComponent<PlayerController>();
+        _playerState      = GetComponentInParent<PlayerState>()      ?? GetComponent<PlayerState>();
 
+        interactAction = new InputAction("Interact", InputActionType.Button, "<Keyboard>/e");
         interactAction.performed += OnInteract;
     }
 
-    private void OnEnable()
-    {
-        interactAction.Enable();
-
-    }
-
-    private void OnDisable()
-    {
-        interactAction.Disable();
-    }
-
-    private void OnDestroy()
-    {
-        interactAction.performed -= OnInteract;
-    }
+    private void OnEnable()  { interactAction.Enable(); }
+    private void OnDisable() { interactAction.Disable(); }
+    private void OnDestroy() { interactAction.performed -= OnInteract; }
 
     private void LateUpdate()
     {
-        if (e_indicator == null)
+        if (e_indicator == null) return;
+
+        if (_playerState != null && _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
         {
+            e_indicator.SetActive(true);
             return;
         }
 
-        Transform source = InteractorSource;
-        if (source == null && Camera.main != null)
-        {
-            source = Camera.main.transform;
-        }
-
-        if (source == null)
-        {
-            return;
-        }
+        Transform source = GetSource();
+        if (source == null) { e_indicator.SetActive(false); return; }
 
         bool canInteract = false;
         Ray r = new Ray(source.position, source.forward);
-        if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange))
-        {
-            if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interacatObj))
-            {
-                canInteract = true;
-            }
-        }
+        if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange, interactableLayers, QueryTriggerInteraction.Collide))
+            canInteract = hitInfo.collider.gameObject.TryGetComponent(out IInteractable _);
 
         e_indicator.SetActive(canInteract);
-
     }
 
     private void OnInteract(InputAction.CallbackContext context)
     {
-        Transform source = InteractorSource;
-        if (source == null && Camera.main != null)
-        {
-            source = Camera.main.transform;
-        }
+        bool isSitting = _playerState != null &&
+                         _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting;
 
-        if (source == null)
-        {
-            return;
-        }
+        Transform source = GetSource();
+        if (source == null) return;
 
         Ray r = new Ray(source.position, source.forward);
-        if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange))
+        if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange, interactableLayers, QueryTriggerInteraction.Collide))
         {
-            if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interacatObj))
+            if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
             {
-                interacatObj.Interact(gameObject);
+                interactObj.Interact(gameObject);
+                return; 
             }
         }
+
+        if (isSitting && _playerController != null)
+            _playerController.TryStandUp();
     }
 
-
-    //void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.E))
-    //    {
-    //        Ray r = new Ray(InteractorSource.position, InteractorSource.forward);
-    //        if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange))
-    //        {
-    //            if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interacatObj))
-    //            {
-    //                interacatObj.Interact();
-    //            }
-    //        }
-    //    }
-    //}
+    private Transform GetSource()
+    {
+        if (InteractorSource != null) 
+            return InteractorSource;
+        if (Camera.main != null) 
+            return Camera.main.transform;
+        return null;
+    }
 }

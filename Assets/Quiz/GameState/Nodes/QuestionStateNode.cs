@@ -65,7 +65,7 @@ public class QuestionStateNode : StateNode
             {
                 bool isCorrect = (station.lockedAnswerIndex == correctIdx);
                 if (isCorrect) 
-                    manager.scoreManager.AddScoreToTeam(station.ownerPlayer.value.GetComponent<MyCharacterController>().team, 1);
+                    manager.scoreManager.AddScoreToTeam(station.ownerPlayer.value.GetComponent<IPlayerController>().team, 1);
                 station.RPC_ShowVignette(isCorrect);
                 station.RPC_ResetButtons();
             }

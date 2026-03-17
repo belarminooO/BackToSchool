@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2777186966925111960}
   - component: {fileID: 5949214517360419818}
   - component: {fileID: 3962419682986669532}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Red Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,9 +162,9 @@ GameObject:
   - component: {fileID: 6634880170997988090}
   - component: {fileID: 8598173499395340333}
   - component: {fileID: 3965416190246291149}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PhysicalButtons
-  m_TagString: Untagged
+  m_TagString: physicalButtons
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 275952065482091962}
   - component: {fileID: 682835565349051818}
   - component: {fileID: 2799482790511838462}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Yellow Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 5889480713527857322}
   - component: {fileID: 7046477742783346116}
   - component: {fileID: 7840560579020564744}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blue Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -557,7 +557,7 @@ GameObject:
   - component: {fileID: 3873727602030416826}
   - component: {fileID: 3867045359453395488}
   - component: {fileID: 7379744573848502011}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Green Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 6830568181444781172}
   - component: {fileID: 25650751550451764}
   - component: {fileID: 8702034162315327263}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}

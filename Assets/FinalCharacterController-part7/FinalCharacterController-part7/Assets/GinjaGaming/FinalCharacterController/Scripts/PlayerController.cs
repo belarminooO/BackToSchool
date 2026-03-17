@@ -6,12 +6,14 @@ using UnityEngine.InputSystem;
 namespace GinjaGaming.FinalCharacterController
 {
     [DefaultExecutionOrder(-1)]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IPlayerController
     {
         [Header("Quiz System Data")]
-        public Team team = Team.None;
-        public bool hasAnswered = false;
-        public int score = 0;
+        public Team team { get; set; } = Team.None;
+        public bool hasAnswered { get; set; } = false;
+        public int score { get; set; } = 0;
+        public bool isJailed { get; set; } = false;
+        
         public GameObject vignetteObject;
         public ChangeColor changeColorScript;
 
@@ -76,6 +78,13 @@ namespace GinjaGaming.FinalCharacterController
 
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
         private float _interactionCooldownTimer = 0f;
+
+        public bool IsMovementEnabled
+        {
+        get => enabled;
+        set => enabled = value;
+        }
+
         #endregion
 
         #region Startup
@@ -89,6 +98,19 @@ namespace GinjaGaming.FinalCharacterController
             _stepOffset = _characterController.stepOffset;
         }
         #endregion
+
+        // Cursor Locking
+        private void OnEnable()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        private void OnDisable()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 
         #region Update Logic
         private void Update()
@@ -107,55 +129,29 @@ namespace GinjaGaming.FinalCharacterController
         private void HandleInteraction()
         {
             if (_interactionCooldownTimer > 0)
-            {
                 _interactionCooldownTimer -= Time.deltaTime;
+
+            if (!_playerActionsInput.GatherPressed) return;
+
+            if (_interactionCooldownTimer > 0)
+            {
+                _playerActionsInput.SetGatherPressedFalse();
+                return;
             }
 
-            if (_playerActionsInput.GatherPressed)
+            _playerActionsInput.SetGatherPressedFalse();
+            _interactionCooldownTimer = 0.4f;
+            // Chair sit/stand is fully handled by Interactor to avoid same-frame double-fire.
+        }
+
+        public void SetCurrentChair(ChairInteraction chair) { _currentChair = chair; }
+
+        public void TryStandUp()
+        {
+            if (_currentChair != null)
             {
-                if (_interactionCooldownTimer > 0)
-                {
-                    _playerActionsInput.SetGatherPressedFalse();
-                    return;
-                }
-
-                _playerActionsInput.SetGatherPressedFalse();
-                _interactionCooldownTimer = 0.4f; // Small buffer to prevent double-click issues
-
-                // If already sitting, stand up using the registered chair
-                if (_playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
-                {
-                    if (_currentChair != null)
-                    {
-                        _currentChair.Interact(this);
-                        _currentChair = null; // Clear reference
-                    }
-                    else
-                    {
-                        // Emergency fallback if we lost the chair reference
-                        ChairInteraction[] chairs = FindObjectsByType<ChairInteraction>(FindObjectsSortMode.None);
-                        foreach (var chair in chairs)
-                        {
-                            // We don't have a direct way to check who is sitting without making the field public, 
-                            // but StandUp has its own check.
-                            chair.StandUp();
-                        }
-                    }
-                    return;
-                }
-
-                // Try to find a chair nearby
-                Collider[] colliders = Physics.OverlapSphere(transform.position, _interactionRadius); 
-                foreach (var collider in colliders)
-                {
-                    ChairInteraction chair = collider.GetComponentInParent<ChairInteraction>();
-                    if (chair != null)
-                    {
-                        _currentChair = chair;
-                        chair.Interact(this);
-                        break;
-                    }
-                }
+                _currentChair.StandUp();
+                _currentChair = null;
             }
         }
 
@@ -319,7 +315,6 @@ namespace GinjaGaming.FinalCharacterController
             {
                 // Skip player rotation while sitting
             }
-            // ROTATE if we're not idling
             else if (!isIdling)
             {
                 RotatePlayerToTarget();
@@ -399,7 +394,6 @@ namespace GinjaGaming.FinalCharacterController
 
         private bool CanRun()
         {
-            // This means player is moving diagonally at 45 degrees or forward, if so, we can run
             return _playerLocomotionInput.MovementInput.y >= Mathf.Abs(_playerLocomotionInput.MovementInput.x);
         }
         #endregion
@@ -411,6 +405,31 @@ namespace GinjaGaming.FinalCharacterController
         public void ChangeScore(int points)
         {
             score += points;
+        }
+    
+
+        public void ShowVignette(bool correctAnswer)
+        {
+            if (vignetteObject != null && changeColorScript != null)
+            {
+                vignetteObject.SetActive(true);
+                if (correctAnswer) changeColorScript.ChangeToGreen();
+                else changeColorScript.ChangeToRed();
+                Invoke(nameof(HideVignette), 2f);
+            }
+        }
+
+        private void HideVignette()
+        {
+            if (vignetteObject != null) 
+                vignetteObject.SetActive(false);
+        }
+
+        public void TeleportTo(Vector3 position)
+        {
+            _characterController.enabled = false;
+            transform.position = position;
+            _characterController.enabled = true;
         }
     }
 }

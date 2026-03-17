@@ -6,7 +6,7 @@ using GinjaGaming.FinalCharacterController;
 using Unity.Cinemachine;
 
 [RequireComponent(typeof(KinematicCharacterMotor))]
-public class MyCharacterController : MonoBehaviour, ICharacterController
+public class MyCharacterController : MonoBehaviour, ICharacterController, IPlayerController
 {
 
     [Header("Vignette Feedback")]
@@ -14,9 +14,9 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     public ChangeColor changeColorScript;
 
     [Header("Quiz System Data")]
-    public Team team = Team.None;
-    public bool hasAnswered = false;
-    public int score = 0;
+    public Team team { get; set; } = Team.None;
+    public bool hasAnswered { get; set; } = false;
+    public int score { get; set; } = 0;
 
     public KinematicCharacterMotor Motor;
 
@@ -41,7 +41,8 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     public float MovementSharpness = 15f;
     public float JumpSpeed = 10f;
     public float Gravity = 30f;
-    public bool IsMovementEnabled = true;
+    public bool IsMovementEnabled { get; set; } = true;
+
 
     [Header("Look Settings")]
     public float LookSensitivity = 0.5f; // Adjust if mouse is too fast/slow
@@ -54,7 +55,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     private float _targetYaw;
     private bool _jumpRequested;
 
-    public bool isJailed = false;
+    public bool isJailed { get; set; } = false;
 
     private void Awake()
     {
@@ -226,6 +227,11 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
         {
             vignetteObject.SetActive(false);
         }
+    }
+
+    public void TeleportTo(Vector3 position)
+    {
+        Motor.SetPosition(position);
     }
 
 }

@@ -6814,7 +6814,7 @@ MonoBehaviour:
     m_Bits: 1
   playerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   noiseThreshold: -45
   hearingRadius: 15
   showDebugGizmos: 1

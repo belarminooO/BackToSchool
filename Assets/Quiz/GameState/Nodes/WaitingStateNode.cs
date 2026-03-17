@@ -1,6 +1,6 @@
 using UnityEngine;
 using PurrNet.StateMachine;
-using GinjaGaming.FinalCharacterController;
+using System.Linq;
 public class WaitingStateNode : StateNode
 {
     public StateNode freezeState;
@@ -45,7 +45,7 @@ public class WaitingStateNode : StateNode
         }
 
         int registeredCount = manager.scoreManager.registeredPlayers.Count;
-        int spawnedCount = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None).Length;
+        int spawnedCount = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>().Count();
 
         Debug.Log($"[WaitingState] quizReady={manager.quizReady}, " +
                   $"registered={registeredCount}/{manager.requiredPlayers}, " +

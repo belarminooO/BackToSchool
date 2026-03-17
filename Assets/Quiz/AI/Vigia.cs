@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using PurrNet;
 using MetaVoiceChat.AudioFilters; // Para o NoiseGate
 
@@ -47,7 +48,7 @@ public class Vigia : NetworkBehaviour
     private bool isWaiting = false;
     private Vector3 investigationTarget;
 
-    private MyCharacterController _currentDetectionTarget;
+    private IPlayerController _currentDetectionTarget;
     private float _gracePeriodTimer = 0f;
 
     public SyncVar<VigiaState> CurrentState = new SyncVar<VigiaState>(VigiaState.Wandering);
@@ -165,7 +166,7 @@ public class Vigia : NetworkBehaviour
 
         foreach (var target in targets)
         {
-            var p = target.GetComponentInParent<MyCharacterController>();
+            var p = target.GetComponentInParent<IPlayerController>();
             if (p != null && p.isJailed) 
                 continue;
 
@@ -191,7 +192,7 @@ public class Vigia : NetworkBehaviour
         PlayerVoiceState[] playerVoices = Object.FindObjectsByType<PlayerVoiceState>(FindObjectsSortMode.None);         
         foreach (var playerVoice in playerVoices)
         {
-            var p = playerVoice.GetComponentInParent<MyCharacterController>();
+            var p = playerVoice.GetComponentInParent<IPlayerController>();
             if (p != null && p.isJailed) 
                 continue;
 
@@ -250,7 +251,7 @@ public class Vigia : NetworkBehaviour
 
     private bool HasActiveJailCandidate()
     {
-        var nearbyPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        var nearbyPlayers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>();
         foreach (var player in nearbyPlayers)
         {
             if (player == null || player.isJailed)
@@ -259,7 +260,7 @@ public class Vigia : NetworkBehaviour
             float dist = Vector3.Distance(transform.position, player.transform.position);
             if (dist <= jailDetectionRadius)
             {
-                var voiceState = player.GetComponent<PlayerVoiceState>();
+                var voiceState = player.gameObject.GetComponent<PlayerVoiceState>();
                 if (voiceState != null && voiceState.isTalking.value)
                 {
                     return true;
@@ -351,18 +352,18 @@ public class Vigia : NetworkBehaviour
             return;
         }
 
-        var nearbyPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
-        MyCharacterController talkingPlayer = null;
+        var nearbyPlayers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>();
+        IPlayerController talkingPlayer = null;
 
         foreach (var player in nearbyPlayers)
         {
-            if (player == null || player.isJailed) 
+            if (player == null || player.isJailed)
                 continue;
 
             float dist = Vector3.Distance(transform.position, player.transform.position);
             if (dist <= jailDetectionRadius)
             {
-                var voiceState = player.GetComponent<PlayerVoiceState>();
+                var voiceState = player.gameObject.GetComponent<PlayerVoiceState>();
                 if (voiceState != null && voiceState.isTalking.value)
                 {
                     talkingPlayer = player;
@@ -406,7 +407,7 @@ public class Vigia : NetworkBehaviour
         }
     }
     
-    private void SendPlayerToJail(MyCharacterController player) 
+    private void SendPlayerToJail(IPlayerController player) 
     {
         if (player == null) 
             return;
@@ -426,29 +427,29 @@ public class Vigia : NetworkBehaviour
 
         jailPos += new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
         
-        player.Motor.SetPosition(jailPos);
+        player.TeleportTo(jailPos);
         player.isJailed = true;
 
-        var network = player.GetComponent<NetworkIdentity>();
+        var network = player.gameObject.GetComponent<NetworkIdentity>();
         if (network != null && network.owner.HasValue)
             Rpc_JailPlayer(network.owner.Value, jailPos);
 
         StopAllCoroutines();
         isWaiting = false;
         GoToNextWaypoint();
-        Debug.Log($"[Vigia] Jailed {player.name}!");
+        Debug.Log($"[Vigia] Jailed {player.gameObject.name}!");
     }
 
     [TargetRpc]
     private void Rpc_JailPlayer(PlayerID player, Vector3 jailPosition)
     {
-        var allPlayers = Object.FindObjectsByType<MyCharacterController>(FindObjectsSortMode.None);
+        var allPlayers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPlayerController>();
         foreach (var p in allPlayers)
         {
-            var net = p.GetComponent<NetworkIdentity>();
+            var net = p.gameObject.GetComponent<NetworkIdentity>();
             if (net != null && net.isOwner)
             {
-                p.Motor.SetPosition(jailPosition);
+                p.TeleportTo(jailPosition);
                 p.isJailed = true;
                 break;
             }

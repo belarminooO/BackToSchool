@@ -91,8 +91,9 @@ public class AnswerButtonManager : NetworkBehaviour
     {
         if (ownerPlayer.value != null && ownerPlayer.value.isOwner)
         {
-           var player = ownerPlayer.value.GetComponent<MyCharacterController>();
-           player.ShowVignette(correctAnswer);
+            var player = ownerPlayer.value.GetComponent<IPlayerController>();
+            if (player != null)
+                player.ShowVignette(correctAnswer);
         }
     }
 }

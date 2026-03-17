@@ -1,7 +1,6 @@
 using UnityEngine;
 using PurrNet;
 using System.Collections.Generic;
-using GinjaGaming.FinalCharacterController;
 
 public class StationManager : NetworkBehaviour
 {
@@ -11,7 +10,7 @@ public class StationManager : NetworkBehaviour
     [Header("Stations")]
     public AnswerButtonManager[] stations;
     
-    public void AssignStations(List<MyCharacterController> activePlayers)
+    public void AssignStations(List<IPlayerController> activePlayers)
     {
         if (!isServer)
         {
@@ -28,7 +27,7 @@ public class StationManager : NetworkBehaviour
 
             if (i < activePlayers.Count)
             {
-                stations[i].RPC_SetOwner(activePlayers[i].GetComponent<NetworkIdentity>());
+                stations[i].RPC_SetOwner(activePlayers[i].gameObject.GetComponent<NetworkIdentity>());
                 RPC_SetStationActive(i, true);
             }
             else
