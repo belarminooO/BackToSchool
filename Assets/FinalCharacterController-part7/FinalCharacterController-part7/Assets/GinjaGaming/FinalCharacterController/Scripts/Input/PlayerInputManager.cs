@@ -14,7 +14,8 @@ namespace GinjaGaming.FinalCharacterController
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                Destroy(this);
                 return;
             }
 
@@ -34,7 +35,7 @@ namespace GinjaGaming.FinalCharacterController
 
         private void OnDisable()
         {
-            PlayerControls.Disable();
+            PlayerControls?.Disable();
         }
     }
 }

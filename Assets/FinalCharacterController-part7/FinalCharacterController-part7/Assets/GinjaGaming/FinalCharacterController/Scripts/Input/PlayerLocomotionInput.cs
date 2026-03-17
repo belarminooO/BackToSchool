@@ -17,32 +17,53 @@ namespace GinjaGaming.FinalCharacterController
         public bool WalkToggledOn { get; private set; }
         public bool CrouchToggledOn { get; private set; }
         #endregion
-
+        
         #region Startup
+        private PlayerControls _ownControls;
+
         private void OnEnable()
         {
-            if (PlayerInputManager.Instance?.PlayerControls == null)
-            {
-                Debug.LogError("Player controls is not initialized - cannot enable");
-                return;
-            }
-
-            PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.Enable();
-            PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.SetCallbacks(this);
+            _ownControls = new PlayerControls();
+            _ownControls.PlayerLocomotionMap.Enable();
+            _ownControls.PlayerLocomotionMap.SetCallbacks(this);
         }
 
         private void OnDisable()
         {
-            if (PlayerInputManager.Instance?.PlayerControls == null)
-            {
-                Debug.LogError("Player controls is not initialized - cannot disable");
-                return;
-            }
-
-            PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.Disable();
-            PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.RemoveCallbacks(this);
+            _ownControls?.PlayerLocomotionMap.Disable();
+            _ownControls?.PlayerLocomotionMap.RemoveCallbacks(this);
+            _ownControls?.Dispose();
+            _ownControls = null;
         }
         #endregion
+        
+        // #region Startup
+        // private void OnEnable()
+        // {
+
+        //     if (PlayerInputManager.Instance?.PlayerControls == null)
+        //     {
+        //         Debug.LogError("Player controls is not initialized - cannot enable");
+        //         return;
+        //     }
+
+        //     PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.Enable();
+        //     PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.SetCallbacks(this);
+        // }
+
+        // private void OnDisable()
+        // {
+
+        //     if (PlayerInputManager.Instance?.PlayerControls == null)
+        //     {
+        //         Debug.LogError("Player controls is not initialized - cannot disable");
+        //         return;
+        //     }
+
+        //     PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.Disable();
+        //     PlayerInputManager.Instance.PlayerControls.PlayerLocomotionMap.RemoveCallbacks(this);
+        // }
+        // #endregion
 
         #region Late Update Logic
         private void LateUpdate()

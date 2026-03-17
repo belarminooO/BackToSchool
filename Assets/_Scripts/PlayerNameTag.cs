@@ -46,7 +46,8 @@ public class PlayerNameTag : NetworkBehaviour
                 nameCanvas.gameObject.SetActive(true);
             }
 
-            OnNameChanged(steamName.value);
+            if (!string.IsNullOrEmpty(steamName.value))
+                OnNameChanged(steamName.value);
         }
 
     }

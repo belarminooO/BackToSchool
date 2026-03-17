@@ -14,6 +14,7 @@ namespace GinjaGaming.FinalCharacterController
         private PlayerState _playerState;
         public bool GatherPressed { get; private set; }
         public bool AttackPressed { get; private set; }
+        private PlayerControls _ownControls;
         #endregion
 
         #region Startup
@@ -22,29 +23,44 @@ namespace GinjaGaming.FinalCharacterController
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
             _playerState = GetComponent<PlayerState>();
         }
+
         private void OnEnable()
         {
-            if (PlayerInputManager.Instance?.PlayerControls == null)
-            {
-                Debug.LogError("Player controls is not initialized - cannot enable");
-                return;
-            }
-
-            PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.Enable();
-            PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.SetCallbacks(this);
+            _ownControls = new PlayerControls();
+            _ownControls.PlayerActionsMap.Enable();
+            _ownControls.PlayerActionsMap.SetCallbacks(this);
         }
 
         private void OnDisable()
         {
-            if (PlayerInputManager.Instance?.PlayerControls == null)
-            {
-                Debug.LogError("Player controls is not initialized - cannot disable");
-                return;
-            }
-
-            PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.Disable();
-            PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.RemoveCallbacks(this);
+            _ownControls?.PlayerActionsMap.Disable();
+            _ownControls?.PlayerActionsMap.RemoveCallbacks(this);
+            _ownControls?.Dispose();
+            _ownControls = null;
         }
+        // private void OnEnable()
+        // {
+        //     if (PlayerInputManager.Instance?.PlayerControls == null)
+        //     {
+        //         Debug.LogError("Player controls is not initialized - cannot enable");
+        //         return;
+        //     }
+
+        //     PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.Enable();
+        //     PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.SetCallbacks(this);
+        // }
+
+        // private void OnDisable()
+        // {
+        //     if (PlayerInputManager.Instance?.PlayerControls == null)
+        //     {
+        //         Debug.LogError("Player controls is not initialized - cannot disable");
+        //         return;
+        //     }
+
+        //     PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.Disable();
+        //     PlayerInputManager.Instance.PlayerControls.PlayerActionsMap.RemoveCallbacks(this);
+        // }
         #endregion
 
         #region Update

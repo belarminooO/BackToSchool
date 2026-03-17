@@ -21,6 +21,8 @@ namespace GinjaGaming.FinalCharacterController
         [Header("Components")]
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Camera _playerCamera;
+        [SerializeField] private Transform _cameraTarget;
+
         public float RotationMismatch { get; private set; } = 0f;
         public bool IsRotatingToTarget { get; private set; } = false;
 
@@ -96,6 +98,16 @@ namespace GinjaGaming.FinalCharacterController
 
             _antiBump = sprintSpeed;
             _stepOffset = _characterController.stepOffset;
+
+            if (_playerCamera == null)
+                _playerCamera = Camera.main;
+
+
+            // // Hide player layer from camera (wasn't working in editor)
+            // if (Camera.main != null) {
+            //     int playerLayer = LayerMask.NameToLayer("Player");
+            //     Camera.main.cullingMask &= ~(1 << playerLayer);
+            // }
         }
         #endregion
 
@@ -304,7 +316,7 @@ namespace GinjaGaming.FinalCharacterController
             _cameraRotation.x += lookSenseH * _playerLocomotionInput.LookInput.x;
             _cameraRotation.y = Mathf.Clamp(_cameraRotation.y - lookSenseV * _playerLocomotionInput.LookInput.y, -lookLimitV, lookLimitV);
 
-            _playerTargetRotation.x += transform.eulerAngles.x + lookSenseH * _playerLocomotionInput.LookInput.x;
+            _playerTargetRotation.x += lookSenseH * _playerLocomotionInput.LookInput.x;
 
             float rotationTolerance = 90f;
             bool isSitting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting;
@@ -325,8 +337,22 @@ namespace GinjaGaming.FinalCharacterController
                 UpdateIdleRotation(rotationTolerance);
             }
 
-            _playerCamera.transform.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0f);
+            // _playerCamera.transform.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0f);
 
+            if (_cameraTarget != null)
+                _cameraTarget.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0f);
+            
+            if (_cameraTarget != null)
+            {
+                bool isCrouching = _playerState.CurrentPlayerMovementState == PlayerMovementState.Crouching;
+                float targetCameraY = isCrouching ? crouchingHeight - 0.3f : standingHeight - 0.2f;
+                
+                Vector3 localPos = _cameraTarget.localPosition;
+                localPos.y = Mathf.MoveTowards(localPos.y, targetCameraY, 5f * Time.deltaTime);
+                _cameraTarget.localPosition = localPos;
+            }
+            
+            
             // Get angle between camera and player
             Vector3 camForwardProjectedXZ = new Vector3(_playerCamera.transform.forward.x, 0f, _playerCamera.transform.forward.z).normalized;
             Vector3 crossProduct = Vector3.Cross(transform.forward, camForwardProjectedXZ);

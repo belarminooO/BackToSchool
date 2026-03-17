@@ -12,13 +12,21 @@ public class AnswerButtonManager : NetworkBehaviour
 
     public int lockedAnswerIndex { get; private set; } = -1; // -1 = no answer
 
+    // [ObserversRpc]
+    // public void RPC_SetOwner(NetworkIdentity newOwner)
+    // {
+    //     ownerPlayer.value = newOwner;
+    //     lockedAnswerIndex = -1;
+
+    //     // Update a text canvas here to show the player's name or other info if needed <-----------
+    // }
+
     [ObserversRpc]
     public void RPC_SetOwner(NetworkIdentity newOwner)
     {
-        ownerPlayer.value = newOwner;
+        if (isServer)
+            ownerPlayer.value = newOwner; 
         lockedAnswerIndex = -1;
-
-        // Update a text canvas here to show the player's name or other info if needed <-----------
     }
 
     public void SubmitAnswer(AnswerButton newButton, GameObject whoPressedIt) 

@@ -137,7 +137,7 @@ public class ScoreManager : NetworkBehaviour
             Debug.Log($"[Server] Assigned {allPlayers[i].gameObject.name} to {assignedTeam}");
         }
 
-        //RPC_UpdateLeaderboard();
+        RPC_UpdateLeaderboard();
     }
 
     [ObserversRpc]
