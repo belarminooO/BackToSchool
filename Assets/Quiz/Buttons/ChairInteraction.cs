@@ -1,15 +1,18 @@
 using UnityEngine;
+using PurrNet;
 
 namespace GinjaGaming.FinalCharacterController
 {
-    
-    public class ChairInteraction : MonoBehaviour, IInteractable
+
+    public class ChairInteraction : NetworkBehaviour, IInteractable
     {
         [Header("Sitting Settings")]
         [SerializeField] private Transform _sitPoint;
         [SerializeField] private Transform _exitPoint;
 
         private PlayerController _sittingPlayer;
+
+        public SyncVar<bool> isOccupied = new SyncVar<bool>(ownerAuth: false);
 
         public void Interact(GameObject interactor)
         {
@@ -22,10 +25,15 @@ namespace GinjaGaming.FinalCharacterController
 
         public void Interact(PlayerController player)
         {
-            if (_sittingPlayer == null)
+
+            if (_sittingPlayer == null && !isOccupied.value)
+            {
                 SitDown(player);
+            }
             else if (_sittingPlayer == player)
+            {
                 StandUp();
+            }
         }
 
         private void SitDown(PlayerController player)
@@ -37,6 +45,8 @@ namespace GinjaGaming.FinalCharacterController
             }
 
             _sittingPlayer = player;
+
+            CmdSetOccupiedStatus(true);
 
             player.transform.position = _sitPoint.position;
             player.transform.rotation = _sitPoint.rotation;
@@ -65,7 +75,16 @@ namespace GinjaGaming.FinalCharacterController
             playerState?.SetPlayerMovementState(PlayerMovementState.Idling);
 
             _sittingPlayer = null;
+
+            CmdSetOccupiedStatus(false);
+
             Debug.Log("[ChairInteraction] Player stood up.");
+        }
+
+        [ServerRpc(requireOwnership: false)]
+        private void CmdSetOccupiedStatus(bool status)
+        {
+            isOccupied.value = status;
         }
     }
 }

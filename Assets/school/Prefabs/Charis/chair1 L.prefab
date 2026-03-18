@@ -125,21 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c41229392aad145afd48595d8de899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GinjaGaming.FinalCharacterController.ChairInteraction
-  _isSetup: 0
-  _prefabId: -2147483648
-  _componentIndex: -2147483648
-  _shouldBePooled: 0
-  _parent: {fileID: 0}
-  _invertedPathToNearestParent: 
-  _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _sitPoint: {fileID: 1013669755874071752}
   _exitPoint: {fileID: 4864788776314992434}
-  isOccupied:
-    _value: 0
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
 --- !u!1 &3743677849268944721
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,6 +201,7 @@ GameObject:
   - component: {fileID: 2370913213552355614}
   - component: {fileID: 6511018685959714796}
   - component: {fileID: 7429129698061606525}
+  - component: {fileID: -4183920160738798269}
   m_Layer: 0
   m_Name: chair1 L
   m_TagString: Untagged
@@ -318,3 +306,24 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e3fd7e9d6b3f64648beef3391d3952d6, type: 3}
+--- !u!114 &-4183920160738798269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8641432822391884058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}

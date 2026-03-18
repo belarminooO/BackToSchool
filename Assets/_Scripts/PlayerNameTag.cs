@@ -11,10 +11,15 @@ public class PlayerNameTag : NetworkBehaviour
     [SerializeField] private MetaVc metaVc;
 
     public SyncVar<string> steamName = new SyncVar<string>(ownerAuth: true);
+
     protected override void OnSpawned()
     {
         steamName.onChanged += OnNameChanged;
 
+        if (nameText != null)
+        {
+            nameText.enableWordWrapping = false;
+        }
 
         if (metaVc != null)
         {
