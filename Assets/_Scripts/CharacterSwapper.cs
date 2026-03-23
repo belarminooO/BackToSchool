@@ -174,6 +174,14 @@ namespace GinjaGaming.FinalCharacterController
                 }
             }
 
+            // FINAL SYNC: Tell the network state to refresh body visibility.
+            // This ensures if we are the LocalPlayer, the new body is hidden from our eyes.
+            var networkState = GetComponent<FirstPersonNetworkState>();
+            if (networkState != null)
+            {
+                networkState.RefreshBodyVisibility();
+            }
+
             // 7. Cleanup old objects
             if (oldMesh != null) Undo.DestroyObjectImmediate(oldMesh.gameObject);
             if (oldSkeleton != null) Undo.DestroyObjectImmediate(oldSkeleton.gameObject);

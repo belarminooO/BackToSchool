@@ -51,11 +51,14 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
         if (isOwner)
         {
-            if (Camera.main != null)
+            // Fix: Layer name is "player" (lowercase) as seen in TagManager
+            int playerLayer = LayerMask.NameToLayer("player");
+            if (playerLayer != -1 && Camera.main != null)
             {
-                int playerLayer = LayerMask.NameToLayer("Player");
                 Camera.main.cullingMask &= ~(1 << playerLayer);
             }
+
+            RefreshBodyVisibility();
 
             if (_locomotionInput != null)
                 _locomotionInput.enabled = true;
@@ -64,12 +67,20 @@ public class FirstPersonNetworkState : NetworkBehaviour
         }
         else
         {
-            int remoteLayer = LayerMask.NameToLayer("RemotePlayer");
-            if (remoteLayer != -1)
-            {
-                foreach (var renderer in GetComponentsInChildren<Renderer>(true))
-                    renderer.gameObject.layer = remoteLayer;
-            }
+            // For remote players, we can keep them on a different layer if needed
+            // However, the Swapper handles the main layers now.
+        }
+    }
+
+    public void RefreshBodyVisibility()
+    {
+        if (!isOwner) return;
+
+        // Set all mesh renderers to ShadowsOnly for the local player
+        // This hides the body from their own eyes but keeps it in the world
+        foreach (var renderer in GetComponentsInChildren<SkinnedMeshRenderer>(true))
+        {
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
         }
     }
 
