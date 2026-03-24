@@ -10,9 +10,16 @@ public class FirstPersonNetworkState : NetworkBehaviour
     public Vector2 SyncedMovementInput => _syncInput.value;
     public PlayerMovementState SyncedMovementState => (PlayerMovementState)_syncState.value;
 
+    private SyncVar<bool> _syncAttack = new SyncVar<bool>(ownerAuth: true);
+    private SyncVar<bool> _syncGather = new SyncVar<bool>(ownerAuth: true);
+
+    public bool SyncedAttack => _syncAttack.value;
+    public bool SyncedGather => _syncGather.value;
+
     private PlayerState _playerState;
     private PlayerLocomotionInput _locomotionInput;
     private PlayerController _playerController;
+    private PlayerActionsInput _actionsInput;
 
 
     private void Awake()
@@ -21,6 +28,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
         _locomotionInput = GetComponent<PlayerLocomotionInput>();
 
         _playerController = GetComponent<PlayerController>();
+        _actionsInput = GetComponent<PlayerActionsInput>();
 
         if (_locomotionInput != null) 
             _locomotionInput.enabled = false;
@@ -97,6 +105,11 @@ public class FirstPersonNetworkState : NetworkBehaviour
             _syncState.value = (int)_playerState.CurrentPlayerMovementState;
         if (_locomotionInput != null)
             _syncInput.value = _locomotionInput.MovementInput;
+        if (_actionsInput != null)
+        {
+            _syncAttack.value = _actionsInput.AttackPressed;
+            _syncGather.value = _actionsInput.GatherPressed;
+        }
     }
 
     private void OnStateChanged(int newState)

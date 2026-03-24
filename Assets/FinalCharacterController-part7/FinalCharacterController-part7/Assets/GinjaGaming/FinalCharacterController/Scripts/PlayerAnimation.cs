@@ -158,8 +158,8 @@ namespace GinjaGaming.FinalCharacterController
             _animator.SetFloat(inputYHash, _currentBlendInput.y);
             _animator.SetFloat(inputMagnitudeHash, _currentBlendInput.magnitude);
 
-            bool attackPressed = isOwner && _playerActionsInput != null && _playerActionsInput.AttackPressed;
-            bool gatherPressed = isOwner && _playerActionsInput != null && _playerActionsInput.GatherPressed;
+            bool attackPressed = isOwner ? (_playerActionsInput != null && _playerActionsInput.AttackPressed) : (_networkState != null && _networkState.SyncedAttack);
+            bool gatherPressed = isOwner ? (_playerActionsInput != null && _playerActionsInput.GatherPressed) : (_networkState != null && _networkState.SyncedGather);
             bool isPlayingAction = actionHashes.Any(hash => _animator.GetBool(hash));
             
             _animator.SetBool(isAttackingHash, attackPressed);
