@@ -149,8 +149,29 @@ namespace QuizAI.Editor
                         }
                     }
                 }
-                // Clear the source so it auto-assigns to Camera.main
-                if (newInteractor != null) newInteractor.InteractorSource = null;
+                // Assign InteractorSource to the CameraTarget (the transform the player actually looks through)
+                if (newInteractor != null)
+                {
+                    Transform cameraTarget = null;
+                    foreach (var t in newPlayerInstance.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (t.name == "CameraTarget" || t.name.Contains("CameraTarget"))
+                        {
+                            cameraTarget = t;
+                            break;
+                        }
+                    }
+                    // Fallback: find any camera component that isn't tagged MainCamera
+                    if (cameraTarget == null)
+                    {
+                        foreach (var cam in newPlayerInstance.GetComponentsInChildren<Camera>(true))
+                        {
+                            cameraTarget = cam.transform;
+                            break;
+                        }
+                    }
+                    newInteractor.InteractorSource = cameraTarget;
+                }
                 Debug.Log("[PlayerSetup] Transferred Interactor component.");
             }
 

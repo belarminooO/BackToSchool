@@ -21,6 +21,7 @@ namespace GinjaGaming.FinalCharacterController
         [Header("Components")]
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Camera _playerCamera;
+        public Camera PlayerCamera => _playerCamera;
         [SerializeField] private Transform _cameraTarget;
         private CapsuleCollider _bodyCollider;
 

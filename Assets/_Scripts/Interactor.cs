@@ -36,13 +36,8 @@ public class Interactor : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (e_indicator == null) return;
-
-        if (_playerState != null && _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
-        {
-            e_indicator.SetActive(true);
+        if (e_indicator == null) 
             return;
-        }
 
         Transform source = GetSource();
         if (source == null) { e_indicator.SetActive(false); return; }

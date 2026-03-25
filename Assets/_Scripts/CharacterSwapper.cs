@@ -296,4 +296,6 @@ namespace GinjaGaming.FinalCharacterController
         }
     }
 #endif
+
+
 }

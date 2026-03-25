@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FirstPersonNetworkState : NetworkBehaviour
 {
+    private SyncVar<int> _syncCharacterIndex = new SyncVar<int>(ownerAuth: true);
     private SyncVar<int> _syncState = new SyncVar<int>(ownerAuth: true);
     private SyncVar<Vector2> _syncInput = new SyncVar<Vector2>(ownerAuth: true);
 
@@ -16,15 +17,23 @@ public class FirstPersonNetworkState : NetworkBehaviour
     public bool SyncedAttack => _syncAttack.value;
     public bool SyncedGather => _syncGather.value;
 
+    [Header("Character")]
+    public int totalCharacterCount = 18;
+
     [Header("Push Settings")]
     public float pushRange = 3f;
     public float pushForce = 7.5f;
     private bool _wasAttacking = false;
 
+    [Header("Camera")]
+    public PlayerCameraStack playerCameraStack;
+
     private PlayerState _playerState;
     private PlayerLocomotionInput _locomotionInput;
     private PlayerController _playerController;
     private PlayerActionsInput _actionsInput;
+
+    
 
 
     private void Awake()
@@ -77,12 +86,40 @@ public class FirstPersonNetworkState : NetworkBehaviour
                 _locomotionInput.enabled = true;
             if (_playerController != null)
                 _playerController.enabled = true;
+
+            // FORCE LOAD CAMERA STACK
+            // if (playerCameraStack == null)
+            // {
+            //     playerCameraStack = GetComponentInChildren<PlayerCameraStack>();
+            //     if (playerCameraStack == null) 
+            //         playerCameraStack = Object.FindAnyObjectByType<PlayerCameraStack>();
+            // }
+
+
+            if (playerCameraStack != null)
+                playerCameraStack.initLocalPlayer();
+            else
+                Debug.LogWarning("PlayerCameraStack could not be found!");
+
         }
         else
         {
-            // For remote players, we can keep them on a different layer if needed
-            // However, the Swapper handles the main layers now.
+            CapsuleCollider bodyCollider = GetComponent<CapsuleCollider>();
+            if (bodyCollider != null)
+            {
+                bodyCollider.height = 1.8f;
+                bodyCollider.center = new Vector3(0, 0.9f, 0);
+                bodyCollider.radius = 0.3f;
+            }
         }
+
+        // _syncCharacterIndex.onChanged += OnCharacterIndexChanged;
+
+        // if (isOwner)
+        // {
+        //     _syncCharacterIndex.value = Random.Range(10, totalCharacterCount);
+        //     ApplyCharacterIndex(_syncCharacterIndex.value);
+        // }
     }
 
     public void RefreshBodyVisibility()
@@ -97,9 +134,20 @@ public class FirstPersonNetworkState : NetworkBehaviour
         }
     }
 
+    private void OnCharacterIndexChanged(int newIndex)
+    {
+        ApplyCharacterIndex(newIndex);
+    }
+
+    private void ApplyCharacterIndex(int index)
+    {
+        // TODO
+    }
+
     protected override void OnDespawned()
     {
         _syncState.onChanged -= OnStateChanged;
+        //_syncCharacterIndex.onChanged -= OnCharacterIndexChanged;
     }
 
     private void Update()
@@ -124,10 +172,11 @@ public class FirstPersonNetworkState : NetworkBehaviour
         }
     }
 
-    private void TryPushOtherPlayers()
+private void TryPushOtherPlayers()
     {
-        if (Camera.main == null) return;
-
+        Camera cam = _playerController != null ? _playerController.PlayerCamera : null;
+        if (Camera.main == null) 
+            return;
         Ray r = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         
         // Include Layer 0 (Default) since your Player Prefab is currently on the Default layer
@@ -137,40 +186,103 @@ public class FirstPersonNetworkState : NetworkBehaviour
         RaycastHit[] hits = Physics.SphereCastAll(r, 0.4f, pushRange, layerMask, QueryTriggerInteraction.Ignore);
         foreach (var hit in hits)
         {
-            // Don't push ourselves
             if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
                 continue;
-
             FirstPersonNetworkState otherState = hit.collider.GetComponentInParent<FirstPersonNetworkState>();
-            if (otherState != null)
+            NetworkIdentity otherIdentity = hit.collider.GetComponentInParent<NetworkIdentity>();
+            
+            if (otherState != null && otherIdentity != null)
             {
                 Vector3 forceDir = Camera.main.transform.forward;
-                forceDir.y = 0.2f; // Slight upward push
-                otherState.PushServerRpc(forceDir.normalized * pushForce);
-                break; // Only push one person per attack
+                forceDir.y = 0.2f; 
+                
+                CmdPushPlayerServerRpc(otherIdentity, forceDir.normalized * pushForce);
+                break; 
             }
         }
     }
 
-    [ServerRpc(requireOwnership: false)]
-    public void PushServerRpc(Vector3 forceVector)
+    [ServerRpc] 
+    public void CmdPushPlayerServerRpc(NetworkIdentity targetIdentity, Vector3 forceVector)
     {
-        // Target the specific owner of this object
-        var network = GetComponent<NetworkIdentity>();
-        if (network != null && network.owner.HasValue)
+        if (targetIdentity != null)
         {
-            PushTargetRpc(network.owner.Value, forceVector);
+            FirstPersonNetworkState targetState = targetIdentity.GetComponent<FirstPersonNetworkState>();
+            if (targetState != null)
+            {
+                targetState.ReceivePushOnServer(forceVector);
+            }
         }
     }
 
-    [TargetRpc]
-    public void PushTargetRpc(PlayerID target, Vector3 forceVector)
+    public void ReceivePushOnServer(Vector3 forceVector)
     {
-        if (_playerController != null)
+        if (_playerController != null && _playerController.enabled)
         {
             _playerController.ApplyKnockback(forceVector);
         }
+        else
+        {
+            TargetPushObserversRpc(forceVector);
+        }
     }
+
+    [ObserversRpc] 
+    private void TargetPushObserversRpc(Vector3 forceVector)
+    {
+        if (!isOwner) 
+            return;
+            
+        if (_playerController != null)
+            _playerController.ApplyKnockback(forceVector);
+    }
+
+    // [ServerRpc(requireOwnership: false)]
+    // public void PushServerRpc(Vector3 forceVector)
+    // {
+
+    //     if (isOwner)
+    //     {
+    //         if (_playerController != null)
+    //             _playerController.ApplyKnockback(forceVector);
+    //         return;
+    //     }
+
+    //     var network = GetComponent<NetworkIdentity>();
+    //     if (network != null && network.owner.HasValue)
+    //     {
+    //         PushTargetRpc(network.owner.Value, forceVector);
+    //     }
+    // }
+
+    // [TargetRpc]
+    // public void PushTargetRpc(PlayerID target, Vector3 forceVector)
+    // {
+    //     if (_playerController != null)
+    //     {
+    //         _playerController.ApplyKnockback(forceVector);
+    //     }
+    // }
+
+    [ServerRpc(requireOwnership:false)]
+    public void PushServerRpc(Vector3 forceVector)
+    {
+        if (_playerController != null && _playerController.enabled)
+        {
+            _playerController.ApplyKnockback(forceVector);
+            return;
+        }
+        PushOwnerRpc(forceVector);
+    }
+
+    [ObserversRpc]
+    private void PushOwnerRpc(Vector3 forceVector)
+    {
+        if (!isOwner) 
+            return;
+        if (_playerController != null)
+            _playerController.ApplyKnockback(forceVector);
+    }   
 
     private void OnStateChanged(int newState)
     {

@@ -58,5 +58,12 @@ namespace GinjaGaming.FinalCharacterController
             
             Debug.Log($"Visual swapped to: {newModel.name}. Avatar updated.");
         }
+
+        public void SelectCharacter(int index, GameObject[] prefabs)
+        {
+            if (index < 0 || index >= prefabs.Length) return;
+            characterPrefab = prefabs[index];
+            SwapVisuals();
+        }
     }
 }

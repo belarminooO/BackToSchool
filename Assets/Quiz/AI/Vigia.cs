@@ -12,7 +12,6 @@ using MetaVoiceChat.AudioFilters; // Para o NoiseGate
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
-[HelpURL("https://github.com/migboss/BackToSchool")]
 public class Vigia : NetworkBehaviour
 {
     [Header("Patrol Settings")]
@@ -65,6 +64,10 @@ public class Vigia : NetworkBehaviour
     public float jailDetectionTime = 2f;
     public float jailDetectionRadius = 2.5f; 
     public float voiceGracePeriod = 0.5f;
+
+    [Header("Indicator Light")]
+    [Tooltip("Light that turns green by default and red when investigating.")]
+    public Light indicatorLight;
 
     [Header("Detection Bar UI")]
     public GameObject detectionBarRoot;
@@ -128,6 +131,7 @@ public class Vigia : NetworkBehaviour
 
         UpdateAnimations();
         UpdateDetectionUI();
+        UpdateIndicatorLight();
     }
 
     private void OnValidate()
@@ -453,6 +457,19 @@ public class Vigia : NetworkBehaviour
                 p.isJailed = true;
                 break;
             }
+        }
+    }
+
+    private void UpdateIndicatorLight()
+    {
+        if (indicatorLight == null) 
+            return;
+        if (CurrentState.value == VigiaState.Investigating)
+        {
+            indicatorLight.color = Color.red;
+        } else
+        {
+            indicatorLight.color = Color.green;
         }
     }
 

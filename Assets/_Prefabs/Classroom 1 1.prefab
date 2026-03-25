@@ -6830,6 +6830,7 @@ MonoBehaviour:
   jailDetectionTime: 3
   jailDetectionRadius: 1
   voiceGracePeriod: 0.5
+  indicatorLight: {fileID: 1922019613533266129}
   detectionBarRoot: {fileID: 6534308273891776557}
   detectionSlider: {fileID: 8943732892945901559}
   DetectionProgress:
