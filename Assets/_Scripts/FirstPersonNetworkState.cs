@@ -16,6 +16,11 @@ public class FirstPersonNetworkState : NetworkBehaviour
     public bool SyncedAttack => _syncAttack.value;
     public bool SyncedGather => _syncGather.value;
 
+    [Header("Push Settings")]
+    public float pushRange = 3f;
+    public float pushForce = 7.5f;
+    private bool _wasAttacking = false;
+
     private PlayerState _playerState;
     private PlayerLocomotionInput _locomotionInput;
     private PlayerController _playerController;
@@ -107,8 +112,63 @@ public class FirstPersonNetworkState : NetworkBehaviour
             _syncInput.value = _locomotionInput.MovementInput;
         if (_actionsInput != null)
         {
+            // Execute precisely when the animation event SetAttackPressedFalse fires
+            if (!_actionsInput.AttackPressed && _wasAttacking)
+            {
+                TryPushOtherPlayers();
+            }
+            _wasAttacking = _actionsInput.AttackPressed;
+
             _syncAttack.value = _actionsInput.AttackPressed;
             _syncGather.value = _actionsInput.GatherPressed;
+        }
+    }
+
+    private void TryPushOtherPlayers()
+    {
+        if (Camera.main == null) return;
+
+        Ray r = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        
+        // Include Layer 0 (Default) since your Player Prefab is currently on the Default layer
+        int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
+        
+        // SphereCast forgives exact aiming
+        RaycastHit[] hits = Physics.SphereCastAll(r, 0.4f, pushRange, layerMask, QueryTriggerInteraction.Ignore);
+        foreach (var hit in hits)
+        {
+            // Don't push ourselves
+            if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
+                continue;
+
+            FirstPersonNetworkState otherState = hit.collider.GetComponentInParent<FirstPersonNetworkState>();
+            if (otherState != null)
+            {
+                Vector3 forceDir = Camera.main.transform.forward;
+                forceDir.y = 0.2f; // Slight upward push
+                otherState.PushServerRpc(forceDir.normalized * pushForce);
+                break; // Only push one person per attack
+            }
+        }
+    }
+
+    [ServerRpc(requireOwnership: false)]
+    public void PushServerRpc(Vector3 forceVector)
+    {
+        // Target the specific owner of this object
+        var network = GetComponent<NetworkIdentity>();
+        if (network != null && network.owner.HasValue)
+        {
+            PushTargetRpc(network.owner.Value, forceVector);
+        }
+    }
+
+    [TargetRpc]
+    public void PushTargetRpc(PlayerID target, Vector3 forceVector)
+    {
+        if (_playerController != null)
+        {
+            _playerController.ApplyKnockback(forceVector);
         }
     }
 

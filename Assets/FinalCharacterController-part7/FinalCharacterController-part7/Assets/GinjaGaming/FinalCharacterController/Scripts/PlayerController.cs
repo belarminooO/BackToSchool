@@ -22,6 +22,7 @@ namespace GinjaGaming.FinalCharacterController
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private Transform _cameraTarget;
+        private CapsuleCollider _bodyCollider;
 
         public float RotationMismatch { get; private set; } = 0f;
         public bool IsRotatingToTarget { get; private set; } = false;
@@ -46,6 +47,8 @@ namespace GinjaGaming.FinalCharacterController
         [Header("Height Settings")]
         public float standingHeight = 1.8f;
         public float crouchingHeight = 1.2f;
+        [Tooltip("Radius of the collision body (CapsuleCollider) used for player-to-player pushing")]
+        public float bodyColliderRadius = 0.3f;
 
         [Header("State Data")]
         public PlayerMovementState playerMovementState;
@@ -80,6 +83,12 @@ namespace GinjaGaming.FinalCharacterController
 
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
         private float _interactionCooldownTimer = 0f;
+        private Vector3 _externalForce = Vector3.zero;
+
+        public void ApplyKnockback(Vector3 force)
+        {
+            _externalForce += force;
+        }
 
         public bool IsMovementEnabled
         {
@@ -95,6 +104,7 @@ namespace GinjaGaming.FinalCharacterController
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
             _playerActionsInput = GetComponent<PlayerActionsInput>();
             _playerState = GetComponent<PlayerState>();
+            _bodyCollider = GetComponent<CapsuleCollider>();
 
             _antiBump = sprintSpeed;
             _stepOffset = _characterController.stepOffset;
@@ -275,6 +285,16 @@ namespace GinjaGaming.FinalCharacterController
             finalVelocity.y = _verticalVelocity;
             finalVelocity = !isGrounded ? HandleSteepWalls(finalVelocity) : finalVelocity;
 
+            if (_externalForce.magnitude > 0.1f)
+            {
+                finalVelocity += _externalForce;
+                _externalForce = Vector3.Lerp(_externalForce, Vector3.zero, 5f * Time.deltaTime);
+            }
+            else
+            {
+                _externalForce = Vector3.zero;
+            }
+
             // Move character (Unity suggests only calling this once per tick)
             _characterController.Move(finalVelocity * Time.deltaTime);
             
@@ -290,6 +310,14 @@ namespace GinjaGaming.FinalCharacterController
             float targetHeight = isCrouchingState ? crouchingHeight : standingHeight;
             _characterController.height = Mathf.MoveTowards(_characterController.height, targetHeight, 10f * Time.deltaTime);
             _characterController.center = Vector3.up * (_characterController.height / 2f);
+            
+            // Sync extra body collider if it exists (for player-to-player collision)
+            if (_bodyCollider != null)
+            {
+                _bodyCollider.height = _characterController.height;
+                _bodyCollider.center = _characterController.center;
+                _bodyCollider.radius = bodyColliderRadius;
+            }
         }
 
         private Vector3 HandleSteepWalls(Vector3 velocity)
