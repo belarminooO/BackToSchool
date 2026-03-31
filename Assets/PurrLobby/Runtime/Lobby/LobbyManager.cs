@@ -55,8 +55,21 @@ namespace PurrLobby
 
         private bool IsStarting = false;
 
+        public static LobbyManager Instance { get; private set; }
+
         private void Awake()
         {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             _lastKnownState = new Lobby { IsValid = false };
 
             if (CurrentProvider != null)
