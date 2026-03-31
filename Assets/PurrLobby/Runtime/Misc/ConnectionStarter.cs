@@ -137,17 +137,45 @@ namespace PurrLobby
             }
 
             // ----------------------------------------------
+// #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
+//             if (_networkManager.transport != null && _networkManager.transport.GetType().Name == "SteamTransport")
+//             {
+//                 if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
+//                 {
+//                     Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
+//                     Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
+//                     var addressProperty = _networkManager.transport.GetType().GetProperty("address");
+//                     if (addressProperty != null && addressProperty.CanWrite)
+//                     {
+//                         addressProperty.SetValue(_networkManager.transport, ownerId.m_SteamID.ToString());
+//                     }
+//                 }
+//             }
+// #endif
+
 #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
-            if (_networkManager.transport != null && _networkManager.transport.GetType().Name == "SteamTransport")
+            if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
             {
-                if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
+                Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
+                Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
+                void TrySetAddress(ITransport t)
                 {
-                    Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
-                    Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
-                    var addressProperty = _networkManager.transport.GetType().GetProperty("address");
-                    if (addressProperty != null && addressProperty.CanWrite)
+                    if (t == null) return;
+                    if (t.GetType().Name == "SteamTransport")
                     {
-                        addressProperty.SetValue(_networkManager.transport, ownerId.m_SteamID.ToString());
+                        var addressProperty = t.GetType().GetProperty("address");
+                        if (addressProperty != null && addressProperty.CanWrite)
+                        {
+                            addressProperty.SetValue(t, ownerId.m_SteamID.ToString());
+                        }
+                    }
+                }
+                TrySetAddress(_networkManager.transport);
+                if (_networkManager.transport is CompositeTransport composite)
+                {
+                    foreach (var t in composite.transports)
+                    {
+                        TrySetAddress(t);
                     }
                 }
             }

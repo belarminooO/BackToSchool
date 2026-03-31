@@ -1596,7 +1596,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -256.11108, y: 2.5743103, z: -362.59464}
+  m_LocalPosition: {x: -242.11108, y: 2.5743103, z: -362.59464}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7335,6 +7335,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1267779088}
         m_TargetAssemblyTypeName: PurrLobby.ViewManager, PurrNetLobbySetup
         m_MethodName: OnRoomJoined
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2004745146}
+        m_TargetAssemblyTypeName: CameraSwitcher, Assembly-CSharp
+        m_MethodName: GoInside
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
