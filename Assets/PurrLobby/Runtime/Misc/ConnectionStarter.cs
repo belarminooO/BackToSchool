@@ -352,29 +352,41 @@ namespace PurrLobby
 
         private IEnumerator StartClient()
         {
-            // Initial delay to let the host finish initializing its server
+            int attempts = 0;
+            int maxAttempts = 3; // Reduced since Steam connection negotiation handles its own long timeouts
+
+            // Wait a brief moment before first attempt
             yield return new WaitForSeconds(1.5f);
 
+            PurrLogger.Log($"[ConnectionStarter] Starting client connection to {_hostAddress}", this);
             _networkManager.StartClient();
 
-            // Retry loop: wait up to 5 seconds per attempt, retry up to 5 times
-            int attempts = 0;
-            const int maxAttempts = 5;
             while (attempts < maxAttempts)
             {
-                yield return new WaitForSeconds(5f);
+                // Wait for the connection state to either succeed or officially fail via Steam
+                float timeoutCounter = 0f;
+                float maxTimeout = 25f; // Give SDR up to 25 seconds to negotiate over the internet
+
+                while (_networkManager.clientState == ConnectionState.Connecting && timeoutCounter < maxTimeout)
+                {
+                    yield return new WaitForSeconds(0.5f);
+                    timeoutCounter += 0.5f;
+                }
+
                 if (_networkManager.clientState == ConnectionState.Connected)
+                {
+                    PurrLogger.Log("[ConnectionStarter] Client successfully connected!", this);
                     yield break;
+                }
 
                 attempts++;
-                PurrLogger.Log($"[ConnectionStarter] Client not connected (attempt {attempts}/{maxAttempts}). Retrying...", this);
+                PurrLogger.Log($"[ConnectionStarter] Client not connected (attempt {attempts}/{maxAttempts}). Steam State: {_networkManager.clientState}. Retrying...", this);
                 _networkManager.StopClient();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(2f);
                 _networkManager.StartClient();
             }
 
-            if (_networkManager.clientState != ConnectionState.Connected)
-                PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts.", this);
+            PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts.", this);
         }
 
 
