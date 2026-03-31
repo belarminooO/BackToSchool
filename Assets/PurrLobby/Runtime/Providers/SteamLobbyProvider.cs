@@ -404,7 +404,32 @@ namespace PurrLobby.Providers
 
         public void Shutdown()
         {
-            //Not needed
+            // Leave lobby on shutdown to prevent leftover lobbies in Steam
+            if (IsSteamClientAvailable && _currentLobby != Steamworks.CSteamID.Nil)
+            {
+                Steamworks.SteamMatchmaking.LeaveLobby(_currentLobby);
+                _currentLobby = Steamworks.CSteamID.Nil;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // Leave lobby when this component is destroyed (scene unload, editor stop, etc.)
+            if (IsSteamClientAvailable && _currentLobby != Steamworks.CSteamID.Nil)
+            {
+                Steamworks.SteamMatchmaking.LeaveLobby(_currentLobby);
+                _currentLobby = Steamworks.CSteamID.Nil;
+            }
+        }
+
+        private void OnApplicationQuit()
+        {
+            // Leave lobby when application quits (Alt+F4, crash recovery, etc.)
+            if (IsSteamClientAvailable && _currentLobby != Steamworks.CSteamID.Nil)
+            {
+                Steamworks.SteamMatchmaking.LeaveLobby(_currentLobby);
+                _currentLobby = Steamworks.CSteamID.Nil;
+            }
         }
 
         private List<LobbyUser> GetLobbyUsers(Steamworks.CSteamID lobbyId)

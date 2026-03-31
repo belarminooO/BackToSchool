@@ -315,9 +315,29 @@ namespace PurrLobby
 
         private IEnumerator StartClient()
         {
-            // Brief delay to ensure server is fully listening before client connects
-            yield return new WaitForSeconds(1f);
+            // Initial delay to let the host finish initializing its server
+            yield return new WaitForSeconds(1.5f);
+
             _networkManager.StartClient();
+
+            // Retry loop: wait up to 5 seconds per attempt, retry up to 5 times
+            int attempts = 0;
+            const int maxAttempts = 5;
+            while (attempts < maxAttempts)
+            {
+                yield return new WaitForSeconds(5f);
+                if (_networkManager.clientState == ConnectionState.Connected)
+                    yield break;
+
+                attempts++;
+                PurrLogger.Log($"[ConnectionStarter] Client not connected (attempt {attempts}/{maxAttempts}). Retrying...", this);
+                _networkManager.StopClient();
+                yield return new WaitForSeconds(0.5f);
+                _networkManager.StartClient();
+            }
+
+            if (_networkManager.clientState != ConnectionState.Connected)
+                PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts.", this);
         }
 
 

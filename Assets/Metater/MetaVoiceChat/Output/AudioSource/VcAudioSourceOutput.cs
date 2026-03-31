@@ -234,7 +234,7 @@ namespace MetaVoiceChat.Output.AudioSource
 
         private void OnDestroy()
         {
-            vcAudioClip.Dispose();
+            vcAudioClip?.Dispose();
         }
     }
 }

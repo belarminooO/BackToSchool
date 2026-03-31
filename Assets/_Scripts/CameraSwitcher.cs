@@ -13,6 +13,13 @@ public class CameraSwitcher : MonoBehaviour
 
     void Start()
     {
+        // Auto-subscribe to LobbyManager so GoInside fires for ALL join paths
+        // (Browse click, Steam invite, host creation) without requiring Inspector wiring.
+        var lobbyManager = FindFirstObjectByType<PurrLobby.LobbyManager>();
+        if (lobbyManager != null)
+        {
+            lobbyManager.OnRoomJoined.AddListener(lobby => GoInside());
+        }
         GoOutside();
     }
 
