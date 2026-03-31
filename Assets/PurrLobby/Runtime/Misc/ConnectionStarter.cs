@@ -54,6 +54,11 @@ namespace PurrLobby
                 return;
             }
 
+            if (_networkManager != null)
+            {
+                _networkManager.enabled = false;
+            }
+
 #if UTP_LOBBYRELAY
             // Check if we're using UTP with relay - requires async configuration
             _useUnityRelay = IsUsingUTPTransport();
@@ -192,6 +197,12 @@ namespace PurrLobby
 
             // --------------------------
             _hasStarted = true;
+            
+            if (_networkManager != null)
+            {
+                _networkManager.enabled = true;
+            }
+
             if (_lobbyDataHolder.CurrentLobby.IsOwner)
             {
                 _networkManager.StartHost();
