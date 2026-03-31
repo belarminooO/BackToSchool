@@ -33,6 +33,7 @@ public class LobbyCharacterDisplay : MonoBehaviour
 
     private void Refresh(Lobby lobby)
     {
+        if (this == null) return;
         if (!lobby.IsValid || lobby.Members == null) return;
 
         foreach (var go in _spawned) if (go) Destroy(go);
@@ -81,6 +82,7 @@ public class LobbyCharacterDisplay : MonoBehaviour
 
     private void ClearAll()
     {
+        if (this == null) return;
         foreach (var go in _spawned) if (go) Destroy(go);
         _spawned.Clear();
         _assigned.Clear();
