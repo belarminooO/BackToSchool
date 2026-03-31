@@ -1,4 +1,5 @@
 using PurrNet;
+using PurrNet.Transports;
 using PurrNet.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,7 +24,7 @@ namespace PurrLobby
         [SerializeField] private bool subscribeToOnAllReady = true;
 
         // Prevents duplicate scene transitions
-        private static bool _hasAlreadySwitched = false;
+        private bool _hasAlreadySwitched = false;
 
         private void Start()
         {
@@ -48,50 +49,75 @@ namespace PurrLobby
         /// Switches to the game scene.
         /// Safe to call multiple times - will only switch once.
         /// </summary>
+        // public void SwitchScene()
+        // {
+        //     // Prevent duplicate scene switches
+        //     if (_hasAlreadySwitched)
+        //     {
+        //         PurrLogger.LogWarning("SwitchScene already called - ignoring duplicate", this);
+        //         return;
+        //     }
+            
+        //     _hasAlreadySwitched = true;
+            
+        //     if (string.IsNullOrEmpty(nextScene))
+        //     {
+        //         PurrLogger.LogError("Next scene name is not set!", this);
+        //         return;
+        //     }
+
+        //     PurrLogger.Log($"Switching to scene: {nextScene}", this);
+            
+        //     // Mark lobby as started to prevent new players from joining
+        //     if (lobbyManager != null)
+        //     {
+        //         lobbyManager.SetLobbyStarted();
+        //     }
+
+        //     // ---------------------------------------- //
+
+        //     if (NetworkManager.main != null && NetworkManager.main.isServer)
+        //     {
+        //         _hasAlreadySwitched = true;
+        //         PurrLogger.Log($"[Server] Host is loading networked scene: {nextScene}", this);
+        //         NetworkManager.main.sceneModule.LoadSceneAsync(nextScene);
+        //     }
+        //     else if (NetworkManager.main == null || (!NetworkManager.main.isServer && !NetworkManager.main.isClient))
+        //     {
+        //         _hasAlreadySwitched = true;
+        //         SceneManager.LoadSceneAsync(nextScene);
+        //     }
+
+
+        //     // ----------------------------------------- //
+
+        //     // Load game scene - ConnectionStarter in new scene will handle network initialization
+        //     //SceneManager.LoadSceneAsync(nextScene);
+        // }
+
         public void SwitchScene()
         {
-            // Prevent duplicate scene switches
-            if (_hasAlreadySwitched)
+            if (_hasAlreadySwitched) return;
+            
+            // If we are a client but still connecting, WAIT. 
+            // The SceneModule will automatically take us to the new scene once connected.
+            if (NetworkManager.main != null && NetworkManager.main.clientState == ConnectionState.Connecting)
             {
-                PurrLogger.LogWarning("SwitchScene already called - ignoring duplicate", this);
+                PurrLogger.Log("Client is still connecting... waiting for network to handle scene switch.", this);
                 return;
             }
-            
-            _hasAlreadySwitched = true;
-            
-            if (string.IsNullOrEmpty(nextScene))
-            {
-                PurrLogger.LogError("Next scene name is not set!", this);
-                return;
-            }
-
-            PurrLogger.Log($"Switching to scene: {nextScene}", this);
-            
-            // Mark lobby as started to prevent new players from joining
-            if (lobbyManager != null)
-            {
-                lobbyManager.SetLobbyStarted();
-            }
-
-            // ---------------------------------------- //
-
             if (NetworkManager.main != null && NetworkManager.main.isServer)
             {
                 _hasAlreadySwitched = true;
                 PurrLogger.Log($"[Server] Host is loading networked scene: {nextScene}", this);
                 NetworkManager.main.sceneModule.LoadSceneAsync(nextScene);
             }
-            else if (NetworkManager.main == null || (!NetworkManager.main.isServer && !NetworkManager.main.isClient))
+            // Only load offline if we are NOT trying to be a client/server
+            else if (NetworkManager.main == null || (!NetworkManager.main.isServer && !NetworkManager.main.isClient && NetworkManager.main.clientState == ConnectionState.Disconnected))
             {
                 _hasAlreadySwitched = true;
                 SceneManager.LoadSceneAsync(nextScene);
             }
-
-
-            // ----------------------------------------- //
-
-            // Load game scene - ConnectionStarter in new scene will handle network initialization
-            //SceneManager.LoadSceneAsync(nextScene);
         }
     }
 }

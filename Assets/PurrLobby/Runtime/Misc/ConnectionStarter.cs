@@ -29,7 +29,7 @@ namespace PurrLobby
         private LobbyDataHolder _lobbyDataHolder;
 
         // Prevents duplicate network starts if scene loads multiple times
-        private static bool _hasStarted = false;
+        private bool _hasStarted = false;
         private bool _useUnityRelay = false;
 
         private void Awake()
@@ -172,7 +172,7 @@ namespace PurrLobby
                         UnityEngine.Debug.Log($"[ConnectionStarter] Successfully set Steam address to: {ownerId.m_SteamID}");
                     }
                 }
-                
+
                 TrySetAddress(_networkManager.transport);
                 if (_networkManager.transport is CompositeTransport composite)
                 {
