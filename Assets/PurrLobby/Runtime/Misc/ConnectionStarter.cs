@@ -54,9 +54,9 @@ namespace PurrLobby
                 return;
             }
 
-            if (_networkManager != null)
+            if (_networkManager == null)
             {
-                _networkManager.enabled = false;
+                PurrLogger.LogError("NetworkManager could not be found!", this);
             }
 
 #if UTP_LOBBYRELAY
@@ -197,11 +197,6 @@ namespace PurrLobby
 
             // --------------------------
             _hasStarted = true;
-            
-            if (_networkManager != null)
-            {
-                _networkManager.enabled = true;
-            }
 
             if (_lobbyDataHolder.CurrentLobby.IsOwner)
             {
