@@ -179,6 +179,14 @@ public class QuizGameManager : NetworkBehaviour
         protected override void OnSpawned()
         {
             if(isServer) {
+                var lobbyHolder = FindFirstObjectByType<PurrLobby.LobbyDataHolder>();
+                if (lobbyHolder != null && lobbyHolder.CurrentLobby.IsValid &&
+                    lobbyHolder.CurrentLobby.Members != null && lobbyHolder.CurrentLobby.Members.Count > 0)
+                {
+                    requiredPlayers = lobbyHolder.CurrentLobby.Members.Count;
+                    Debug.Log($"[GameManager] Required players set to {requiredPlayers} from lobby");
+                }
+
                 totalRoundsSettings.value = PlayerPrefs.GetInt("Quiz_RoundNumber", 3);
                 roundDurationSettings.value = PlayerPrefs.GetInt("Quiz_QuestionTimer", 30);
                 currentRound.value = 1;
