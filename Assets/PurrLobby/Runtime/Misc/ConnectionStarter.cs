@@ -167,7 +167,7 @@ namespace PurrLobby
             }
             else
             {
-                _networkManager.StartClient();
+                StartCoroutine(StartClient());
             }
             // --------------------------
 
@@ -322,9 +322,9 @@ namespace PurrLobby
 
 
         // Reset the _hasStarted flag when the ConnectionStarter is destroyed
-        // private void OnDestroy()
-        // {
-        //     _hasStarted = false;
-        // }
+        private void OnDestroy()
+        {
+            _hasStarted = false;
+        }
     }
 }

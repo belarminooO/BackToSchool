@@ -240,6 +240,7 @@ namespace PurrLobby
                 var room = await _currentProvider.CreateLobbyAsync(maxPlayers, roomProperties);
                 _currentLobby = room;
                 OnRoomUpdated?.Invoke(room);
+                OnRoomJoined?.Invoke(room);
             });
         }
 

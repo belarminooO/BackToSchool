@@ -3104,7 +3104,7 @@ MonoBehaviour:
   _directChildren: []
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
-  requiredPlayers: 1
+  requiredPlayers: 2
   stateMachine: {fileID: 364223067}
   waitingState: {fileID: 1848090773}
   freezeState: {fileID: 512507347}
@@ -3448,46 +3448,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d6b322432f5a24f8712d4bcf39461e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VigiaEmpurrar
-  _isSetup: 0
-  _prefabId: -2147483648
-  _componentIndex: -2147483648
-  _shouldBePooled: 0
-  _parent: {fileID: 0}
-  _invertedPathToNearestParent: 
-  _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
-  waypoints:
-  - {fileID: 2002934586}
-  - {fileID: 695189653}
-  randomPatrol: 0
-  wanderSpeed: 0.25
-  chaseSpeed: 3
-  stopDistance: 0.8
-  viewDistance: 15
-  viewAngle: 90
-  visionMask:
-    serializedVersion: 2
-    m_Bits: 1
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  pushRange: 2
-  pushForce: 15
-  pushUpForce: 3
-  pushCooldown: 2
-  targetPersistence: 3
-  showDebugGizmos: 1
-  showPatrolPath: 1
-  CurrentState:
-    _value: 0
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
-  SyncedSpeed:
-    _value: 0
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
-  indicatorLight: {fileID: 0}
 --- !u!1 &549349647
 GameObject:
   m_ObjectHideFlags: 0
@@ -6551,46 +6511,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d6b322432f5a24f8712d4bcf39461e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VigiaEmpurrar
-  _isSetup: 0
-  _prefabId: -2147483648
-  _componentIndex: -2147483648
-  _shouldBePooled: 0
-  _parent: {fileID: 0}
-  _invertedPathToNearestParent: 
-  _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
-  waypoints:
-  - {fileID: 1743822494}
-  - {fileID: 1646150546}
-  randomPatrol: 0
-  wanderSpeed: 0.25
-  chaseSpeed: 3
-  stopDistance: 0.8
-  viewDistance: 15
-  viewAngle: 90
-  visionMask:
-    serializedVersion: 2
-    m_Bits: 1
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  pushRange: 2
-  pushForce: 15
-  pushUpForce: 3
-  pushCooldown: 2
-  targetPersistence: 3
-  showDebugGizmos: 1
-  showPatrolPath: 1
-  CurrentState:
-    _value: 0
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
-  SyncedSpeed:
-    _value: 0
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
-  indicatorLight: {fileID: 0}
 --- !u!1 &1133117340
 GameObject:
   m_ObjectHideFlags: 0
@@ -11704,46 +11624,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d6b322432f5a24f8712d4bcf39461e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VigiaEmpurrar
-  _isSetup: 0
-  _prefabId: -2147483648
-  _componentIndex: -2147483648
-  _shouldBePooled: 0
-  _parent: {fileID: 0}
-  _invertedPathToNearestParent: 
-  _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
-  waypoints:
-  - {fileID: 430191168}
-  - {fileID: 1321602436}
-  randomPatrol: 0
-  wanderSpeed: 0.25
-  chaseSpeed: 3
-  stopDistance: 0.8
-  viewDistance: 15
-  viewAngle: 90
-  visionMask:
-    serializedVersion: 2
-    m_Bits: 1
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  pushRange: 2
-  pushForce: 15
-  pushUpForce: 3
-  pushCooldown: 2
-  targetPersistence: 3
-  showDebugGizmos: 1
-  showPatrolPath: 1
-  CurrentState:
-    _value: 0
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
-  SyncedSpeed:
-    _value: 0
-    _ownerAuth: 0
-    _sendIntervalInSeconds: 0
-  indicatorLight: {fileID: 0}
 --- !u!1001 &1888221785
 PrefabInstance:
   m_ObjectHideFlags: 0
