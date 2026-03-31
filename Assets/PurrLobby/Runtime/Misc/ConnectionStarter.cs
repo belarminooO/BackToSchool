@@ -358,7 +358,6 @@ namespace PurrLobby
             // Wait a brief moment before first attempt
             yield return new WaitForSeconds(1.5f);
 
-            PurrLogger.Log($"[ConnectionStarter] Starting client connection to {_hostAddress}", this);
             _networkManager.StartClient();
 
             while (attempts < maxAttempts)
