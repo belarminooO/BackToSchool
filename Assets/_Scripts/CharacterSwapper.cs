@@ -160,9 +160,7 @@ namespace GinjaGaming.FinalCharacterController
                     item.localRotation = localRot;
                     item.localScale = localScale;
 
-                    // SPECIAL FIX: If this is the active camera, make it the Interactor Source!
-                    // This ensures interaction is perfectly aligned with what the player sees (the eyes).
-                    if (item.name.Contains("Camera") || item.GetComponent<Camera>() != null)
+                    if ((item.name.Contains("Camera Target") && !item.name.Equals("Main Camera")) || item.GetComponent<Camera>() != null)
                     {
                         var interactor = GetComponent<Interactor>();
                         if (interactor != null)

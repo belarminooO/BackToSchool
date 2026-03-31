@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using PurrNet;
+using PurrLobby;
 
 public class DevDirectConnect : MonoBehaviour
 {
@@ -8,6 +9,13 @@ public class DevDirectConnect : MonoBehaviour
 
     private IEnumerator Start()
     {
+        var lobbyHolder = FindFirstObjectByType<LobbyDataHolder>();
+        if (lobbyHolder != null && lobbyHolder.CurrentLobby.IsValid)
+        {
+            Debug.Log("[DEV] Lobby active - skipping DevDirectConnect (Steam flow active)");
+            yield break;
+        }
+
         bool isClone = false;
 
 #if UNITY_EDITOR
