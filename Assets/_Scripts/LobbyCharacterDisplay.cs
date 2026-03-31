@@ -47,6 +47,13 @@ public class LobbyCharacterDisplay : MonoBehaviour
 
         for (int i = 0; i < lobby.Members.Count && i < spawnPoints.Count && characterPrefabs.Count > 0; i++)
         {
+
+            if (spawnPoints[i] == null)
+            {
+                Debug.LogWarning($"[LobbyCharacterDisplay] spawnPoints[{i}] is null or destroyed — skipping.");
+                continue;
+            }
+
             string id = lobby.Members[i].Id;
 
             if (!_assigned.ContainsKey(id))

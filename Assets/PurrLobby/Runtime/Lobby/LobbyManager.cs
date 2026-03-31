@@ -154,15 +154,23 @@ namespace PurrLobby
             
             _currentProvider.OnLobbyUpdated += room => InvokeDelayed(() =>
             {
-                if(!_lastKnownState.HasChanged(room) || room.Members.Count <= 0 || !room.IsValid) return;
+                if (!_lastKnownState.HasChanged(room) || room.Members.Count <= 0 || !room.IsValid) return;
 
                 _lastKnownState = room;
                 _currentLobby = room;
-                OnRoomUpdated?.Invoke(room);
+
+                try 
+                { 
+                    OnRoomUpdated?.Invoke(room); 
+                }
+                catch (Exception ex) 
+                { 
+                    PurrLogger.LogError($"[LobbyManager] OnRoomUpdated listener threw: {ex.Message}"); 
+                }
 
                 if (!IsStarting && room.Members.TrueForAll(x => x.IsReady))
                 {
-                    IsStarting = true; //Prevent calling ready again if lobby is updated after all ready
+                    IsStarting = true;
                     CallOnAllReady();
                 }
             });
@@ -253,7 +261,6 @@ namespace PurrLobby
                 var room = await _currentProvider.CreateLobbyAsync(maxPlayers, roomProperties);
                 _currentLobby = room;
                 OnRoomUpdated?.Invoke(room);
-                OnRoomJoined?.Invoke(room);
             });
         }
 
@@ -397,17 +404,19 @@ namespace PurrLobby
 
         private async void CallOnAllReady()
         {
+            Debug.Log("[LobbyManager] CallOnAllReady() ENTERED"); 
             await WaitForAllTasksAsync();
-            if(_currentLobby.IsValid && _currentLobby.Members.TrueForAll(x => x.IsReady))
+            if (_currentLobby.IsValid && _currentLobby.Members.TrueForAll(x => x.IsReady))
             {
                 await _currentProvider.SetAllReadyAsync();
-
+                Debug.Log("[LobbyManager] OnAllReady.Invoke() FIRING"); 
                 OnAllReady?.Invoke();
             }
         }
-        
+
         public async Task WaitForAllTasksAsync()
         {
+            Debug.Log("[LobbyManager] WaitForAllTasksAsync() ENTERED");
             while (_taskLock > 0)
             {
                 await Task.Yield();

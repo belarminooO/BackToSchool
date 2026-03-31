@@ -374,7 +374,7 @@ namespace PurrLobby
 
                 if (_networkManager.clientState == ConnectionState.Connected)
                 {
-                    PurrLogger.Log("[ConnectionStarter] Client successfully connected!", this);
+                    Debug.Log($"[ConnectionStarter] PurrNet clientState = {_networkManager.clientState}, isServer = {_networkManager.isServer}");
                     yield break;
                 }
 
