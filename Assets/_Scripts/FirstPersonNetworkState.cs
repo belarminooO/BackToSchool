@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FirstPersonNetworkState : NetworkBehaviour
 {
-    private SyncVar<int> _syncCharacterIndex = new SyncVar<int>(ownerAuth: true);
     private SyncVar<int> _syncState = new SyncVar<int>(ownerAuth: true);
     private SyncVar<Vector2> _syncInput = new SyncVar<Vector2>(ownerAuth: true);
 
@@ -16,9 +15,6 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
     public bool SyncedAttack => _syncAttack.value;
     public bool SyncedGather => _syncGather.value;
-
-    [Header("Character")]
-    public int totalCharacterCount = 18;
 
     [Header("Push Settings")]
     public float pushRange = 3f;
@@ -32,9 +28,6 @@ public class FirstPersonNetworkState : NetworkBehaviour
     private PlayerLocomotionInput _locomotionInput;
     private PlayerController _playerController;
     private PlayerActionsInput _actionsInput;
-
-    
-
 
     private void Awake()
     {
@@ -113,13 +106,6 @@ public class FirstPersonNetworkState : NetworkBehaviour
             }
         }
 
-        // _syncCharacterIndex.onChanged += OnCharacterIndexChanged;
-
-        // if (isOwner)
-        // {
-        //     _syncCharacterIndex.value = Random.Range(10, totalCharacterCount);
-        //     ApplyCharacterIndex(_syncCharacterIndex.value);
-        // }
     }
 
     public void RefreshBodyVisibility()
@@ -134,20 +120,9 @@ public class FirstPersonNetworkState : NetworkBehaviour
         }
     }
 
-    private void OnCharacterIndexChanged(int newIndex)
-    {
-        ApplyCharacterIndex(newIndex);
-    }
-
-    private void ApplyCharacterIndex(int index)
-    {
-        // TODO
-    }
-
     protected override void OnDespawned()
     {
         _syncState.onChanged -= OnStateChanged;
-        //_syncCharacterIndex.onChanged -= OnCharacterIndexChanged;
     }
 
     private void Update()
@@ -290,4 +265,6 @@ private void TryPushOtherPlayers()
             return;
         _playerState.SetPlayerMovementState((PlayerMovementState)newState);
     }
+
+    
 }

@@ -353,7 +353,7 @@ namespace PurrLobby
         private IEnumerator StartClient()
         {
             int attempts = 0;
-            int maxAttempts = 3; // Reduced since Steam connection negotiation handles its own long timeouts
+            int maxAttempts = 5; 
 
             // Wait a brief moment before first attempt
             yield return new WaitForSeconds(1.5f);
@@ -381,7 +381,7 @@ namespace PurrLobby
                 attempts++;
                 PurrLogger.Log($"[ConnectionStarter] Client not connected (attempt {attempts}/{maxAttempts}). Steam State: {_networkManager.clientState}. Retrying...", this);
                 _networkManager.StopClient();
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(4f);
                 _networkManager.StartClient();
             }
 

@@ -7263,6 +7263,7 @@ GameObject:
   - component: {fileID: 1097043114}
   - component: {fileID: 1097043116}
   - component: {fileID: 1097043117}
+  - component: {fileID: 1097043118}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -7487,9 +7488,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyCharacterDisplay
   lobbyManager: {fileID: 1097043115}
   characterPrefabs:
+  - {fileID: 1145572536574463470, guid: 3d4f380361200c147976ee24dbb410a9, type: 3}
   - {fileID: 1145572536574463470, guid: 7d62cedf62e9d4a44a8ec018a22d8d0e, type: 3}
   - {fileID: 1145572536574463470, guid: 5abaabcc7e0f8144281e9bcafa1ceb44, type: 3}
   - {fileID: 1145572536574463470, guid: b95993082e2a4154c9213cbb213ab2a3, type: 3}
+  - {fileID: 1145572536574463470, guid: 51d824e2cd8a29842b7714d5c04f30d1, type: 3}
+  - {fileID: 1145572536574463470, guid: c90c924e9b82e0e499f526072a4514a8, type: 3}
+  - {fileID: 1145572536574463470, guid: 04ecdff551a4d614b986343da69e6200, type: 3}
+  - {fileID: 1145572536574463470, guid: 53960bc5734075041bc91d9cc58df9c0, type: 3}
+  - {fileID: 1145572536574463470, guid: ab3eb0ca739d7cc40a7a8cb0ee6bd5d8, type: 3}
+  - {fileID: 1145572536574463470, guid: 410499d40f3a16543b86977004512d2d, type: 3}
+  - {fileID: 1145572536574463470, guid: 7a43bda600684c04c97f41a9d95fb400, type: 3}
+  - {fileID: 1145572536574463470, guid: a5f573dcda66ef145845a3a804a99218, type: 3}
+  - {fileID: 1145572536574463470, guid: 95ac907cb1aec354a967a6b30dddcd9f, type: 3}
+  - {fileID: 1145572536574463470, guid: b6ff78c6efc13e247ae06d878a0db632, type: 3}
+  - {fileID: 1145572536574463470, guid: cd3ca4b0647a7454bb2895be93483d40, type: 3}
+  - {fileID: 1145572536574463470, guid: 204cfb0948c193846a0ee1b975b29ce0, type: 3}
+  - {fileID: 1145572536574463470, guid: 058f51a43a42a354e87892e3c21d2dc4, type: 3}
+  - {fileID: 1145572536574463470, guid: 9b1e2ceab961bd64b90ca92d4b9d96d6, type: 3}
   spawnPoints:
   - {fileID: 1607161840}
   - {fileID: 1941771282}
@@ -7499,6 +7515,18 @@ MonoBehaviour:
   - {fileID: 1363445133}
   - {fileID: 14997501}
   - {fileID: 1750173293}
+--- !u!114 &1097043118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097043112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc0a570eda848540a4dd4c65b51352c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkinSelection
 --- !u!1001 &1097917364
 PrefabInstance:
   m_ObjectHideFlags: 0

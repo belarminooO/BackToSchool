@@ -66,6 +66,7 @@ namespace PurrLobby
             }
             else
             {
+                Instance.ResetForNewSession();
                 Destroy(gameObject);
                 return;
             }
@@ -149,6 +150,7 @@ namespace PurrLobby
             _currentProvider.OnLobbyLeft += () => InvokeDelayed(() =>
             {
                 _currentLobby = default;
+                IsStarting = false;
                 OnRoomLeft?.Invoke();
             });
             
@@ -400,6 +402,19 @@ namespace PurrLobby
         {
             _currentProvider = null;
             _lobbyDataHolder = null;
+        }
+
+        public void ResetForNewSession()
+        {
+            IsStarting = false;
+            _lastKnownState = new Lobby { IsValid = false };
+            _taskLock = 0;
+            _delayedActions.Clear();
+
+            if (_currentLobby.IsValid)
+                LeaveLobby(_currentLobby.LobbyId);
+
+            _lobbyDataHolder?.SetCurrentLobby(default);
         }
 
         private async void CallOnAllReady()

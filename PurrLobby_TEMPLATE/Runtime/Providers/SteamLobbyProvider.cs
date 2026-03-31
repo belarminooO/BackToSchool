@@ -404,7 +404,11 @@ namespace PurrLobby.Providers
 
         public void Shutdown()
         {
-            //Not needed
+            if (IsSteamClientAvailable && _currentLobby != Steamworks.CSteamID.Nil)
+            {
+                Steamworks.SteamMatchmaking.LeaveLobby(_currentLobby);
+                _currentLobby = Steamworks.CSteamID.Nil;
+            }        
         }
 
         private List<LobbyUser> GetLobbyUsers(Steamworks.CSteamID lobbyId)

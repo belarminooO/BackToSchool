@@ -57,14 +57,18 @@ public class LobbyCharacterDisplay : MonoBehaviour
             string id = lobby.Members[i].Id;
 
             if (!_assigned.ContainsKey(id))
-                _assigned[id] = Random.Range(0, characterPrefabs.Count);
+                _assigned[id] = Mathf.Abs((id + lobby.LobbyId).GetHashCode()) % characterPrefabs.Count;
 
             int idx = _assigned[id];
 
             Debug.Log($"[LobbyCharacterDisplay] Player {id} → skin {idx} (total prefabs: {characterPrefabs.Count})");
 
             if (id == myId)
+            {
                 AssignedPrefab = characterPrefabs[idx];
+                SkinSelection.Instance?.Set(idx);
+                Debug.Log($"[SkinSelection] Set index={idx} for myId={myId} | Instance={(SkinSelection.Instance == null ? "NULL — add SkinSelection to lobby scene!" : "OK")}");
+            }
 
             GameObject go = Instantiate(characterPrefabs[idx], spawnPoints[i].position, spawnPoints[i].rotation);
 
