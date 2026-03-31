@@ -158,18 +158,21 @@ namespace PurrLobby
             {
                 Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
                 Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
-                void TrySetAddress(ITransport t)
+                
+                
+                
+                void TrySetAddress(object t)
                 {
                     if (t == null) return;
-                    if (t.GetType().Name == "SteamTransport")
+                    
+                    // Direct cast forces the compiler to keep 'address' in the build
+                    if (t is PurrNet.Steam.SteamTransport steamTransport)
                     {
-                        var addressProperty = t.GetType().GetProperty("address");
-                        if (addressProperty != null && addressProperty.CanWrite)
-                        {
-                            addressProperty.SetValue(t, ownerId.m_SteamID.ToString());
-                        }
+                        steamTransport.address = ownerId.m_SteamID.ToString();
+                        UnityEngine.Debug.Log($"[ConnectionStarter] Successfully set Steam address to: {ownerId.m_SteamID}");
                     }
                 }
+                
                 TrySetAddress(_networkManager.transport);
                 if (_networkManager.transport is CompositeTransport composite)
                 {
@@ -370,9 +373,9 @@ namespace PurrLobby
 
 
         // Reset the _hasStarted flag when the ConnectionStarter is destroyed
-        private void OnDestroy()
-        {
-            _hasStarted = false;
-        }
+        // private void OnDestroy()
+        // {
+        //     _hasStarted = false;
+        // }
     }
 }
