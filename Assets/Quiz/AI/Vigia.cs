@@ -86,6 +86,10 @@ public class Vigia : NetworkBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
+        if (playerMask.value == 0) playerMask = LayerMask.GetMask("Player");
+        if (visionMask.value == 0) visionMask = LayerMask.GetMask("Default", "Environment", "Ground");
+        if (indicatorLight == null) indicatorLight = GetComponentInChildren<Light>();
+
         gameObject.isStatic = false;
 
         if (waypoints == null || waypoints.Count == 0)

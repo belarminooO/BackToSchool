@@ -1922,7 +1922,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3105,7 +3105,7 @@ MonoBehaviour:
   _directChildren: []
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
-  requiredPlayers: 2
+  requiredPlayers: 1
   stateMachine: {fileID: 364223067}
   waitingState: {fileID: 1848090773}
   freezeState: {fileID: 512507347}
@@ -3393,10 +3393,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1923039037
   m_Radius: 0.4
-  m_Speed: 0.25
-  m_Acceleration: 12
+  m_Speed: 0.05
+  m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 240
+  m_AngularSpeed: 120
   m_StoppingDistance: 0.8
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -3459,9 +3459,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 543051297}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0d6b322432f5a24f8712d4bcf39461e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c21cf49947a9fc4a973dde1b0e864f6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VigiaEmpurrar
+  m_EditorClassIdentifier: Assembly-CSharp::ColegaEmpurrar
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  waypoints:
+  - {fileID: 2002934586}
+  - {fileID: 695189653}
+  randomPatrol: 0
+  wanderSpeed: 0.05
+  investigateSpeed: 3
+  stopDistance: 0.8
+  viewDistance: 12
+  viewAngle: 80
+  visionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  pushForce: 35
+  pushDistance: 1.2
+  showDebugGizmos: 1
+  showPatrolPath: 1
+  CurrentState:
+    _value: 0
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
+  SyncedSpeed:
+    _value: 0
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
+  indicatorLight: {fileID: 0}
 --- !u!1 &549349647
 GameObject:
   m_ObjectHideFlags: 0
@@ -5041,6 +5078,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890020278}
   m_CullTransparentMesh: 1
+--- !u!134 &895912158
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1001 &896748029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5442,7 +5492,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.016666668
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 570261de7d9714340892338b6aedb178, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 84acf58460377de45979ea8fe8a99b1a, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1001 &1028082132
 PrefabInstance:
@@ -6006,7 +6056,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 68b55f7d24d043d4d8044734a96fb382, type: 2}
+      objectReference: {fileID: 9100000, guid: a6fdbc5714a96ee4ab4c86f8c3575835, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 8842198587072178518, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
@@ -6453,7 +6503,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122609005}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 895912158}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -6531,10 +6581,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1923039037
   m_Radius: 0.4
-  m_Speed: 0.25
-  m_Acceleration: 12
+  m_Speed: 0.05
+  m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 240
+  m_AngularSpeed: 120
   m_StoppingDistance: 0.8
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -6597,9 +6647,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 1122609005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0d6b322432f5a24f8712d4bcf39461e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c21cf49947a9fc4a973dde1b0e864f6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VigiaEmpurrar
+  m_EditorClassIdentifier: Assembly-CSharp::ColegaEmpurrar
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  waypoints:
+  - {fileID: 1743822494}
+  - {fileID: 1646150546}
+  randomPatrol: 0
+  wanderSpeed: 0.05
+  investigateSpeed: 3
+  stopDistance: 0.8
+  viewDistance: 12
+  viewAngle: 80
+  visionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  pushForce: 35
+  pushDistance: 1.2
+  showDebugGizmos: 1
+  showPatrolPath: 1
+  CurrentState:
+    _value: 0
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
+  SyncedSpeed:
+    _value: 0
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
+  indicatorLight: {fileID: 0}
 --- !u!1 &1133117340
 GameObject:
   m_ObjectHideFlags: 0
@@ -6755,7 +6842,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162989169}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ccc454d6a19ac140b15f8d619d0fb5e, type: 3}
   m_Name: 
@@ -6797,7 +6884,7 @@ MonoBehaviour:
   _startClientFlags: 0
   _cookieScope: 1
   _dontDestroyOnLoad: 0
-  _transport: {fileID: 1162989171}
+  _transport: {fileID: 1162989175}
   _networkPrefabs: {fileID: 11400000, guid: 4a469599880784e418d2a0a040751f3b, type: 2}
   _networkAssets: {fileID: 11400000, guid: 04f87596314634641986316e5f781c98, type: 2}
   _networkRules: {fileID: 11400000, guid: d8799083b96579a42b8b2d03e4ceae98, type: 2}
@@ -6827,7 +6914,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162989169}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc64ff707d914a64e95f2ac0bf554c09, type: 3}
   m_Name: 
@@ -6846,7 +6933,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162989169}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c9fad460502b364cba14087be3cad24, type: 3}
   m_Name: 
@@ -7817,7 +7904,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_Name
-      value: strong-man-c (3)
+      value: strong-man-c (1)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_IsActive
@@ -7830,7 +7917,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 68b55f7d24d043d4d8044734a96fb382, type: 2}
+      objectReference: {fileID: 9100000, guid: a6fdbc5714a96ee4ab4c86f8c3575835, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 8842198587072178518, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
@@ -9036,7 +9123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_Name
-      value: strong-man-c (1)
+      value: strong-man-c (3)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_IsActive
@@ -9049,7 +9136,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 68b55f7d24d043d4d8044734a96fb382, type: 2}
+      objectReference: {fileID: 9100000, guid: a6fdbc5714a96ee4ab4c86f8c3575835, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 8842198587072178518, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
@@ -11188,7 +11275,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.016666668
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 6eafa69d6daf8cd4e893e8a4352d8ef9, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 77a7fe1b0697e0940a1671a919477512, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1001 &1842624487
 PrefabInstance:
@@ -11631,10 +11718,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1923039037
   m_Radius: 0.4
-  m_Speed: 0.25
-  m_Acceleration: 12
+  m_Speed: 0.05
+  m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 240
+  m_AngularSpeed: 120
   m_StoppingDistance: 0.8
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -11697,9 +11784,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 1864806818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0d6b322432f5a24f8712d4bcf39461e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c21cf49947a9fc4a973dde1b0e864f6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VigiaEmpurrar
+  m_EditorClassIdentifier: Assembly-CSharp::ColegaEmpurrar
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  waypoints:
+  - {fileID: 430191168}
+  - {fileID: 1321602436}
+  randomPatrol: 0
+  wanderSpeed: 0.05
+  investigateSpeed: 3
+  stopDistance: 0.8
+  viewDistance: 12
+  viewAngle: 80
+  visionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  pushForce: 35
+  pushDistance: 1.2
+  showDebugGizmos: 1
+  showPatrolPath: 1
+  CurrentState:
+    _value: 0
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
+  SyncedSpeed:
+    _value: 0
+    _ownerAuth: 0
+    _sendIntervalInSeconds: 0
+  indicatorLight: {fileID: 0}
 --- !u!1001 &1888221785
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12513,7 +12637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12689,7 +12813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12774,7 +12898,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.016666668
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 63ff65925fd612644846736b093291b9, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: cd75f092de454ac4fa2571e29a8aa191, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &2033773485
 GameObject:
