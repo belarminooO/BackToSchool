@@ -25,6 +25,8 @@ namespace PurrLobby
     /// </summary>
     public class ConnectionStarter : MonoBehaviour
     {
+        public static bool IsClientConnectionInProgress { get; private set; }
+
         private NetworkManager _networkManager;
         private LobbyDataHolder _lobbyDataHolder;
 
@@ -352,6 +354,8 @@ namespace PurrLobby
 
         private IEnumerator StartClient()
         {
+            IsClientConnectionInProgress = true;
+            
             int attempts = 0;
             int maxAttempts = 5; 
 
@@ -375,6 +379,7 @@ namespace PurrLobby
                 if (_networkManager.clientState == ConnectionState.Connected)
                 {
                     Debug.Log($"[ConnectionStarter] PurrNet clientState = {_networkManager.clientState}, isServer = {_networkManager.isServer}");
+                    IsClientConnectionInProgress = false;
                     yield break;
                 }
 
@@ -386,6 +391,7 @@ namespace PurrLobby
             }
 
             PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts.", this);
+            IsClientConnectionInProgress = false;
         }
 
 
