@@ -79,8 +79,9 @@ namespace GinjaGaming.FinalCharacterController
             GatherPressed = false;
         }
 
-        public void SetAttackPressedFalse() 
-        { 
+        public void SetAttackPressedFalse()
+        {
+            Debug.Log($"[ActionsInput] SetAttackPressedFalse on '{gameObject.name}'", gameObject);
             AttackPressed = false;
         }
         #endregion
@@ -98,6 +99,8 @@ namespace GinjaGaming.FinalCharacterController
         {
             if (!context.performed)
                 return;
+
+            Debug.Log($"[ActionsInput] OnAttacking PERFORMED on '{gameObject.name}'", gameObject);
 
             AttackPressed = true;
         }

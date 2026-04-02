@@ -5,23 +5,18 @@ public class AnimationEventRelay : MonoBehaviour
 {
     private PlayerActionsInput _actionsInput;
 
-    private PlayerActionsInput ActionsInput
+    private void Awake()
     {
-        get
-        {
-            if (_actionsInput == null)
-                _actionsInput = GetComponentInParent<PlayerActionsInput>(true); 
-            return _actionsInput;
-        }
+        _actionsInput = GetComponentInParent<PlayerActionsInput>();
     }
 
     public void SetAttackPressedFalse()
     {
-        ActionsInput?.SetAttackPressedFalse();
+        _actionsInput?.SetAttackPressedFalse();
     }
 
     public void SetGatherPressedFalse()
     {
-        ActionsInput?.SetGatherPressedFalse();
+        _actionsInput?.SetGatherPressedFalse();
     }
 }
