@@ -431,13 +431,10 @@ namespace PurrLobby
                 _networkManager.StartClient();
             }
 
-                PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts. Returning to lobby.", this);
-                IsClientConnectionInProgress = false;
-                _networkManager.StopClient();
-                var lobbyManager = FindFirstObjectByType<PurrLobby.LobbyManager>();
-                if (lobbyManager != null)
-                    lobbyManager.LeaveLobby();
-                UnityEngine.SceneManagement.SceneManager.LoadScene("LobbySample");
+            PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts. Returning to lobby.", this);
+            IsClientConnectionInProgress = false;
+            _networkManager.StopClient();
+            UnityEngine.SceneManagement.SceneManager.LoadScene("LobbySample");
         }
 
         // Reset the _hasStarted flag when the ConnectionStarter is destroyed
