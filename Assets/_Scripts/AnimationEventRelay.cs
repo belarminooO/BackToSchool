@@ -5,20 +5,23 @@ public class AnimationEventRelay : MonoBehaviour
 {
     private PlayerActionsInput _actionsInput;
 
-    private void Awake()
+    private PlayerActionsInput ActionsInput
     {
-        _actionsInput = GetComponentInParent<PlayerActionsInput>();
+        get
+        {
+            if (_actionsInput == null)
+                _actionsInput = GetComponentInParent<PlayerActionsInput>(true); 
+            return _actionsInput;
+        }
     }
 
-    // Called by the animation event on PushMixamo
     public void SetAttackPressedFalse()
     {
-        _actionsInput?.SetAttackPressedFalse();
+        ActionsInput?.SetAttackPressedFalse();
     }
 
-    // Called by the animation event on Gather animations (if any)
     public void SetGatherPressedFalse()
     {
-        _actionsInput?.SetGatherPressedFalse();
+        ActionsInput?.SetGatherPressedFalse();
     }
 }
