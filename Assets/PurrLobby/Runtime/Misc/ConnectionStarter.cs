@@ -422,16 +422,20 @@ namespace PurrLobby
                 yield return new WaitForSeconds(6f); // ← was 4f
 
                 // ← Re-fetch host's Steam ID before each retry, in case lobby ownership changed
-                #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
+#if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
                 if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
                 {
                     var lobbyId = new Steamworks.CSteamID(parsedLobbyId);
                     var ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
 
+                    PurrLogger.Log($"[Steam Debug] Attempting to connect to Host Steam ID: {ownerId.m_SteamID}", this);
+
                     void TrySetAddress(object t)
                     {
-                        if (t is PurrNet.Steam.SteamTransport st)
+                        if (t is PurrNet.Steam.SteamTransport st) {
                             st.address = ownerId.m_SteamID.ToString();
+                            PurrLogger.Log($"[Steam Debug] SUCCESS! Applied address to SteamTransport component.", this);
+                        }
                     }
 
                     TrySetAddress(_networkManager.transport);
@@ -439,7 +443,7 @@ namespace PurrLobby
                         foreach (var t in composite.transports)
                             TrySetAddress(t);
                 }
-                #endif
+#endif
             }
 
             PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts. Returning to lobby.", this);
