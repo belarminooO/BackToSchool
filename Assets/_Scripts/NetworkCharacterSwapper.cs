@@ -28,7 +28,8 @@ public class NetworkCharacterSwapper : NetworkBehaviour
         }
         else
         {
-            SwapCharacter(_index.value);
+            if (_index.value > 0 || characterModels.Count > 0)
+                SwapCharacter(_index.value);
         }
     }
 
@@ -53,7 +54,6 @@ public class NetworkCharacterSwapper : NetworkBehaviour
             rootTransform = found != null ? found : transform;
         }
 
-        // 1. Identify existing model — same logic as CharacterSwapper
         Transform oldSkeleton = null;
         Transform oldMesh = null;
 
@@ -70,7 +70,6 @@ public class NetworkCharacterSwapper : NetworkBehaviour
 
         Transform oldHead = oldSkeleton != null ? FindDeepChild(oldSkeleton, "Head") : null;
 
-        // 2. Instantiate new model — runtime equivalent of PrefabUtility.InstantiatePrefab
         GameObject newInstance = Instantiate(newFbx, rootTransform);
         newInstance.name = newFbx.name;
         newInstance.transform.localPosition = Vector3.zero;
@@ -79,7 +78,6 @@ public class NetworkCharacterSwapper : NetworkBehaviour
 
         Transform newHead = FindDeepChild(newInstance.transform, "Head");
 
-        // 3. Update Animator avatar — same as CharacterSwapper
         Animator newAnim = newInstance.GetComponent<Animator>();
         if (newAnim != null)
         {
@@ -92,13 +90,22 @@ public class NetworkCharacterSwapper : NetworkBehaviour
             if (mainAnimator != null)
             {
                 mainAnimator.avatar = newAnim.avatar;
+
+                bool wasGrounded = mainAnimator.GetBool("isGrounded");
+                bool wasIdling   = mainAnimator.GetBool("isIdling");
+
                 mainAnimator.Rebind();
+
+                mainAnimator.SetBool("isGrounded",  wasGrounded);
+                mainAnimator.SetBool("isIdling",    wasIdling);
+                mainAnimator.SetBool("isAttacking", false);
+                mainAnimator.SetBool("isGathering", false);
+                mainAnimator.Update(0f);
             }
 
             newAnim.enabled = false;
         }
 
-        // 4. Move head attachments (FirstPersonCamera, etc.) to new head — same as CharacterSwapper
         if (oldHead != null && newHead != null)
         {
             var toMove = new List<Transform>();
@@ -116,17 +123,14 @@ public class NetworkCharacterSwapper : NetworkBehaviour
             }
         }
 
-        // 5. Set layers — same as CharacterSwapper
-        SetLayerRecursively(newInstance, 2); // Ignore Raycast
+        SetLayerRecursively(newInstance, 2);
         foreach (var smr in newInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
             smr.gameObject.layer = 3;
 
-        // 6. Hide body from local owner's first-person camera
         if (isOwner)
             foreach (var smr in newInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
                 smr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
-        // 7. Destroy old — same as CharacterSwapper
         if (oldMesh != null) Destroy(oldMesh.gameObject);
         if (oldSkeleton != null) Destroy(oldSkeleton.gameObject);
     }
