@@ -380,13 +380,24 @@ namespace PurrLobby
             // Increased initial wait to give host's Steam SDR session more time to activate
             yield return new WaitForSeconds(3f); // ← was 1.5f
 
-            _networkManager.StartClient();
-
             while (attempts < maxAttempts)
             {
+                _networkManager.StartClient();
+
+                // CRITICAL FIX: Wait for a short grace period before calculating timeouts.
+                // PurrNet / SteamTransport may not reliably update 'clientState' to 'Connecting' 
+                // on the exact same frame that StartClient() returns execution.
+                float gracePeriod = 0f;
+                while (_networkManager.clientState == ConnectionState.Disconnected && gracePeriod < 2f)
+                {
+                    yield return null; // Wait for the next Unity frame
+                    gracePeriod += Time.deltaTime;
+                }
+
                 float timeoutCounter = 0f;
                 float maxTimeout = 30f; // ← slightly increased from 25f for internet play
 
+                // Now it's safe to loop while 'Connecting'
                 while (_networkManager.clientState == ConnectionState.Connecting 
                     && timeoutCounter < maxTimeout)
                 {
@@ -394,6 +405,7 @@ namespace PurrLobby
                     timeoutCounter += 0.5f;
                 }
 
+                // Did the connection successfully establish?
                 if (_networkManager.clientState == ConnectionState.Connected)
                 {
                     Debug.Log($"[ConnectionStarter] Connected! clientState = {_networkManager.clientState}");
@@ -401,8 +413,9 @@ namespace PurrLobby
                     yield break;
                 }
 
+                // If not, it failed or timed out.
                 attempts++;
-                PurrLogger.Log($"[ConnectionStarter] Attempt {attempts}/{maxAttempts} failed. Retrying...", this);
+                PurrLogger.Log($"[ConnectionStarter] Attempt {attempts}/{maxAttempts} failed. Current state: {_networkManager.clientState}. Retrying...", this);
                 _networkManager.StopClient();
 
                 // ← Increased cooldown to give Steam SDR more time to reset cleanly
@@ -427,8 +440,6 @@ namespace PurrLobby
                             TrySetAddress(t);
                 }
                 #endif
-
-                _networkManager.StartClient();
             }
 
             PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts. Returning to lobby.", this);
@@ -436,6 +447,7 @@ namespace PurrLobby
             _networkManager.StopClient();
             UnityEngine.SceneManagement.SceneManager.LoadScene("LobbySample");
         }
+
 
         // Reset the _hasStarted flag when the ConnectionStarter is destroyed
         // private void OnDestroy()
