@@ -22,6 +22,9 @@ public class ChangeRoundStateNode : StateNode
         else
         {
             manager.currentRound.value++;
+
+            manager.scoreManager.EvaluateRoundCosmetics();
+
             var players = manager.scoreManager.allPlayers;
             manager.spawnManager.TeleportAllPlayersToRound(players.ToArray(), manager.currentRound.value);
 

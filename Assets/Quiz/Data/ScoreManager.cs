@@ -443,4 +443,51 @@ public class ScoreManager : NetworkBehaviour
     {
         return registeredPlayers.IndexOf(id);
     }
+
+    public void EvaluateRoundCosmetics()
+    {
+        if (!isServer || allPlayers.Count == 0) 
+            return;
+
+        int highestScore = int.MinValue;
+        int lowestScore = int.MaxValue;
+
+        foreach (var player in allPlayers)
+        {
+            int score = GetScoreForTeam(player.team);
+            if (score > highestScore) highestScore = score;
+            if (score < lowestScore) lowestScore = score;
+        }
+
+        foreach (var player in allPlayers)
+        {
+            int score = GetScoreForTeam(player.team);
+            
+            bool getsCrown = (score == highestScore && score > 0); 
+            bool getsNose = (score == lowestScore && score < highestScore);
+
+            PlayerCosmetics cosmetics = player.gameObject.GetComponent<PlayerCosmetics>();
+            if (cosmetics != null)
+            {
+                cosmetics.SetCosmeticsServerAuth(getsCrown, getsNose);
+            }
+        }
+    }
+
+    private int GetScoreForTeam(Team t)
+    {
+        return t switch
+        {
+            Team.Team1 => team1Score.value,
+            Team.Team2 => team2Score.value,
+            Team.Team3 => team3Score.value,
+            Team.Team4 => team4Score.value,
+            Team.Team5 => team5Score.value,
+            Team.Team6 => team6Score.value,
+            Team.Team7 => team7Score.value,
+            Team.Team8 => team8Score.value,
+            _ => 0
+        };
+    }
+
 }

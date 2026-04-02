@@ -37,3 +37,5 @@ unity postprocessing urp examples: https://github.com/togucchi/urp-postprocessin
 classroom objects: https://styloo.itch.io/classroom-asset-pack
 
 new skybox: https://assetstore.unity.com/packages/vfx/shaders/free-skybox-extended-shader-107400?srsltid=AfmBOopskbcJzwj6yYDctAoz0L5Uur7lGPQUNFzRs22VjgmL6VIpFQy1
+
+low poly crown: https://sketchfab.com/3d-models/simple-low-poly-crown-e2462871cc894914adbdb8722838c3b0
