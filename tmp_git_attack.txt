@@ -1,0 +1,175 @@
+﻿commit ca9621dd5c8a974c2b4510926211e94ac068aba7
+Author: mig <114227605+migboss@users.noreply.github.com>
+Date:   Wed Mar 25 07:10:42 2026 +0000
+
+    Push 100 + NPC Dynamic Light + Networked Animation Objects
+
+diff --git a/Assets/_Scripts/AnimationEventRelay.cs b/Assets/_Scripts/AnimationEventRelay.cs
+new file mode 100644
+index 0000000..f705321
+--- /dev/null
++++ b/Assets/_Scripts/AnimationEventRelay.cs
+@@ -0,0 +1,24 @@
++using GinjaGaming.FinalCharacterController;
++using UnityEngine;
++
++public class AnimationEventRelay : MonoBehaviour
++{
++    private PlayerActionsInput _actionsInput;
++
++    private void Awake()
++    {
++        _actionsInput = GetComponentInParent<PlayerActionsInput>();
++    }
++
++    // Called by the animation event on PushMixamo
++    public void SetAttackPressedFalse()
++    {
++        _actionsInput?.SetAttackPressedFalse();
++    }
++
++    // Called by the animation event on Gather animations (if any)
++    public void SetGatherPressedFalse()
++    {
++        _actionsInput?.SetGatherPressedFalse();
++    }
++}
+\ No newline at end of file
+
+commit 4417deebde3b7fb5758d65cca2fd2f36cb6a0345
+Author: belarminooO <130702154+belarminooO@users.noreply.github.com>
+Date:   Wed Mar 25 00:37:41 2026 +0000
+
+    push 99
+
+diff --git a/Assets/_Scripts/FirstPersonNetworkState.cs b/Assets/_Scripts/FirstPersonNetworkState.cs
+index e97f552..779887b 100644
+--- a/Assets/_Scripts/FirstPersonNetworkState.cs
++++ b/Assets/_Scripts/FirstPersonNetworkState.cs
+@@ -16,6 +16,11 @@ public class FirstPersonNetworkState : NetworkBehaviour
+     public bool SyncedAttack => _syncAttack.value;
+     public bool SyncedGather => _syncGather.value;
+ 
++    [Header("Push Settings")]
++    public float pushRange = 3f;
++    public float pushForce = 7.5f;
++    private bool _wasAttacking = false;
++
+     private PlayerState _playerState;
+     private PlayerLocomotionInput _locomotionInput;
+     private PlayerController _playerController;
+@@ -107,11 +112,66 @@ private void Update()
+             _syncInput.value = _locomotionInput.MovementInput;
+         if (_actionsInput != null)
+         {
++            // Execute precisely when the animation event SetAttackPressedFalse fires
++            if (!_actionsInput.AttackPressed && _wasAttacking)
++            {
++                TryPushOtherPlayers();
++            }
++            _wasAttacking = _actionsInput.AttackPressed;
++
+             _syncAttack.value = _actionsInput.AttackPressed;
+             _syncGather.value = _actionsInput.GatherPressed;
+         }
+     }
+ 
++    private void TryPushOtherPlayers()
++    {
++        if (Camera.main == null) return;
++
++        Ray r = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
++        
++        // Include Layer 0 (Default) since your Player Prefab is currently on the Default layer
++        int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
++        
++        // SphereCast forgives exact aiming
++        RaycastHit[] hits = Physics.SphereCastAll(r, 0.4f, pushRange, layerMask, QueryTriggerInteraction.Ignore);
++        foreach (var hit in hits)
++        {
++            // Don't push ourselves
++            if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
++                continue;
++
++            FirstPersonNetworkState otherState = hit.collider.GetComponentInParent<FirstPersonNetworkState>();
++            if (otherState != null)
++            {
++                Vector3 forceDir = Camera.main.transform.forward;
++                forceDir.y = 0.2f; // Slight upward push
++                otherState.PushServerRpc(forceDir.normalized * pushForce);
++                break; // Only push one person per attack
++            }
++        }
++    }
++
++    [ServerRpc(requireOwnership: false)]
++    public void PushServerRpc(Vector3 forceVector)
++    {
++        // Target the specific owner of this object
++        var network = GetComponent<NetworkIdentity>();
++        if (network != null && network.owner.HasValue)
++        {
++            PushTargetRpc(network.owner.Value, forceVector);
++        }
++    }
++
++    [TargetRpc]
++    public void PushTargetRpc(PlayerID target, Vector3 forceVector)
++    {
++        if (_playerController != null)
++        {
++            _playerController.ApplyKnockback(forceVector);
++        }
++    }
++
+     private void OnStateChanged(int newState)
+     {
+         if (isOwner || _playerState == null)
+
+commit 4ac9aa2df0a5474d9c3fd15fd1e9445eb22a2dc0
+Author: belarminooO <130702154+belarminooO@users.noreply.github.com>
+Date:   Tue Mar 24 13:13:59 2026 +0000
+
+    push 95 funcional
+
+diff --git a/Assets/_Scripts/FirstPersonNetworkState.cs b/Assets/_Scripts/FirstPersonNetworkState.cs
+index 6a21f7b..e97f552 100644
+--- a/Assets/_Scripts/FirstPersonNetworkState.cs
++++ b/Assets/_Scripts/FirstPersonNetworkState.cs
+@@ -10,9 +10,16 @@ public class FirstPersonNetworkState : NetworkBehaviour
+     public Vector2 SyncedMovementInput => _syncInput.value;
+     public PlayerMovementState SyncedMovementState => (PlayerMovementState)_syncState.value;
+ 
++    private SyncVar<bool> _syncAttack = new SyncVar<bool>(ownerAuth: true);
++    private SyncVar<bool> _syncGather = new SyncVar<bool>(ownerAuth: true);
++
++    public bool SyncedAttack => _syncAttack.value;
++    public bool SyncedGather => _syncGather.value;
++
+     private PlayerState _playerState;
+     private PlayerLocomotionInput _locomotionInput;
+     private PlayerController _playerController;
++    private PlayerActionsInput _actionsInput;
+ 
+ 
+     private void Awake()
+@@ -21,6 +28,7 @@ private void Awake()
+         _locomotionInput = GetComponent<PlayerLocomotionInput>();
+ 
+         _playerController = GetComponent<PlayerController>();
++        _actionsInput = GetComponent<PlayerActionsInput>();
+ 
+         if (_locomotionInput != null) 
+             _locomotionInput.enabled = false;
+@@ -97,6 +105,11 @@ private void Update()
+             _syncState.value = (int)_playerState.CurrentPlayerMovementState;
+         if (_locomotionInput != null)
+             _syncInput.value = _locomotionInput.MovementInput;
++        if (_actionsInput != null)
++        {
++            _syncAttack.value = _actionsInput.AttackPressed;
++            _syncGather.value = _actionsInput.GatherPressed;
++        }
+     }
+ 
+     private void OnStateChanged(int newState)

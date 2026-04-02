@@ -1,0 +1,364 @@
+﻿commit 60b572606e1d833fd30e71f588db05fab89842f5
+Author: mig <114227605+migboss@users.noreply.github.com>
+Date:   Tue Mar 31 22:15:27 2026 +0100
+
+    SteamTransport Multiplayer + Random Multiplayer Steam System
+
+diff --git a/Assets/PurrLobby/Runtime/Lobby/LobbyManager.cs b/Assets/PurrLobby/Runtime/Lobby/LobbyManager.cs
+index ff95f48..36d3090 100644
+--- a/Assets/PurrLobby/Runtime/Lobby/LobbyManager.cs
++++ b/Assets/PurrLobby/Runtime/Lobby/LobbyManager.cs
+@@ -66,6 +66,7 @@ private void Awake()
+             }
+             else
+             {
++                Instance.ResetForNewSession();
+                 Destroy(gameObject);
+                 return;
+             }
+@@ -149,6 +150,7 @@ private void SubscribeToProviderEvents()
+             _currentProvider.OnLobbyLeft += () => InvokeDelayed(() =>
+             {
+                 _currentLobby = default;
++                IsStarting = false;
+                 OnRoomLeft?.Invoke();
+             });
+             
+@@ -402,6 +404,19 @@ private void OnDestroy()
+             _lobbyDataHolder = null;
+         }
+ 
++        public void ResetForNewSession()
++        {
++            IsStarting = false;
++            _lastKnownState = new Lobby { IsValid = false };
++            _taskLock = 0;
++            _delayedActions.Clear();
++
++            if (_currentLobby.IsValid)
++                LeaveLobby(_currentLobby.LobbyId);
++
++            _lobbyDataHolder?.SetCurrentLobby(default);
++        }
++
+         private async void CallOnAllReady()
+         {
+             Debug.Log("[LobbyManager] CallOnAllReady() ENTERED"); 
+diff --git a/Assets/PurrLobby/Runtime/Misc/ConnectionStarter.cs b/Assets/PurrLobby/Runtime/Misc/ConnectionStarter.cs
+index 3df3797..b41884f 100644
+--- a/Assets/PurrLobby/Runtime/Misc/ConnectionStarter.cs
++++ b/Assets/PurrLobby/Runtime/Misc/ConnectionStarter.cs
+@@ -353,7 +353,7 @@ private void StartNetworkAfterRelayConfig()
+         private IEnumerator StartClient()
+         {
+             int attempts = 0;
+-            int maxAttempts = 3; // Reduced since Steam connection negotiation handles its own long timeouts
++            int maxAttempts = 5; 
+ 
+             // Wait a brief moment before first attempt
+             yield return new WaitForSeconds(1.5f);
+@@ -381,7 +381,7 @@ private IEnumerator StartClient()
+                 attempts++;
+                 PurrLogger.Log($"[ConnectionStarter] Client not connected (attempt {attempts}/{maxAttempts}). Steam State: {_networkManager.clientState}. Retrying...", this);
+                 _networkManager.StopClient();
+-                yield return new WaitForSeconds(2f);
++                yield return new WaitForSeconds(4f);
+                 _networkManager.StartClient();
+             }
+ 
+diff --git a/Assets/_Scripts/FirstPersonNetworkState.cs b/Assets/_Scripts/FirstPersonNetworkState.cs
+index ba143a5..9fd2bfb 100644
+--- a/Assets/_Scripts/FirstPersonNetworkState.cs
++++ b/Assets/_Scripts/FirstPersonNetworkState.cs
+@@ -4,7 +4,6 @@
+ 
+ public class FirstPersonNetworkState : NetworkBehaviour
+ {
+-    private SyncVar<int> _syncCharacterIndex = new SyncVar<int>(ownerAuth: true);
+     private SyncVar<int> _syncState = new SyncVar<int>(ownerAuth: true);
+     private SyncVar<Vector2> _syncInput = new SyncVar<Vector2>(ownerAuth: true);
+ 
+@@ -17,9 +16,6 @@ public class FirstPersonNetworkState : NetworkBehaviour
+     public bool SyncedAttack => _syncAttack.value;
+     public bool SyncedGather => _syncGather.value;
+ 
+-    [Header("Character")]
+-    public int totalCharacterCount = 18;
+-
+     [Header("Push Settings")]
+     public float pushRange = 3f;
+     public float pushForce = 7.5f;
+@@ -33,9 +29,6 @@ public class FirstPersonNetworkState : NetworkBehaviour
+     private PlayerController _playerController;
+     private PlayerActionsInput _actionsInput;
+ 
+-    
+-
+-
+     private void Awake()
+     {
+         _playerState = GetComponent<PlayerState>();
+@@ -113,13 +106,6 @@ protected override void OnSpawned()
+             }
+         }
+ 
+-        // _syncCharacterIndex.onChanged += OnCharacterIndexChanged;
+-
+-        // if (isOwner)
+-        // {
+-        //     _syncCharacterIndex.value = Random.Range(10, totalCharacterCount);
+-        //     ApplyCharacterIndex(_syncCharacterIndex.value);
+-        // }
+     }
+ 
+     public void RefreshBodyVisibility()
+@@ -134,20 +120,9 @@ public void RefreshBodyVisibility()
+         }
+     }
+ 
+-    private void OnCharacterIndexChanged(int newIndex)
+-    {
+-        ApplyCharacterIndex(newIndex);
+-    }
+-
+-    private void ApplyCharacterIndex(int index)
+-    {
+-        // TODO
+-    }
+-
+     protected override void OnDespawned()
+     {
+         _syncState.onChanged -= OnStateChanged;
+-        //_syncCharacterIndex.onChanged -= OnCharacterIndexChanged;
+     }
+ 
+     private void Update()
+@@ -290,4 +265,6 @@ private void OnStateChanged(int newState)
+             return;
+         _playerState.SetPlayerMovementState((PlayerMovementState)newState);
+     }
++
++    
+ }
+diff --git a/Assets/_Scripts/LobbyCharacterDisplay.cs b/Assets/_Scripts/LobbyCharacterDisplay.cs
+index 4e905bb..9a0164c 100644
+--- a/Assets/_Scripts/LobbyCharacterDisplay.cs
++++ b/Assets/_Scripts/LobbyCharacterDisplay.cs
+@@ -57,14 +57,18 @@ private void Refresh(Lobby lobby)
+             string id = lobby.Members[i].Id;
+ 
+             if (!_assigned.ContainsKey(id))
+-                _assigned[id] = Random.Range(0, characterPrefabs.Count);
++                _assigned[id] = Mathf.Abs((id + lobby.LobbyId).GetHashCode()) % characterPrefabs.Count;
+ 
+             int idx = _assigned[id];
+ 
+             Debug.Log($"[LobbyCharacterDisplay] Player {id} ΓåÆ skin {idx} (total prefabs: {characterPrefabs.Count})");
+ 
+             if (id == myId)
++            {
+                 AssignedPrefab = characterPrefabs[idx];
++                SkinSelection.Instance?.Set(idx);
++                Debug.Log($"[SkinSelection] Set index={idx} for myId={myId} | Instance={(SkinSelection.Instance == null ? "NULL ΓÇö add SkinSelection to lobby scene!" : "OK")}");
++            }
+ 
+             GameObject go = Instantiate(characterPrefabs[idx], spawnPoints[i].position, spawnPoints[i].rotation);
+ 
+diff --git a/Assets/_Scripts/NetworkCharacterSwapper.cs b/Assets/_Scripts/NetworkCharacterSwapper.cs
+new file mode 100644
+index 0000000..92c199c
+--- /dev/null
++++ b/Assets/_Scripts/NetworkCharacterSwapper.cs
+@@ -0,0 +1,151 @@
++using System.Collections.Generic;
++using PurrNet;
++using UnityEngine;
++
++public class NetworkCharacterSwapper : NetworkBehaviour
++{
++    [Header("Character Models ΓÇö same list & order as LobbyCharacterDisplay.characterPrefabs")]
++    [SerializeField] private List<GameObject> characterModels = new();
++
++    [Header("References ΓÇö same as CharacterSwapper")]
++    public Transform rootTransform;
++    public Animator mainAnimator;
++
++    private readonly SyncVar<int> _index = new SyncVar<int>(ownerAuth: true);
++
++    protected override void OnSpawned()
++    {
++        _index.onChanged += OnIndexChanged;
++
++        var skinSel = SkinSelection.Instance;
++        Debug.Log($"[NetworkCharacterSwapper] OnSpawned | isOwner={isOwner} | SkinSelection={(skinSel == null ? "NULL ΓÇö not in scene or destroyed!" : "OK")} | idx={(skinSel != null ? skinSel.SkinIndex.ToString() : "ΓÇö")} | characterModels.Count={characterModels.Count} | rootTransform={(rootTransform == null ? "NULL ΓÇö assign Root in Inspector!" : rootTransform.name)} | mainAnimator={(mainAnimator == null ? "NULL ΓÇö assign Animator in Inspector!" : "OK")}");
++
++        if (isOwner)
++        {
++            int idx = SkinSelection.Instance != null ? SkinSelection.Instance.SkinIndex : 0;
++            _index.value = idx;
++            SwapCharacter(idx);
++        }
++        else
++        {
++            SwapCharacter(_index.value);
++        }
++    }
++
++    protected override void OnDespawned()
++    {
++        _index.onChanged -= OnIndexChanged;
++    }
++
++    private void OnIndexChanged(int newIndex) => SwapCharacter(newIndex);
++
++    private void SwapCharacter(int index)
++    {
++        if (characterModels == null || characterModels.Count == 0) { Debug.LogError("[SwapCharacter] characterModels is empty ΓÇö fill the list in Inspector!"); return; }
++        if (index < 0 || index >= characterModels.Count) { Debug.LogError($"[SwapCharacter] index {index} out of range (count={characterModels.Count})"); return; }
++
++        GameObject newFbx = characterModels[index];
++        if (newFbx == null) return;
++
++        if (rootTransform == null)
++        {
++            Transform found = transform.Find("Root");
++            rootTransform = found != null ? found : transform;
++        }
++
++        // 1. Identify existing model ΓÇö same logic as CharacterSwapper
++        Transform oldSkeleton = null;
++        Transform oldMesh = null;
++
++        foreach (Transform child in rootTransform)
++        {
++            if (child.name == "CameraTarget" || child.name == "Canvas") continue;
++            if (child.GetComponent<SkinnedMeshRenderer>() != null)
++                oldMesh = child;
++            else
++                oldSkeleton = child;
++        }
++
++        Debug.Log($"[SwapCharacter] index={index} | oldSkeleton={(oldSkeleton == null ? "null" : oldSkeleton.name)} | oldMesh={(oldMesh == null ? "null" : oldMesh.name)}");
++
++        Transform oldHead = oldSkeleton != null ? FindDeepChild(oldSkeleton, "Head") : null;
++
++        // 2. Instantiate new model ΓÇö runtime equivalent of PrefabUtility.InstantiatePrefab
++        GameObject newInstance = Instantiate(newFbx, rootTransform);
++        newInstance.name = newFbx.name;
++        newInstance.transform.localPosition = Vector3.zero;
++        newInstance.transform.localRotation = Quaternion.identity;
++        newInstance.transform.localScale = Vector3.one;
++
++        Transform newHead = FindDeepChild(newInstance.transform, "Head");
++
++        // 3. Update Animator avatar ΓÇö same as CharacterSwapper
++        Animator newAnim = newInstance.GetComponent<Animator>();
++        if (newAnim != null)
++        {
++            if (mainAnimator == null)
++                mainAnimator = GetComponent<Animator>();
++
++            if (mainAnimator != null)
++            {
++                mainAnimator.avatar = newAnim.avatar;
++                mainAnimator.Rebind();
++            }
++
++            newAnim.enabled = false;
++        }
++
++        // 4. Move head attachments (FirstPersonCamera, etc.) to new head ΓÇö same as CharacterSwapper
++        if (oldHead != null && newHead != null)
++        {
++            var toMove = new List<Transform>();
++            foreach (Transform child in oldHead)
++                if (!child.name.ToLower().Contains("end"))
++                    toMove.Add(child);
++
++            foreach (var item in toMove)
++            {
++                item.GetLocalPositionAndRotation(out Vector3 lp, out Quaternion lr);
++                Vector3 ls = item.localScale;
++                item.SetParent(newHead, false);
++                item.SetLocalPositionAndRotation(lp, lr);
++                item.localScale = ls;
++            }
++        }
++
++        // 5. Set layers ΓÇö same as CharacterSwapper
++        SetLayerRecursively(newInstance, 2); // Ignore Raycast
++        foreach (var smr in newInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
++            smr.gameObject.layer = 3;
++
++        // 6. Hide body from local owner's first-person camera
++        if (isOwner)
++            foreach (var smr in newInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
++                smr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
++
++        // 7. Destroy old ΓÇö same as CharacterSwapper
++        if (oldMesh != null) Destroy(oldMesh.gameObject);
++        if (oldSkeleton != null) Destroy(oldSkeleton.gameObject);
++    }
++
++    private Transform FindDeepChild(Transform parent, string childName)
++    {
++        foreach (Transform child in parent)
++        {
++            if (child.name.Equals(childName, System.StringComparison.OrdinalIgnoreCase) ||
++                child.name.EndsWith(":" + childName, System.StringComparison.OrdinalIgnoreCase))
++                return child;
++            Transform found = FindDeepChild(child, childName);
++            if (found != null) return found;
++        }
++        return null;
++    }
++
++    private void SetLayerRecursively(GameObject obj, int layer)
++    {
++        if (obj == null) return;
++        obj.layer = layer;
++        foreach (Transform child in obj.transform)
++            SetLayerRecursively(child.gameObject, layer);
++    }
++}
+diff --git a/Assets/_Scripts/SkinSelection.cs b/Assets/_Scripts/SkinSelection.cs
+new file mode 100644
+index 0000000..baba307
+--- /dev/null
++++ b/Assets/_Scripts/SkinSelection.cs
+@@ -0,0 +1,18 @@
++using UnityEngine;
++
++public class SkinSelection : MonoBehaviour
++{
++    public static SkinSelection Instance { get; private set; }
++    public int SkinIndex { get; private set; } = 0;
++
++    private void Awake()
++    {
++        if (Instance == null) 
++        { 
++            Instance = this; DontDestroyOnLoad(gameObject); 
++        }
++        else Destroy(gameObject);
++    }
++
++    public void Set(int index) => SkinIndex = index;
++}
+diff --git a/PurrLobby_TEMPLATE/Runtime/Providers/SteamLobbyProvider.cs b/PurrLobby_TEMPLATE/Runtime/Providers/SteamLobbyProvider.cs
+index 7ab06f4..11f7feb 100644
+--- a/PurrLobby_TEMPLATE/Runtime/Providers/SteamLobbyProvider.cs
++++ b/PurrLobby_TEMPLATE/Runtime/Providers/SteamLobbyProvider.cs
+@@ -404,7 +404,11 @@ public void SetLobbyStarted(string address, short port, Steamworks.CSteamID serv
+ 
+         public void Shutdown()
+         {
+-            //Not needed
++            if (IsSteamClientAvailable && _currentLobby != Steamworks.CSteamID.Nil)
++            {
++                Steamworks.SteamMatchmaking.LeaveLobby(_currentLobby);
++                _currentLobby = Steamworks.CSteamID.Nil;
++            }        
+         }
+ 
+         private List<LobbyUser> GetLobbyUsers(Steamworks.CSteamID lobbyId)

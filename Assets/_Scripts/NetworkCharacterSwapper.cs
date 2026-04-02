@@ -84,7 +84,10 @@ public class NetworkCharacterSwapper : NetworkBehaviour
         if (newAnim != null)
         {
             if (mainAnimator == null)
-                mainAnimator = GetComponent<Animator>();
+            {
+                mainAnimator = rootTransform.GetComponent<Animator>();
+                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
+            }
 
             if (mainAnimator != null)
             {
