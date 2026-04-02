@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class NetworkCharacterSwapper : NetworkBehaviour
 {
-    [Header("Character Models — same list & order as LobbyCharacterDisplay.characterPrefabs")]
+    [Header("Character Models")]
     [SerializeField] private List<GameObject> characterModels = new();
 
-    [Header("References — same as CharacterSwapper")]
+    [Header("References")]
     public Transform rootTransform;
     public Animator mainAnimator;
 
@@ -78,34 +78,6 @@ public class NetworkCharacterSwapper : NetworkBehaviour
 
         Transform newHead = FindDeepChild(newInstance.transform, "Head");
 
-        Animator newAnim = newInstance.GetComponent<Animator>();
-        if (newAnim != null)
-        {
-            if (mainAnimator == null)
-            {
-                mainAnimator = rootTransform.GetComponent<Animator>();
-                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
-            }
-
-            if (mainAnimator != null)
-            {
-                mainAnimator.avatar = newAnim.avatar;
-
-                bool wasGrounded = mainAnimator.GetBool("isGrounded");
-                bool wasIdling   = mainAnimator.GetBool("isIdling");
-
-                mainAnimator.Rebind();
-
-                mainAnimator.SetBool("isGrounded",  wasGrounded);
-                mainAnimator.SetBool("isIdling",    wasIdling);
-                mainAnimator.SetBool("isAttacking", false);
-                mainAnimator.SetBool("isGathering", false);
-                mainAnimator.Update(0f);
-            }
-
-            newAnim.enabled = false;
-        }
-
         if (oldHead != null && newHead != null)
         {
             var toMove = new List<Transform>();
@@ -131,8 +103,30 @@ public class NetworkCharacterSwapper : NetworkBehaviour
             foreach (var smr in newInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
                 smr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
-        if (oldMesh != null) Destroy(oldMesh.gameObject);
-        if (oldSkeleton != null) Destroy(oldSkeleton.gameObject);
+        if (oldMesh != null) DestroyImmediate(oldMesh.gameObject);
+        if (oldSkeleton != null) DestroyImmediate(oldSkeleton.gameObject);
+
+        Animator newAnim = newInstance.GetComponent<Animator>();
+        if (newAnim != null)
+        {
+            if (mainAnimator == null)
+            {
+                mainAnimator = rootTransform.GetComponent<Animator>();
+                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
+            }
+
+            if (mainAnimator != null)
+            {
+                mainAnimator.avatar = newAnim.avatar;
+                mainAnimator.Rebind();
+                mainAnimator.SetBool("isGrounded", true);
+                mainAnimator.SetBool("isIdling", true);
+                mainAnimator.SetBool("isAttacking", false);
+                mainAnimator.SetBool("isGathering", false);
+            }
+
+            newAnim.enabled = false;
+        }
     }
 
     private Transform FindDeepChild(Transform parent, string childName)
