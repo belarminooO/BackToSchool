@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using PurrNet;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -50,6 +51,11 @@ namespace GinjaGaming.FinalCharacterController
             _playerController = GetComponent<PlayerController>();
             _playerActionsInput = GetComponent<PlayerActionsInput>();
             _networkState = GetComponent<FirstPersonNetworkState>();
+
+            // Must match PurrNet.NetworkAnimator on the same object, or auto-sync will never see parameter changes.
+            var netAnimator = GetComponent<NetworkAnimator>();
+            if (netAnimator != null && netAnimator.animator != null)
+                _animator = netAnimator.animator;
             
             actionHashes = new int[] { isGatheringHash };
         }

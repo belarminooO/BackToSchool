@@ -3485,7 +3485,7 @@ MonoBehaviour:
     m_Bits: 1
   playerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   pushForce: 35
   pushDistance: 1.2
   showDebugGizmos: 1
@@ -6673,7 +6673,7 @@ MonoBehaviour:
     m_Bits: 1
   playerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   pushForce: 35
   pushDistance: 1.2
   showDebugGizmos: 1
@@ -9838,7 +9838,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -103.88
+      value: -102.87
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11593,7 +11593,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -103.88
+      value: -102.87
       objectReference: {fileID: 0}
     - target: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11810,7 +11810,7 @@ MonoBehaviour:
     m_Bits: 1
   playerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   pushForce: 35
   pushDistance: 1.2
   showDebugGizmos: 1

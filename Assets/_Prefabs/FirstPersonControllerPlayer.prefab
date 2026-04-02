@@ -152,9 +152,9 @@ GameObject:
   - component: {fileID: 5896346894010770445}
   - component: {fileID: 8185248604105021258}
   - component: {fileID: 330600805766354493}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -262,6 +262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1273344117401008340}
   - component: {fileID: 5972105705724055664}
+  - component: {fileID: 4456780575365329080}
   - component: {fileID: 2395114634507315066}
   - component: {fileID: 2408507259331374938}
   - component: {fileID: 2832974206472000160}
@@ -280,6 +281,7 @@ GameObject:
   - component: {fileID: 5495349742087640249}
   - component: {fileID: 8037489501502197203}
   - component: {fileID: 8156998706809310805}
+  - component: {fileID: 6843920261802589446}
   m_Layer: 0
   m_Name: FirstPersonControllerPlayer
   m_TagString: Player
@@ -329,6 +331,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4456780575365329080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145572536574463470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57e3a98738ab6c541b2cf4d8d787d461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventRelay
 --- !u!143 &2395114634507315066
 CharacterController:
   m_ObjectHideFlags: 0
@@ -437,7 +451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d015a2dfbd3791849a8c184d57c68c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 3039953829295687360}
+  _animator: {fileID: 5972105705724055664}
   locomotionBlendSpeed: 4
 --- !u!114 &8105434900180841622
 MonoBehaviour:
@@ -676,7 +690,7 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 8192e40207e9cb146a4ec75a26d31a99, type: 3}
   - {fileID: 919132149155446097, guid: fba7f43569532a64fa22cf51a342963d, type: 3}
   rootTransform: {fileID: 5553081326271196007}
-  mainAnimator: {fileID: 3039953829295687360}
+  mainAnimator: {fileID: 5972105705724055664}
 --- !u!136 &5495349742087640249
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -773,6 +787,31 @@ MonoBehaviour:
     _value: 0
     _ownerAuth: 0
     _sendIntervalInSeconds: 0
+--- !u!114 &6843920261802589446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145572536574463470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
+  _animator: {fileID: 5972105705724055664}
+  _ownerAuth: 1
+  _autoSyncParameters: 1
+  _dontSyncParameters: []
 --- !u!1 &1196698094469035040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1396,7 +1435,6 @@ GameObject:
   - component: {fileID: 5553081326271196007}
   - component: {fileID: 3039953829295687360}
   - component: {fileID: 2495821533141702555}
-  - component: {fileID: 4456780575365329080}
   m_Layer: 11
   m_Name: Root
   m_TagString: Untagged
@@ -1429,7 +1467,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6868007049996758782}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: 2165616b63aca644c8983f129c8a6fc6, type: 3}
   m_Controller: {fileID: 9100000, guid: 975d0aa17101fe841ba9768c124ad6c9, type: 2}
   m_CullingMode: 1
@@ -1471,18 +1509,6 @@ MonoBehaviour:
     _value: 
     _ownerAuth: 1
     _sendIntervalInSeconds: 0
---- !u!114 &4456780575365329080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6868007049996758782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57e3a98738ab6c541b2cf4d8d787d461, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventRelay
 --- !u!1 &7377382680452586910
 GameObject:
   m_ObjectHideFlags: 0
@@ -2255,8 +2281,16 @@ PrefabInstance:
       value: SimpleCrown
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 482ddb1d8cef4f7419dad4c6d3bf1891, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 482ddb1d8cef4f7419dad4c6d3bf1891, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 482ddb1d8cef4f7419dad4c6d3bf1891, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

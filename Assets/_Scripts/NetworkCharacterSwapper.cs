@@ -110,26 +110,34 @@ public class NetworkCharacterSwapper : NetworkBehaviour
         if (oldMesh != null) DestroyImmediate(oldMesh.gameObject);
         if (oldSkeleton != null) DestroyImmediate(oldSkeleton.gameObject);
 
-        if (newAnim != null)
-        {
-            if (mainAnimator == null)
+            if (newAnim != null)
             {
-                mainAnimator = rootTransform.GetComponent<Animator>();
-                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
+                if (mainAnimator == null)
+                {
+                    mainAnimator = rootTransform.GetComponent<Animator>();
+                    if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
+                }
+
+                if (mainAnimator != null)
+                {
+                    mainAnimator.avatar = newAnim.avatar;
+                    mainAnimator.Rebind();
+
+                    mainAnimator.SetBool("isAttacking", false);
+                    mainAnimator.SetBool("isGathering", false);
+                    mainAnimator.SetBool("isPlayingAction", false);
+
+                    var netAnim = GetComponent<NetworkAnimator>();
+                    if (netAnim != null)
+                    {
+                        netAnim.SetAnimator(mainAnimator);
+                        if (isOwner)
+                            netAnim.Reconcile();
+                    }
+                }
+
+                newAnim.enabled = false;
             }
-
-            if (mainAnimator != null)
-            {
-                mainAnimator.avatar = newAnim.avatar;
-                mainAnimator.Rebind();
-
-                mainAnimator.SetBool("isAttacking", false);
-                mainAnimator.SetBool("isGathering", false);
-                mainAnimator.SetBool("isPlayingAction", false);
-            }
-
-            newAnim.enabled = false;
-        }
 
     }
 
