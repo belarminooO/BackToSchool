@@ -31,7 +31,10 @@ public class LoadingScreen : MonoBehaviour
             return;
         }
             
-        bool show = ConnectionStarter.IsClientConnectionInProgress || (!manager.isServer && manager.clientState == ConnectionState.Connecting);
+        bool show = ConnectionStarter.IsClientConnectionInProgress 
+                 || ConnectionStarter.IsHostStartingUp
+                 || (!manager.isServer && manager.clientState == ConnectionState.Connecting);
+        
         if (loading1.activeSelf != show) {
             loading1.SetActive(show);
         }

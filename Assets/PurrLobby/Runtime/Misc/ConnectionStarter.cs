@@ -26,6 +26,7 @@ namespace PurrLobby
     public class ConnectionStarter : MonoBehaviour
     {
         public static bool IsClientConnectionInProgress { get; private set; }
+        public static bool IsHostStartingUp { get; private set; } 
 
         private NetworkManager _networkManager;
         private LobbyDataHolder _lobbyDataHolder;
@@ -202,7 +203,7 @@ namespace PurrLobby
 
             if (_lobbyDataHolder.CurrentLobby.IsOwner)
             {
-                _networkManager.StartHost();
+                StartCoroutine(StartHost()); 
             }
             else
             {
@@ -352,25 +353,42 @@ namespace PurrLobby
         }
 #endif
 
+        private IEnumerator StartHost()
+        {
+            IsHostStartingUp = true;
+            _networkManager.StartHost();
+            float elapsed = 0f;
+
+            while (_networkManager.serverState != ConnectionState.Connected && elapsed < 10f)
+            {
+                yield return new WaitForSeconds(0.1f);
+                elapsed += 0.1f;
+            }
+
+            IsHostStartingUp = false;
+            if (_networkManager.serverState != ConnectionState.Connected)
+                PurrLogger.LogError("[ConnectionStarter] Host failed to reach Connected state within 10s.", this);
+        }
+
         private IEnumerator StartClient()
         {
             IsClientConnectionInProgress = true;
-            
-            int attempts = 0;
-            int maxAttempts = 5; 
 
-            // Wait a brief moment before first attempt
-            yield return new WaitForSeconds(1.5f);
+            int attempts = 0;
+            int maxAttempts = 8; // ← increased from 5
+
+            // Increased initial wait to give host's Steam SDR session more time to activate
+            yield return new WaitForSeconds(3f); // ← was 1.5f
 
             _networkManager.StartClient();
 
             while (attempts < maxAttempts)
             {
-                // Wait for the connection state to either succeed or officially fail via Steam
                 float timeoutCounter = 0f;
-                float maxTimeout = 25f; // Give SDR up to 25 seconds to negotiate over the internet
+                float maxTimeout = 30f; // ← slightly increased from 25f for internet play
 
-                while (_networkManager.clientState == ConnectionState.Connecting && timeoutCounter < maxTimeout)
+                while (_networkManager.clientState == ConnectionState.Connecting 
+                    && timeoutCounter < maxTimeout)
                 {
                     yield return new WaitForSeconds(0.5f);
                     timeoutCounter += 0.5f;
@@ -378,22 +396,49 @@ namespace PurrLobby
 
                 if (_networkManager.clientState == ConnectionState.Connected)
                 {
-                    Debug.Log($"[ConnectionStarter] PurrNet clientState = {_networkManager.clientState}, isServer = {_networkManager.isServer}");
+                    Debug.Log($"[ConnectionStarter] Connected! clientState = {_networkManager.clientState}");
                     IsClientConnectionInProgress = false;
                     yield break;
                 }
 
                 attempts++;
-                PurrLogger.Log($"[ConnectionStarter] Client not connected (attempt {attempts}/{maxAttempts}). Steam State: {_networkManager.clientState}. Retrying...", this);
+                PurrLogger.Log($"[ConnectionStarter] Attempt {attempts}/{maxAttempts} failed. Retrying...", this);
                 _networkManager.StopClient();
-                yield return new WaitForSeconds(4f);
+
+                // ← Increased cooldown to give Steam SDR more time to reset cleanly
+                yield return new WaitForSeconds(6f); // ← was 4f
+
+                // ← Re-fetch host's Steam ID before each retry, in case lobby ownership changed
+                #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
+                if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
+                {
+                    var lobbyId = new Steamworks.CSteamID(parsedLobbyId);
+                    var ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
+
+                    void TrySetAddress(object t)
+                    {
+                        if (t is PurrNet.Steam.SteamTransport st)
+                            st.address = ownerId.m_SteamID.ToString();
+                    }
+
+                    TrySetAddress(_networkManager.transport);
+                    if (_networkManager.transport is CompositeTransport composite)
+                        foreach (var t in composite.transports)
+                            TrySetAddress(t);
+                }
+                #endif
+
                 _networkManager.StartClient();
             }
 
-            PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts.", this);
-            IsClientConnectionInProgress = false;
+                PurrLogger.LogError("[ConnectionStarter] Client failed to connect after all retry attempts. Returning to lobby.", this);
+                IsClientConnectionInProgress = false;
+                _networkManager.StopClient();
+                var lobbyManager = FindFirstObjectByType<PurrLobby.LobbyManager>();
+                if (lobbyManager != null)
+                    lobbyManager.LeaveLobby();
+                UnityEngine.SceneManagement.SceneManager.LoadScene("LobbySample");
         }
-
 
         // Reset the _hasStarted flag when the ConnectionStarter is destroyed
         // private void OnDestroy()
