@@ -59,7 +59,8 @@ public class NetworkCharacterSwapper : NetworkBehaviour
 
         foreach (Transform child in rootTransform)
         {
-            if (child.name == "CameraTarget" || child.name == "Canvas") continue;
+            if (child.name == "CameraTarget" || child.name == "Canvas")
+                continue;
             if (child.GetComponent<SkinnedMeshRenderer>() != null)
                 oldMesh = child;
             else
@@ -74,22 +75,12 @@ public class NetworkCharacterSwapper : NetworkBehaviour
         newInstance.transform.localRotation = Quaternion.identity;
         newInstance.transform.localScale = Vector3.one;
 
+        foreach (var relay in newInstance.GetComponentsInChildren<AnimationEventRelay>(true))
+            relay.TryFindActionsInput();
+
         Transform newHead = FindDeepChild(newInstance.transform, "Head");
 
         Animator newAnim = newInstance.GetComponent<Animator>();
-        if (newAnim != null)
-        {
-            if (mainAnimator == null)
-            {
-                mainAnimator = rootTransform.GetComponent<Animator>();
-                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
-            }
-
-            if (mainAnimator != null)
-                mainAnimator.avatar = newAnim.avatar;
-
-            newAnim.enabled = false;
-        }
 
         if (oldHead != null && newHead != null)
         {
@@ -116,8 +107,30 @@ public class NetworkCharacterSwapper : NetworkBehaviour
             foreach (var smr in newInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
                 smr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
-        if (oldMesh != null) Destroy(oldMesh.gameObject);
-        if (oldSkeleton != null) Destroy(oldSkeleton.gameObject);
+        if (oldMesh != null) DestroyImmediate(oldMesh.gameObject);
+        if (oldSkeleton != null) DestroyImmediate(oldSkeleton.gameObject);
+
+        if (newAnim != null)
+        {
+            if (mainAnimator == null)
+            {
+                mainAnimator = rootTransform.GetComponent<Animator>();
+                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
+            }
+
+            if (mainAnimator != null)
+            {
+                mainAnimator.avatar = newAnim.avatar;
+                mainAnimator.Rebind();
+
+                mainAnimator.SetBool("isAttacking", false);
+                mainAnimator.SetBool("isGathering", false);
+                mainAnimator.SetBool("isPlayingAction", false);
+            }
+
+            newAnim.enabled = false;
+        }
+
     }
 
     private Transform FindDeepChild(Transform parent, string childName)

@@ -12,6 +12,7 @@ namespace GinjaGaming.FinalCharacterController
         #region Class Variables
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
+        private FirstPersonNetworkState _networkState;
         public bool GatherPressed { get; private set; }
         public bool AttackPressed { get; private set; }
         private PlayerControls _ownControls;
@@ -22,10 +23,13 @@ namespace GinjaGaming.FinalCharacterController
         {
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
             _playerState = GetComponent<PlayerState>();
+            _networkState = GetComponent<FirstPersonNetworkState>();
         }
 
         private void OnEnable()
         {
+            if (_networkState != null && !_networkState.isOwner)
+                return;
             _ownControls = new PlayerControls();
             _ownControls.PlayerActionsMap.Enable();
             _ownControls.PlayerActionsMap.SetCallbacks(this);
@@ -33,6 +37,8 @@ namespace GinjaGaming.FinalCharacterController
 
         private void OnDisable()
         {
+            if (_ownControls == null)
+                return;
             _ownControls?.PlayerActionsMap.Disable();
             _ownControls?.PlayerActionsMap.RemoveCallbacks(this);
             _ownControls?.Dispose();
@@ -103,6 +109,8 @@ namespace GinjaGaming.FinalCharacterController
             Debug.Log($"[ActionsInput] OnAttacking PERFORMED on '{gameObject.name}'", gameObject);
 
             AttackPressed = true;
+            CancelInvoke(nameof(SetAttackPressedFalse));
+            Invoke(nameof(SetAttackPressedFalse), 0.8f);
         }
         #endregion
     }

@@ -131,7 +131,6 @@ namespace GinjaGaming.FinalCharacterController
         private void UpdateAnimationState()
         {
             bool isOwner = _networkState == null || _networkState.isOwner;
-            // Movement state: owner reads PlayerState directly, proxy reads SyncVar
             PlayerMovementState currentState = isOwner ? _playerState.CurrentPlayerMovementState : _networkState.SyncedMovementState;
             
             bool isIdling = currentState == PlayerMovementState.Idling;
@@ -158,10 +157,15 @@ namespace GinjaGaming.FinalCharacterController
             _animator.SetFloat(inputYHash, _currentBlendInput.y);
             _animator.SetFloat(inputMagnitudeHash, _currentBlendInput.magnitude);
 
-            bool attackPressed = isOwner ? (_playerActionsInput != null && _playerActionsInput.AttackPressed) : (_networkState != null && _networkState.SyncedAttack);
+            bool attackPressed = isOwner ? (_playerActionsInput != null && _playerActionsInput.AttackPressed) : (_networkState != null && _networkState.SyncedAttack);            
             bool gatherPressed = isOwner ? (_playerActionsInput != null && _playerActionsInput.GatherPressed) : (_networkState != null && _networkState.SyncedGather);
             bool isPlayingAction = actionHashes.Any(hash => _animator.GetBool(hash));
             
+            if (attackPressed)
+            {
+                Debug.Log($"[PlayerAnimation] isAttacking=TRUE | isOwner={isOwner} | RawAttack={_playerActionsInput?.AttackPressed} | SyncedAttack={_networkState?.SyncedAttack} | networkStateNull={_networkState == null}", gameObject);
+            }
+
             _animator.SetBool(isAttackingHash, attackPressed);
             _animator.SetBool(isGatheringHash, gatherPressed);
             _animator.SetBool(isPlayingActionHash, isPlayingAction);

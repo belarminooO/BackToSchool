@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FirstPersonNetworkState : NetworkBehaviour
 {
+    
     private SyncVar<int> _syncState = new SyncVar<int>(ownerAuth: true);
     private SyncVar<Vector2> _syncInput = new SyncVar<Vector2>(ownerAuth: true);
 
@@ -41,6 +42,8 @@ public class FirstPersonNetworkState : NetworkBehaviour
             _locomotionInput.enabled = false;
         if (_playerController != null) 
             _playerController.enabled = false;
+        if (_actionsInput != null)       
+            _actionsInput.enabled = false;   
     }
 
     // protected override void OnSpawned()
@@ -79,6 +82,8 @@ public class FirstPersonNetworkState : NetworkBehaviour
                 _locomotionInput.enabled = true;
             if (_playerController != null)
                 _playerController.enabled = true;
+            if (_actionsInput != null)             
+                _actionsInput.enabled = true;   
 
             // FORCE LOAD CAMERA STACK
             // if (playerCameraStack == null)
