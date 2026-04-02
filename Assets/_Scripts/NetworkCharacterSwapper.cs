@@ -18,7 +18,7 @@ public class NetworkCharacterSwapper : NetworkBehaviour
         _index.onChanged += OnIndexChanged;
 
         var skinSel = SkinSelection.Instance;
-        Debug.Log($"[NetworkCharacterSwapper] OnSpawned | isOwner={isOwner} | SkinSelection={(skinSel == null ? "NULL — not in scene or destroyed!" : "OK")} | idx={(skinSel != null ? skinSel.SkinIndex.ToString() : "—")} | characterModels.Count={characterModels.Count} | rootTransform={(rootTransform == null ? "NULL — assign Root in Inspector!" : rootTransform.name)} | mainAnimator={(mainAnimator == null ? "NULL — assign Animator in Inspector!" : "OK")}");
+        Debug.Log($"[NetworkCharacterSwapper] OnSpawned | isOwner={isOwner} | SkinSelection={(skinSel == null ? "NULL" : "OK")} | idx={(skinSel != null ? skinSel.SkinIndex.ToString() : "—")} | characterModels.Count={characterModels.Count}");
 
         if (isOwner)
         {
@@ -42,7 +42,7 @@ public class NetworkCharacterSwapper : NetworkBehaviour
 
     private void SwapCharacter(int index)
     {
-        if (characterModels == null || characterModels.Count == 0) { Debug.LogError("[SwapCharacter] characterModels is empty — fill the list in Inspector!"); return; }
+        if (characterModels == null || characterModels.Count == 0) { Debug.LogError("[SwapCharacter] characterModels is empty!"); return; }
         if (index < 0 || index >= characterModels.Count) { Debug.LogError($"[SwapCharacter] index {index} out of range (count={characterModels.Count})"); return; }
 
         GameObject newFbx = characterModels[index];
@@ -66,8 +66,6 @@ public class NetworkCharacterSwapper : NetworkBehaviour
                 oldSkeleton = child;
         }
 
-        Debug.Log($"[SwapCharacter] index={index} | oldSkeleton={(oldSkeleton == null ? "null" : oldSkeleton.name)} | oldMesh={(oldMesh == null ? "null" : oldMesh.name)}");
-
         Transform oldHead = oldSkeleton != null ? FindDeepChild(oldSkeleton, "Head") : null;
 
         GameObject newInstance = Instantiate(newFbx, rootTransform);
@@ -77,6 +75,21 @@ public class NetworkCharacterSwapper : NetworkBehaviour
         newInstance.transform.localScale = Vector3.one;
 
         Transform newHead = FindDeepChild(newInstance.transform, "Head");
+
+        Animator newAnim = newInstance.GetComponent<Animator>();
+        if (newAnim != null)
+        {
+            if (mainAnimator == null)
+            {
+                mainAnimator = rootTransform.GetComponent<Animator>();
+                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
+            }
+
+            if (mainAnimator != null)
+                mainAnimator.avatar = newAnim.avatar;
+
+            newAnim.enabled = false;
+        }
 
         if (oldHead != null && newHead != null)
         {
@@ -103,30 +116,8 @@ public class NetworkCharacterSwapper : NetworkBehaviour
             foreach (var smr in newInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
                 smr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
-        if (oldMesh != null) DestroyImmediate(oldMesh.gameObject);
-        if (oldSkeleton != null) DestroyImmediate(oldSkeleton.gameObject);
-
-        Animator newAnim = newInstance.GetComponent<Animator>();
-        if (newAnim != null)
-        {
-            if (mainAnimator == null)
-            {
-                mainAnimator = rootTransform.GetComponent<Animator>();
-                if (mainAnimator == null) mainAnimator = GetComponent<Animator>();
-            }
-
-            if (mainAnimator != null)
-            {
-                mainAnimator.avatar = newAnim.avatar;
-                mainAnimator.Rebind();
-                mainAnimator.SetBool("isGrounded", true);
-                mainAnimator.SetBool("isIdling", true);
-                mainAnimator.SetBool("isAttacking", false);
-                mainAnimator.SetBool("isGathering", false);
-            }
-
-            newAnim.enabled = false;
-        }
+        if (oldMesh != null) Destroy(oldMesh.gameObject);
+        if (oldSkeleton != null) Destroy(oldSkeleton.gameObject);
     }
 
     private Transform FindDeepChild(Transform parent, string childName)
