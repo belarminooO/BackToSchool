@@ -174,6 +174,13 @@ public class QuizGameManager : NetworkBehaviour
                 }
                 ui.OnStateChanged(stateName);
             }
+
+            Debug.Log($"[GameManager] State changed to {stateName}, notifying UIs.");
+            if (stateName == "FreezeStateNode")
+            {
+                LoadingScreen.Instance?.Hide();
+                Debug.Log("[LoadingScreen] Hiding loading screen.");
+            }
         }
 
         protected override void OnSpawned()
@@ -219,6 +226,7 @@ public class QuizGameManager : NetworkBehaviour
                 //     scoreManager.ChooseTeams(); 
                 // }
             }
+
         }
 
 

@@ -135,6 +135,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room Spawnpoint 4
       objectReference: {fileID: 0}
+    - target: {fileID: 1203814603202867398, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Name
+      value: Jail Spawnpoint Round 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1571399430281496347, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roomIndex
       value: 3
@@ -1084,6 +1088,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4895497590064792, guid: 288b229db858c114299d1bf70ffc95cd, type: 3}
   m_PrefabInstance: {fileID: 146684619}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &146946798 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2198563246180849935, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+  m_PrefabInstance: {fileID: 1699108199}
+  m_PrefabAsset: {fileID: 0}
 --- !u!134 &148175344
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -1769,6 +1778,10 @@ PrefabInstance:
     - target: {fileID: 997891869540689653, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Room Spawnpoint 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1203814603202867398, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Name
+      value: Jail Spawnpoint Round 2
       objectReference: {fileID: 0}
     - target: {fileID: 1571399430281496347, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roomIndex
@@ -2709,11 +2722,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5931590434532177602, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
   m_PrefabInstance: {fileID: 227833322}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &325595923 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3132342616997817370, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
-  m_PrefabInstance: {fileID: 227833322}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &325619765
 GameObject:
   m_ObjectHideFlags: 0
@@ -2805,6 +2813,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325619765}
   m_Mesh: {fileID: 4513418941931760173, guid: a89ecfc7c050be34895958624aadae49, type: 3}
+--- !u!4 &336292282 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2198563246180849935, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+  m_PrefabInstance: {fileID: 227833322}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &337436386
 GameObject:
   m_ObjectHideFlags: 0
@@ -3511,6 +3524,10 @@ PrefabInstance:
     - target: {fileID: 997891869540689653, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Room Spawnpoint 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1203814603202867398, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Name
+      value: Jail Spawnpoint Round 3
       objectReference: {fileID: 0}
     - target: {fileID: 1571399430281496347, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roomIndex
@@ -5326,11 +5343,11 @@ MonoBehaviour:
     - {fileID: 617874933}
     - {fileID: 617874932}
   jailSpawns:
-  - {fileID: 1046213595}
-  - {fileID: 325595923}
-  - {fileID: 1331908022}
-  - {fileID: 632853187}
-  - {fileID: 617874940}
+  - {fileID: 7303999978710068369}
+  - {fileID: 336292282}
+  - {fileID: 1255471077}
+  - {fileID: 1850734763}
+  - {fileID: 146946798}
 --- !u!114 &527538243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6628,11 +6645,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5931590434532177602, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
   m_PrefabInstance: {fileID: 1699108199}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &617874940 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3132342616997817370, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
-  m_PrefabInstance: {fileID: 1699108199}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &632853179 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5798086072620734113, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
@@ -6671,11 +6683,6 @@ Transform:
 --- !u!4 &632853186 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5931590434532177602, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
-  m_PrefabInstance: {fileID: 11614520}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &632853187 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3132342616997817370, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
   m_PrefabInstance: {fileID: 11614520}
   m_PrefabAsset: {fileID: 0}
 --- !u!134 &640238890
@@ -6991,7 +6998,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &695529193
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8665,11 +8672,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e67e254a13bb0b940838c9341b408ff9, type: 3}
   m_PrefabInstance: {fileID: 1046067202}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1046213595 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3132342616997817370, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
-  m_PrefabInstance: {fileID: 7303999978710068367}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1046561151
 GameObject:
   m_ObjectHideFlags: 0
@@ -10250,7 +10252,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162989169}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ccc454d6a19ac140b15f8d619d0fb5e, type: 3}
   m_Name: 
@@ -10292,7 +10294,7 @@ MonoBehaviour:
   _startClientFlags: 0
   _cookieScope: 1
   _dontDestroyOnLoad: 0
-  _transport: {fileID: 1162989175}
+  _transport: {fileID: 1162989171}
   _networkPrefabs: {fileID: 11400000, guid: 4a469599880784e418d2a0a040751f3b, type: 2}
   _networkAssets: {fileID: 11400000, guid: 04f87596314634641986316e5f781c98, type: 2}
   _networkRules: {fileID: 11400000, guid: d8799083b96579a42b8b2d03e4ceae98, type: 2}
@@ -10322,7 +10324,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162989169}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc64ff707d914a64e95f2ac0bf554c09, type: 3}
   m_Name: 
@@ -10341,7 +10343,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162989169}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c9fad460502b364cba14087be3cad24, type: 3}
   m_Name: 
@@ -10354,7 +10356,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162989169}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5c476fd9733ed148b4631bd99c76108, type: 3}
   m_Name: 
@@ -11042,6 +11044,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
   m_PrefabInstance: {fileID: 11614520}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1255471077 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2198563246180849935, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+  m_PrefabInstance: {fileID: 371022029}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1266988636
 GameObject:
@@ -11942,11 +11949,6 @@ Transform:
 --- !u!4 &1331908021 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5931590434532177602, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
-  m_PrefabInstance: {fileID: 371022029}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1331908022 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3132342616997817370, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
   m_PrefabInstance: {fileID: 371022029}
   m_PrefabAsset: {fileID: 0}
 --- !u!134 &1337656024
@@ -14335,6 +14337,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room Spawnpoint 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1203814603202867398, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Name
+      value: Jail Spawnpoint Round 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1571399430281496347, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roomIndex
       value: 4
@@ -15875,6 +15881,11 @@ MonoBehaviour:
   _networkRules: {fileID: 0}
   _visitiblityRules: {fileID: 0}
   freezeState: {fileID: 512507347}
+--- !u!4 &1850734763 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2198563246180849935, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+  m_PrefabInstance: {fileID: 11614520}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1855708170
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18263,6 +18274,10 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 191433328}
+    - target: {fileID: 1203814603202867398, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Name
+      value: Jail Spawnpoint Round 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 62.38165
@@ -18333,6 +18348,11 @@ PrefabInstance:
 --- !u!4 &7303999978710068368 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+  m_PrefabInstance: {fileID: 7303999978710068367}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7303999978710068369 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2198563246180849935, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
   m_PrefabInstance: {fileID: 7303999978710068367}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &7344902331628363738 stripped

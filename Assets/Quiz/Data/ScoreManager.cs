@@ -422,20 +422,6 @@ public class ScoreManager : NetworkBehaviour
     // Leave to Lobby
     public void LeaveToLobby()
     {
-        var lobbyManager = Object.FindFirstObjectByType<PurrLobby.LobbyManager>();
-        if (lobbyManager != null)
-        {
-            lobbyManager.LeaveLobby();
-        }
-
-        if (NetworkManager.main != null) {
-            NetworkManager.main.StopClient();
-        }
-
-        if (NetworkManager.main != null && NetworkManager.main.isServer) {
-            NetworkManager.main.StopServer();
-        }
-        
         UnityEngine.SceneManagement.SceneManager.LoadScene("LobbySample");
     }
     
