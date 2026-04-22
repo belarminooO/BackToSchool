@@ -135,6 +135,7 @@ public class GenerateQuizJSON : MonoBehaviour
         if (!File.Exists(envPath))
         {
             Debug.LogError(".env file not found at: " + envPath);
+            return;
         }
 
         string[] lines = File.ReadAllLines(envPath);
