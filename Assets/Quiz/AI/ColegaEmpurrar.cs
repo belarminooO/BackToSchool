@@ -105,6 +105,7 @@ public class ColegaEmpurrar : NetworkBehaviour
 
     private void Update()
     {
+        
         if (isServer) 
         {
             // O Colega vai sempre verificar visão se a ronda decorre e não estiver a focar-se em empurrar ou preso.

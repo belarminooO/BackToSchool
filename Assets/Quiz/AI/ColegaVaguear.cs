@@ -63,6 +63,7 @@ public class ColegaVaguear : NetworkBehaviour
 
     private void Start()
     {
+
         if (waypoints != null && waypoints.Count > 0)
         {
             GoToNextWaypoint();
