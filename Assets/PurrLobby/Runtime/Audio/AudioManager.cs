@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 namespace PurrLobby
 {
@@ -15,6 +16,7 @@ namespace PurrLobby
 
         [SerializeField] private AudioClip buttonClickSound;
         private AudioSource sfxSource;
+        private AudioSource musicSource;
 
         private void Awake()
         {
@@ -22,6 +24,8 @@ namespace PurrLobby
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
+                
+                musicSource = GetComponent<AudioSource>();
                 
                 // Add an AudioSource specifically for UI SFX if none exists
                 sfxSource = gameObject.AddComponent<AudioSource>();
@@ -39,6 +43,34 @@ namespace PurrLobby
             else
             {
                 Destroy(gameObject);
+            }
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.name == "Quiz AI")
+            {
+                if (musicSource != null && musicSource.isPlaying)
+                {
+                    musicSource.Stop();
+                }
+            }
+            else
+            {
+                if (musicSource != null && !musicSource.isPlaying)
+                {
+                    musicSource.Play();
+                }
             }
         }
 
