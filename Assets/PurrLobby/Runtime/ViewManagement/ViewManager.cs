@@ -46,8 +46,15 @@ namespace PurrLobby
             }
         }
 
+        private View lastMainView;
+
         private void ShowViewInternal(View view)
         {
+            if (view is MainMenuView || view is BrowseView || view is LobbyView)
+            {
+                lastMainView = view;
+            }
+
             view.canvasGroup.alpha = 1;
             view.canvasGroup.interactable = true;
             view.canvasGroup.blocksRaycasts = true;
@@ -101,6 +108,27 @@ namespace PurrLobby
         public void OnLeaveBrowseClicked()
         {
             ShowView<MainMenuView>();
+        }
+
+        public void OnSettingsClicked()
+        {
+            ShowView<SettingsView>();
+        }
+
+        public void OnLeaveSettingsClicked()
+        {
+            if (lastMainView != null)
+            {
+                foreach (var v in allViews)
+                {
+                    if (v == lastMainView) ShowViewInternal(v);
+                    else HideViewInternal(v);
+                }
+            }
+            else
+            {
+                ShowView<MainMenuView>();
+            }
         }
 
         #endregion

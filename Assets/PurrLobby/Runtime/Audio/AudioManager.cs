@@ -1,0 +1,79 @@
+using UnityEngine;
+using UnityEngine.Audio;
+
+namespace PurrLobby
+{
+    public class AudioManager : MonoBehaviour
+    {
+        public static AudioManager Instance { get; private set; }
+
+        [SerializeField] private AudioMixer audioMixer;
+
+        public const string MASTER_KEY = "MasterVolume";
+        public const string MUSIC_KEY = "MusicVolume";
+        public const string SFX_KEY = "SFXVolume";
+
+        [SerializeField] private AudioClip buttonClickSound;
+        private AudioSource sfxSource;
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+                
+                // Add an AudioSource specifically for UI SFX if none exists
+                sfxSource = gameObject.AddComponent<AudioSource>();
+                
+                // Try to find the SFX group in the mixer
+                if (audioMixer != null)
+                {
+                    AudioMixerGroup[] groups = audioMixer.FindMatchingGroups("SFX");
+                    if (groups.Length > 0)
+                        sfxSource.outputAudioMixerGroup = groups[0];
+                }
+
+                LoadVolumeSettings();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        public void PlayButtonClick()
+        {
+            if (sfxSource != null && buttonClickSound != null)
+            {
+                sfxSource.PlayOneShot(buttonClickSound);
+            }
+        }
+
+        private void LoadVolumeSettings()
+        {
+            float masterVolume = PlayerPrefs.GetFloat(MASTER_KEY, 1f);
+            float musicVolume = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
+            float sfxVolume = PlayerPrefs.GetFloat(SFX_KEY, 1f);
+
+            SetVolume(MASTER_KEY, masterVolume);
+            SetVolume(MUSIC_KEY, musicVolume);
+            SetVolume(SFX_KEY, sfxVolume);
+        }
+
+        public void SetVolume(string parameterName, float sliderValue)
+        {
+            if (audioMixer != null)
+            {
+                float volume = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
+                audioMixer.SetFloat(parameterName, volume);
+                PlayerPrefs.SetFloat(parameterName, sliderValue);
+            }
+        }
+
+        public float GetVolume(string parameterName)
+        {
+            return PlayerPrefs.GetFloat(parameterName, 1f);
+        }
+    }
+}

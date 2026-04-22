@@ -10,6 +10,17 @@
       },
       "hash": "940831fe8a474e92b96a5c183298b45843cf067e"
     },
+    "com.ivanmurzak.unity.mcp": {
+      "version": "0.66.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.test-framework": "1.1.33",
+        "extensions.unity.playerprefsex": "2.1.3"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.rlabrecque.steamworks.net": {
       "version": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#2024.8.0",
       "depth": 0,
@@ -362,6 +373,13 @@
         "com.unity.collections": "2.6.2"
       },
       "hash": "1d4124e49afee76d4a0ded6d027567a30c9e897d"
+    },
+    "extensions.unity.playerprefsex": {
+      "version": "2.1.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
