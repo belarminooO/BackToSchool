@@ -113,3 +113,8 @@ My project/obj/
 ProjectSettings/
 My project/ProjectSettings/
 Assets/_Recovery/
+
+
+
+# VS Code settings (machine-specific)
+.vscode/
