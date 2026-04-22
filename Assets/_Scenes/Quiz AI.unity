@@ -143,6 +143,10 @@ PrefabInstance:
       propertyPath: roomIndex
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2154440210421666584, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 64d551a26a1b7944cba4c7dd341adf9e, type: 2}
     - target: {fileID: 2688160369032791507, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Jail Spawnpoint Round 4
@@ -1149,6 +1153,203 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 120189698}
   m_CullTransparentMesh: 1
+--- !u!1001 &121805806
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2097049924}
+    m_Modifications:
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 816
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554365178149141484, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_Name
+      value: SettingsScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 1962442048232996627, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -220
+      objectReference: {fileID: 0}
+    - target: {fileID: 1982506157971147086, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_fontSize
+      value: 36.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625741926029987090, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625741926029987090, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4629674881799641926, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4629674881799641926, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5376232299948554782, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403329174919378537, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6207120905129385716, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6246843706650348429, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6246843706650348429, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6246843706650348429, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7048682647990343692, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7048682647990343692, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7048682647990343692, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8173351972247188976, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8173351972247188976, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975145322052525858, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975145322052525858, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975145322052525858, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3890729451889915028, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1554365178149141484, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1261084654}
+  m_SourcePrefab: {fileID: 100100000, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+--- !u!114 &121805808 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5588365047691325512, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+  m_PrefabInstance: {fileID: 121805806}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!225 &121805809 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 5403329174919378537, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+  m_PrefabInstance: {fileID: 121805806}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &133613542
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2056,6 +2257,10 @@ PrefabInstance:
       propertyPath: roomIndex
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2154440210421666584, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 64d551a26a1b7944cba4c7dd341adf9e, type: 2}
     - target: {fileID: 2688160369032791507, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Jail Spawnpoint Round 2
@@ -3672,7 +3877,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 0.5
   m_NavMeshData: {fileID: 23800000, guid: 74b84ed86c718e947bd31ee8010f3396, type: 2}
   m_BuildHeightMesh: 0
@@ -4540,6 +4745,10 @@ PrefabInstance:
       propertyPath: roomIndex
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2154440210421666584, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 64d551a26a1b7944cba4c7dd341adf9e, type: 2}
     - target: {fileID: 2688160369032791507, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Jail Spawnpoint Round 3
@@ -4918,6 +5127,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4895497590064792, guid: 288b229db858c114299d1bf70ffc95cd, type: 3}
   m_PrefabInstance: {fileID: 386482553}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &394276371 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2878685060895189344, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+  m_PrefabInstance: {fileID: 121805806}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1001 &395771111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5654,6 +5874,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -5661,8 +5883,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &431145390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5675,6 +5895,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -5682,8 +5904,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 431145391}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -7371,6 +7591,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -7378,8 +7600,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &532044655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7392,6 +7612,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -7399,8 +7621,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 532044653}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -8896,6 +9116,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -8903,8 +9125,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &662211871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8917,6 +9137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -8924,8 +9146,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 662211872}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -9439,6 +9659,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 787490954}
   m_CullTransparentMesh: 1
+--- !u!114 &798846184 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2757616801279847661, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+  m_PrefabInstance: {fileID: 121805806}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1001 &802705550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10066,6 +10297,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f014b693bd3adaa479f1b53c939c176e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlanetSpawner
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -10073,8 +10306,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   planetPrefabs:
   - {fileID: 8966891313913285825, guid: 4e49ddbea7f41dc4fa16feb16e34b065, type: 3}
   - {fileID: 1613903335844460569, guid: 001e8081652021443bf456de5cd53356, type: 3}
@@ -10114,6 +10345,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -10121,8 +10354,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!1 &859003443
 GameObject:
   m_ObjectHideFlags: 0
@@ -10901,6 +11132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -10908,8 +11141,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 910737708}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -12883,6 +13114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -12890,8 +13123,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &1101533628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12904,6 +13135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -12911,8 +13144,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1101533629}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -14785,6 +15016,33 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4188208654106574, guid: 6e8ee28b611f0274dba1617e8888f8ec, type: 3}
   m_PrefabInstance: {fileID: 1259289292}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1261084652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1554365178149141484, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+  m_PrefabInstance: {fileID: 121805806}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1261084653 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1446038648618041720, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+  m_PrefabInstance: {fileID: 121805806}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1261084654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261084652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7161bbac890b064e87bfecfa05e515d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameSettings
+  menuCanvas: {fileID: 121805809}
+  masterSlider: {fileID: 1901142668}
+  musicSlider: {fileID: 394276371}
+  sfxSlider: {fileID: 798846184}
+  voiceSlider: {fileID: 121805808}
 --- !u!1 &1266988636
 GameObject:
   m_ObjectHideFlags: 0
@@ -16412,6 +16670,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -16419,8 +16679,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1387147372}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -19170,6 +19428,10 @@ PrefabInstance:
       propertyPath: roomIndex
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2154440210421666584, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 64d551a26a1b7944cba4c7dd341adf9e, type: 2}
     - target: {fileID: 2688160369032791507, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Jail Spawnpoint Round 5
@@ -21044,6 +21306,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -21051,8 +21315,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1860184563}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -21480,6 +21742,17 @@ PhysicsMaterial:
   m_Bounciness: 0
   m_FrictionCombine: 0
   m_BounceCombine: 0
+--- !u!114 &1901142668 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4535468662625484713, guid: 2d90aedbf9a554864821811549f09d11, type: 3}
+  m_PrefabInstance: {fileID: 121805806}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1908256011
 GameObject:
   m_ObjectHideFlags: 0
@@ -21511,6 +21784,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -21518,8 +21793,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &1908256013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21532,6 +21805,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -21539,8 +21814,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1908256014}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -23363,6 +23636,7 @@ RectTransform:
   - {fileID: 2033773486}
   - {fileID: 1964579847}
   - {fileID: 695529193}
+  - {fileID: 1261084653}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -25516,6 +25790,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Jail Spawnpoint Round 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2154440210421666584, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 64d551a26a1b7944cba4c7dd341adf9e, type: 2}
     - target: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 62.38165

@@ -1,58 +1,94 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Audio;
+using PurrLobby;
 
 public class GameSettings : MonoBehaviour
 {
-    [Header("Audio Mixer")]
-    [SerializeField] private AudioMixer mainMixer;
-
-    [Header("UI Sliders")]
+    [Header("UI References")]
+    [SerializeField] private CanvasGroup menuCanvas;
     [SerializeField] private Slider masterSlider;
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider sfxSlider;
-    [SerializeField] private Slider micSlider; // MetaVoiceChat
-    [SerializeField] private Slider voiceSlider; // MetaVoiceChat
+    [SerializeField] private Slider voiceSlider;
 
-    [Header("UI Panels")]
-    [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private GameObject defaultLobbyUI;
+    private bool isMenuOpen = false;
+
     void Start()
     {
-        masterSlider.value = PlayerPrefs.GetFloat("MasterVol", 1f);
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVol", 1f);
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVol", 1f);
-        micSlider.value = PlayerPrefs.GetFloat("MicVol", 1f);
-        voiceSlider.value = PlayerPrefs.GetFloat("VoiceChatVol", 1f);
+        // Forçar o menu a começar fechado
+        isMenuOpen = false;
+        UpdateMenuState();
 
-        masterSlider.onValueChanged.AddListener(v => UpdateVolume("MasterVol", v));
-        musicSlider.onValueChanged.AddListener(v => UpdateVolume("MusicVol", v));
-        sfxSlider.onValueChanged.AddListener(v => UpdateVolume("SFXVol", v));
-        micSlider.onValueChanged.AddListener(v => UpdateVolume("MicVol", v));
-        voiceSlider.onValueChanged.AddListener(v => UpdateVolume("VoiceChatVol", v));
+        if (AudioManager.Instance != null)
+        {
+            float m = AudioManager.Instance.GetVolume(AudioManager.MASTER_KEY);
+            float mu = AudioManager.Instance.GetVolume(AudioManager.MUSIC_KEY);
+            float s = AudioManager.Instance.GetVolume(AudioManager.SFX_KEY);
+            
+            masterSlider.value = m;
+            musicSlider.value = mu;
+            sfxSlider.value = s;
+            
+            // Forçar a aplicação no mixer imediatamente
+            AudioManager.Instance.SetVolume(AudioManager.MASTER_KEY, m);
+            AudioManager.Instance.SetVolume(AudioManager.MUSIC_KEY, mu);
+            AudioManager.Instance.SetVolume(AudioManager.SFX_KEY, s);
 
-        UpdateVolume("MasterVol", masterSlider.value);
-        UpdateVolume("MusicVol", musicSlider.value);
-        UpdateVolume("SFXVol", sfxSlider.value);
-        UpdateVolume("MicVol", voiceSlider.value);
-        UpdateVolume("VoiceChatVol", voiceSlider.value);
-    }
-    private void UpdateVolume(string param, float linearValue)
-    {
-        PlayerPrefs.SetFloat(param, linearValue);
-        PlayerPrefs.Save();
+            if (voiceSlider != null)
+            {
+                float v = AudioManager.Instance.GetVolume(AudioManager.VOICE_KEY);
+                voiceSlider.value = v;
+                AudioManager.Instance.SetVolume(AudioManager.VOICE_KEY, v);
+            }
+        }
 
-        float db = Mathf.Log10(Mathf.Clamp(linearValue, 0.0001f, 1f)) * 20f;
-        mainMixer.SetFloat(param, db);
+        masterSlider.onValueChanged.AddListener(v => UpdateVolume(AudioManager.MASTER_KEY, v));
+        musicSlider.onValueChanged.AddListener(v => UpdateVolume(AudioManager.MUSIC_KEY, v));
+        sfxSlider.onValueChanged.AddListener(v => UpdateVolume(AudioManager.SFX_KEY, v));
+        if (voiceSlider != null)
+            voiceSlider.onValueChanged.AddListener(v => UpdateVolume(AudioManager.VOICE_KEY, v));
     }
-    public void OpenSettings()
+
+    void Update()
     {
-        defaultLobbyUI.SetActive(false);
-        settingsPanel.SetActive(true);
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleMenu();
+        }
     }
-    public void CloseSettings()
+
+    public void ToggleMenu()
     {
-        settingsPanel.SetActive(false);
-        defaultLobbyUI.SetActive(true);
+        isMenuOpen = !isMenuOpen;
+        UpdateMenuState();
+    }
+
+    private void UpdateMenuState()
+    {
+        if (menuCanvas != null)
+        {
+            menuCanvas.alpha = isMenuOpen ? 1 : 0;
+            menuCanvas.interactable = isMenuOpen;
+            menuCanvas.blocksRaycasts = isMenuOpen;
+        }
+
+        if (isMenuOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    private void UpdateVolume(string param, float value)
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetVolume(param, value);
+        }
     }
 }
