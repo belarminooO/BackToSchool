@@ -2674,7 +2674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9775a1e9f7c4020488e0efc1c21d3d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GenerateQuizJSON
-  skipQuizGeneration: 0
+  skipQuizGeneration: 1
   themes: 
   roundNumber: 3
   questionsPerRound: 5
@@ -3876,8 +3876,8 @@ MonoBehaviour:
   m_IgnoreNavMeshObstacle: 1
   m_OverrideTileSize: 0
   m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_OverrideVoxelSize: 1
+  m_VoxelSize: 0.025
   m_MinRegionArea: 0.5
   m_NavMeshData: {fileID: 23800000, guid: 74b84ed86c718e947bd31ee8010f3396, type: 2}
   m_BuildHeightMesh: 0
@@ -9494,6 +9494,19 @@ Transform:
   - {fileID: 2011879286}
   m_Father: {fileID: 7303999978710068368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &748663105
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1001 &752379994
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13334,19 +13347,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4895497590064792, guid: 288b229db858c114299d1bf70ffc95cd, type: 3}
   m_PrefabInstance: {fileID: 1104790532}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &1107440267
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1001 &1110767076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15782,7 +15782,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.08
+      value: -2.096
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_LocalPosition.z
@@ -17163,7 +17163,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008095888409095444}
-  m_Material: {fileID: 1107440267}
+  m_Material: {fileID: 748663105}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -17178,38 +17178,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6724375674882309492, guid: b0346922037cc434fbbe3883799a125c, type: 3}
---- !u!114 &1483399392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008095888409095444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
-  m_SerializedVersion: 0
-  m_AgentTypeID: -1923039037
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.016666668
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 8f1c5f45d8e007f448b636f40f1dead8, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!1001 &1488902762
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17895,7 +17863,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.76
+      value: -3.854
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 63013d26f33557a41b6ca1dda069b741, type: 3}
       propertyPath: m_LocalPosition.z
@@ -18416,7 +18384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 25c8b59e7b2a3c245947c2145611fd7d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.31
+      value: 0.356
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 25c8b59e7b2a3c245947c2145611fd7d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -21353,7 +21321,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148453569101}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1884634566}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -21597,6 +21565,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4798061275001716, guid: be4105263a3576a4a9d8bb22a5f5ca29, type: 3}
   m_PrefabInstance: {fileID: 1878136814}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &1884634566
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1001 &1888221785
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22174,9 +22155,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -7215276148218459313, guid: b0346922037cc434fbbe3883799a125c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1483399389}
-    - targetCorrespondingSourceObject: {fileID: -7215276148218459313, guid: b0346922037cc434fbbe3883799a125c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1483399392}
   m_SourcePrefab: {fileID: -4161369568681901532, guid: b0346922037cc434fbbe3883799a125c, type: 3}
 --- !u!1 &1946430796
 GameObject:
