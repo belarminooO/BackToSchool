@@ -16,6 +16,8 @@ public class LoadingScreen : MonoBehaviour
             loading1.SetActive(true);
     }
 
+    public bool IsLoading => loading1 != null && loading1.activeSelf;
+
     public void Hide()
     {
         if (loading1 != null)

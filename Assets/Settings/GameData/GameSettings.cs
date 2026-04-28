@@ -53,6 +53,10 @@ public class GameSettings : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            // check if loading screen is active
+            if (LoadingScreen.Instance != null && LoadingScreen.Instance.IsLoading)
+                return;
+
             ToggleMenu();
         }
     }

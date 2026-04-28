@@ -7171,7 +7171,7 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  requiredPlayers: 1
+  requiredPlayers: 2
   stateMachine: {fileID: 364223067}
   waitingState: {fileID: 1848090773}
   freezeState: {fileID: 512507347}
