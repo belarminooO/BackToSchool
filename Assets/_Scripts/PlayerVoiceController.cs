@@ -55,6 +55,7 @@ public class PlayerVoiceController : MonoBehaviour
         }
         UpdateUI();
 
+        PurrLobby.AudioManager.Instance?.RouteVoiceChat();
     }
     
     private void OnMutedPerformed(InputAction.CallbackContext context)
