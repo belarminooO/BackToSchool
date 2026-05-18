@@ -4113,7 +4113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9775a1e9f7c4020488e0efc1c21d3d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GenerateQuizJSON
-  skipQuizGeneration: 1
+  skipQuizGeneration: 0
   themes: 
   roundNumber: 3
   questionsPerRound: 5
