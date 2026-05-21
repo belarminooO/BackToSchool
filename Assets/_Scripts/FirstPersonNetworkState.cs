@@ -152,12 +152,13 @@ public class FirstPersonNetworkState : NetworkBehaviour
         }
     }
 
-private void TryPushOtherPlayers()
+    private void TryPushOtherPlayers()
     {
         Camera cam = _playerController != null ? _playerController.PlayerCamera : null;
-        if (Camera.main == null) 
+        if (cam == null) cam = Camera.main;
+        if (cam == null) 
             return;
-        Ray r = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        Ray r = new Ray(cam.transform.position, cam.transform.forward);
         
         // Include Layer 0 (Default) since your Player Prefab is currently on the Default layer
         int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
@@ -173,7 +174,7 @@ private void TryPushOtherPlayers()
             
             if (otherState != null && otherIdentity != null)
             {
-                Vector3 forceDir = Camera.main.transform.forward;
+                Vector3 forceDir = cam.transform.forward;
                 forceDir.y = 0.2f; 
                 
                 CmdPushPlayerServerRpc(otherIdentity, forceDir.normalized * pushForce);

@@ -56,8 +56,7 @@ namespace MetaVoiceChat.NetProviders.PurrNet
 
         void INetProvider.RelayFrame(int index, double timestamp, ReadOnlySpan<byte> data)
         {
-            var array = MetaVoiceChat.Utils.FixedLengthArrayPool<byte>.Rent(data.Length);
-            data.CopyTo(array);
+            byte[] array = data.ToArray();
             float additionalLatency = Time.deltaTime;
 
             if (isServer)
@@ -68,7 +67,6 @@ namespace MetaVoiceChat.NetProviders.PurrNet
             {
                 CmdRelayFrame(index, timestamp, additionalLatency, array);
             }
-            MetaVoiceChat.Utils.FixedLengthArrayPool<byte>.Return(array);
         }
 
         [ServerRpc(channel: Channel.Unreliable)]
