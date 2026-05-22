@@ -98,14 +98,17 @@ namespace PurrLobby
         public void SwitchScene()
         {
             if (_hasAlreadySwitched) return;
-            
-            // If we are a client but still connecting, WAIT. 
+
+            // If we are a client but still connecting, WAIT.
             // The SceneModule will automatically take us to the new scene once connected.
             if (NetworkManager.main != null && NetworkManager.main.clientState == ConnectionState.Connecting)
             {
                 PurrLogger.Log("Client is still connecting... waiting for network to handle scene switch.", this);
                 return;
             }
+
+            CaptureExpectedPlayerCount();
+
             if (NetworkManager.main != null && NetworkManager.main.isServer)
             {
                 _hasAlreadySwitched = true;
@@ -118,6 +121,18 @@ namespace PurrLobby
                 _hasAlreadySwitched = true;
                 SceneManager.LoadSceneAsync(nextScene);
             }
+        }
+
+        // Snapshot the lobby size right before the scene change so the game scene has a
+        // count that survives any Steam disconnect event that might fire during the switch.
+        private void CaptureExpectedPlayerCount()
+        {
+            if (lobbyManager == null) return;
+            var lobby = lobbyManager.CurrentLobby;
+            if (!lobby.IsValid || lobby.Members == null || lobby.Members.Count <= 0) return;
+
+            LobbyDataHolder.CapturedExpectedPlayerCount = lobby.Members.Count;
+            PurrLogger.Log($"[SceneSwitcher] Captured expected player count: {lobby.Members.Count}", this);
         }
     }
 }
