@@ -156,26 +156,32 @@ public class FirstPersonNetworkState : NetworkBehaviour
     {
         Camera cam = _playerController != null ? _playerController.PlayerCamera : null;
         if (cam == null) cam = Camera.main;
-        if (cam == null) 
+        if (cam == null)
             return;
         Ray r = new Ray(cam.transform.position, cam.transform.forward);
-        
+
         // Include Layer 0 (Default) since your Player Prefab is currently on the Default layer
         int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
-        
+
         // SphereCast forgives exact aiming
         RaycastHit[] hits = Physics.SphereCastAll(r, 0.4f, pushRange, layerMask, QueryTriggerInteraction.Ignore);
+        Debug.Log($"[PUSH-DBG 1] TryPushOtherPlayers fired. isServer={isServer} isOwner={isOwner} hits={hits.Length} from cam={cam.name} pos={cam.transform.position}");
         foreach (var hit in hits)
         {
             if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
+            {
+                Debug.Log($"[PUSH-DBG 1a] skipping self-hit: {hit.collider.name}");
                 continue;
+            }
             FirstPersonNetworkState otherState = hit.collider.GetComponentInParent<FirstPersonNetworkState>();
+            Debug.Log($"[PUSH-DBG 1b] hit={hit.collider.name} otherState={(otherState == null ? "NULL" : otherState.gameObject.name)}");
 
             if (otherState != null)
             {
                 Vector3 forceDir = cam.transform.forward;
                 forceDir.y = 0.2f;
 
+                Debug.Log($"[PUSH-DBG 2] About to call PushServerRpc on {otherState.gameObject.name}. otherState.isOwner={otherState.isOwner} otherState.owner={otherState.owner}");
                 otherState.PushServerRpc(forceDir.normalized * pushForce);
                 break;
             }
@@ -185,11 +191,13 @@ public class FirstPersonNetworkState : NetworkBehaviour
     [ServerRpc(requireOwnership: false)]
     public void PushServerRpc(Vector3 forceVector)
     {
+        Debug.Log($"[PUSH-DBG 3] PushServerRpc reached server on {gameObject.name}. isServer={isServer} owner={owner}");
         ReceivePushOnServer(forceVector);
     }
 
     public void ReceivePushOnServer(Vector3 forceVector)
     {
+        Debug.Log($"[PUSH-DBG 4] ReceivePushOnServer on {gameObject.name}. isServer={isServer} owner.HasValue={owner.HasValue} owner={owner}");
         if (owner.HasValue)
             TargetPushRpc(owner.Value, forceVector);
     }
@@ -197,6 +205,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
     [TargetRpc]
     private void TargetPushRpc(PlayerID target, Vector3 forceVector)
     {
+        Debug.Log($"[PUSH-DBG 5] TargetPushRpc fired on {gameObject.name}. target={target} isOwner={isOwner} _playerController={(_playerController == null ? "NULL" : "OK")}");
         if (_playerController != null)
             _playerController.ApplyKnockback(forceVector);
     }
