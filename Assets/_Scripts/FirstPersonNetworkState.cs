@@ -173,20 +173,19 @@ public class FirstPersonNetworkState : NetworkBehaviour
         if (Time.time < _nextPushTime)
             return;
 
-        Camera cam = _playerController != null ? _playerController.PlayerCamera : null;
-        if (cam == null)
-            cam = Camera.main;
-        if (cam == null)
-        {
-            Debug.LogWarning($"[PUSH-DBG INPUT] Could not find a camera for {gameObject.name}");
-            return;
-        }
+        Transform sourceTransform = null;
+        if (_playerController != null && _playerController.PlayerCamera != null)
+            sourceTransform = _playerController.PlayerCamera.transform;
+        if (sourceTransform == null && _playerController != null && _playerController.CameraTarget != null)
+            sourceTransform = _playerController.CameraTarget;
+        if (sourceTransform == null)
+            sourceTransform = transform;
 
         _nextPushTime = Time.time + pushCooldown;
-        Vector3 origin = cam.transform.position;
-        Vector3 direction = cam.transform.forward.normalized;
+        Vector3 origin = sourceTransform.position;
+        Vector3 direction = sourceTransform.forward.normalized;
 
-        Debug.Log($"[PUSH-DBG INPUT] AttackStarted on {gameObject.name}. Requesting server push from {origin} dir={direction}");
+        Debug.Log($"[PUSH-DBG INPUT] AttackStarted on {gameObject.name}. source={sourceTransform.name} origin={origin} dir={direction}");
         RequestPushServerRpc(origin, direction);
     }
 
@@ -205,33 +204,73 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
     private void TryPushOtherPlayers(Vector3 rayOrigin, Vector3 rayDirection)
     {
-        Ray r = new Ray(rayOrigin, rayDirection);
-
-        // Include Layer 0 (Default) since your Player Prefab is currently on the Default layer
         int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
+        Vector3 searchOrigin = transform.position + Vector3.up * 0.9f;
+        Vector3 flatForward = Vector3.ProjectOnPlane(rayDirection, Vector3.up).normalized;
+        if (flatForward.sqrMagnitude < 0.0001f)
+            flatForward = transform.forward;
 
-        // SphereCast forgives exact aiming
-        RaycastHit[] hits = Physics.SphereCastAll(r, 0.4f, pushRange, layerMask, QueryTriggerInteraction.Ignore);
-        Debug.Log($"[PUSH-DBG 1] TryPushOtherPlayers fired. isServer={isServer} isOwner={isOwner} hits={hits.Length} rayOrigin={rayOrigin} rayDir={rayDirection}");
+        Collider[] hits = Physics.OverlapSphere(searchOrigin, pushRange + 0.75f, layerMask, QueryTriggerInteraction.Ignore);
+        Debug.Log($"[PUSH-DBG 1] TryPushOtherPlayers fired. isServer={isServer} isOwner={isOwner} overlaps={hits.Length} rayOrigin={rayOrigin} rayDir={rayDirection} searchOrigin={searchOrigin}");
+
+        FirstPersonNetworkState bestTarget = null;
+        float bestScore = float.MinValue;
+
         foreach (var hit in hits)
         {
-            if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
+            if (hit.gameObject == gameObject || hit.transform.IsChildOf(transform))
             {
-                Debug.Log($"[PUSH-DBG 1a] skipping self-hit: {hit.collider.name}");
+                Debug.Log($"[PUSH-DBG 1a] skipping self-hit: {hit.name}");
                 continue;
             }
-            FirstPersonNetworkState otherState = hit.collider.GetComponentInParent<FirstPersonNetworkState>();
-            Debug.Log($"[PUSH-DBG 1b] hit={hit.collider.name} otherState={(otherState == null ? "NULL" : otherState.gameObject.name)}");
 
-            if (otherState != null)
+            FirstPersonNetworkState otherState = hit.GetComponentInParent<FirstPersonNetworkState>();
+            if (otherState == null || otherState == this)
+                continue;
+
+            Vector3 targetCenter = otherState.transform.position + Vector3.up * 0.9f;
+            Vector3 toTarget = targetCenter - searchOrigin;
+            float distance = toTarget.magnitude;
+            if (distance > pushRange + 0.75f || distance < 0.05f)
+                continue;
+
+            Vector3 toTargetDir = toTarget / distance;
+            float facingDot = Vector3.Dot(flatForward, Vector3.ProjectOnPlane(toTargetDir, Vector3.up).normalized);
+            if (facingDot < 0.2f)
             {
-                Vector3 forceDir = rayDirection;
-                forceDir.y = 0.2f;
-
-                Debug.Log($"[PUSH-DBG 2] Server applying push to {otherState.gameObject.name}. otherState.isOwner={otherState.isOwner} otherState.owner={otherState.owner}");
-                otherState.ReceivePushOnServer(forceDir.normalized * pushForce);
-                break;
+                Debug.Log($"[PUSH-DBG 1b] rejecting {otherState.gameObject.name} due to angle. dot={facingDot}");
+                continue;
             }
+
+            if (Physics.Linecast(searchOrigin, targetCenter, out RaycastHit blockHit, ~0, QueryTriggerInteraction.Ignore))
+            {
+                FirstPersonNetworkState blockedPlayer = blockHit.collider.GetComponentInParent<FirstPersonNetworkState>();
+                if (blockedPlayer != otherState && !blockHit.collider.transform.IsChildOf(transform))
+                {
+                    Debug.Log($"[PUSH-DBG 1c] line blocked for {otherState.gameObject.name} by {blockHit.collider.name}");
+                    continue;
+                }
+            }
+
+            float score = (facingDot * 3f) - distance;
+            Debug.Log($"[PUSH-DBG 1d] candidate={otherState.gameObject.name} dist={distance} dot={facingDot} score={score}");
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestTarget = otherState;
+            }
+        }
+
+        if (bestTarget != null)
+        {
+            Vector3 forceDir = flatForward;
+            forceDir.y = 0.2f;
+            Debug.Log($"[PUSH-DBG 2] Server applying push to {bestTarget.gameObject.name}. bestScore={bestScore} owner={bestTarget.owner}");
+            bestTarget.ReceivePushOnServer(forceDir.normalized * pushForce);
+        }
+        else
+        {
+            Debug.Log($"[PUSH-DBG 2-NO-HIT] No valid push target found for {gameObject.name}");
         }
     }
 

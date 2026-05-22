@@ -23,6 +23,7 @@ namespace GinjaGaming.FinalCharacterController
         [SerializeField] private Camera _playerCamera;
         public Camera PlayerCamera => _playerCamera;
         [SerializeField] private Transform _cameraTarget;
+        public Transform CameraTarget => _cameraTarget;
         private CapsuleCollider _bodyCollider;
 
         public float RotationMismatch { get; private set; } = 0f;
