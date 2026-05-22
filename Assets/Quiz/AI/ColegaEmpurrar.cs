@@ -294,15 +294,23 @@ public class ColegaEmpurrar : NetworkBehaviour
 
         Vector3 force = pushDir * pushForce;
 
-        PlayerController pc = player.gameObject.GetComponent<PlayerController>();
-        if (pc != null)
+        FirstPersonNetworkState fps = player.gameObject.GetComponent<FirstPersonNetworkState>();
+        if (fps != null)
         {
-            pc.ApplyKnockback(force);
+            fps.ReceivePushOnServer(force);
         }
         else
         {
-            Rigidbody rb = player.gameObject.GetComponent<Rigidbody>();
-            if (rb != null) rb.AddForce(force, ForceMode.Impulse);
+            PlayerController pc = player.gameObject.GetComponent<PlayerController>();
+            if (pc != null)
+            {
+                pc.ApplyKnockback(force);
+            }
+            else
+            {
+                Rigidbody rb = player.gameObject.GetComponent<Rigidbody>();
+                if (rb != null) rb.AddForce(force, ForceMode.Impulse);
+            }
         }
 
         // Tenta rodar animação via rede usando ObserversRpc

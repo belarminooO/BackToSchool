@@ -198,15 +198,13 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
     public void ReceivePushOnServer(Vector3 forceVector)
     {
-        TargetPushObserversRpc(forceVector);
+        if (owner.HasValue)
+            TargetPushRpc(owner.Value, forceVector);
     }
 
-    [ObserversRpc] 
-    private void TargetPushObserversRpc(Vector3 forceVector)
+    [TargetRpc]
+    private void TargetPushRpc(PlayerID target, Vector3 forceVector)
     {
-        if (!isOwner) 
-            return;
-            
         if (_playerController != null)
             _playerController.ApplyKnockback(forceVector);
     }
