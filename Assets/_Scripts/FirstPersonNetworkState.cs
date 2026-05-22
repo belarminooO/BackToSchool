@@ -183,7 +183,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
         }
     }
 
-    [ServerRpc] 
+    [ServerRpc(requireOwnership: false)]
     public void CmdPushPlayerServerRpc(NetworkIdentity targetIdentity, Vector3 forceVector)
     {
         if (targetIdentity != null)
@@ -198,14 +198,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
     public void ReceivePushOnServer(Vector3 forceVector)
     {
-        if (_playerController != null && _playerController.enabled)
-        {
-            _playerController.ApplyKnockback(forceVector);
-        }
-        else
-        {
-            TargetPushObserversRpc(forceVector);
-        }
+        TargetPushObserversRpc(forceVector);
     }
 
     [ObserversRpc] 
@@ -244,26 +237,6 @@ public class FirstPersonNetworkState : NetworkBehaviour
     //         _playerController.ApplyKnockback(forceVector);
     //     }
     // }
-
-    [ServerRpc(requireOwnership:false)]
-    public void PushServerRpc(Vector3 forceVector)
-    {
-        if (_playerController != null && _playerController.enabled)
-        {
-            _playerController.ApplyKnockback(forceVector);
-            return;
-        }
-        PushOwnerRpc(forceVector);
-    }
-
-    [ObserversRpc]
-    private void PushOwnerRpc(Vector3 forceVector)
-    {
-        if (!isOwner) 
-            return;
-        if (_playerController != null)
-            _playerController.ApplyKnockback(forceVector);
-    }   
 
     private void OnStateChanged(int newState)
     {
