@@ -20,7 +20,9 @@ public class FirstPersonNetworkState : NetworkBehaviour
     [Header("Push Settings")]
     public float pushRange = 3f;
     public float pushForce = 7.5f;
+    public float pushCooldown = 0.45f;
     private bool _wasAttacking = false;
+    private float _nextPushTime = 0f;
 
     [Header("Camera")]
     public PlayerCameraStack playerCameraStack;
@@ -44,6 +46,8 @@ public class FirstPersonNetworkState : NetworkBehaviour
             _playerController.enabled = false;
         if (_actionsInput != null)       
             _actionsInput.enabled = false;   
+        if (_actionsInput != null)
+            _actionsInput.AttackStarted += OnAttackStarted;
     }
 
     // protected override void OnSpawned()
@@ -130,6 +134,12 @@ public class FirstPersonNetworkState : NetworkBehaviour
         _syncState.onChanged -= OnStateChanged;
     }
 
+    private void OnDestroy()
+    {
+        if (_actionsInput != null)
+            _actionsInput.AttackStarted -= OnAttackStarted;
+    }
+
     private void Update()
     {
         if (!isSpawned || !isOwner)
@@ -144,11 +154,6 @@ public class FirstPersonNetworkState : NetworkBehaviour
             {
                 Debug.Log($"[PUSH-DBG 0] AttackPressed transition on {gameObject.name}: was={_wasAttacking} now={_actionsInput.AttackPressed} isServer={isServer} isOwner={isOwner} _actionsInput.enabled={_actionsInput.enabled}");
             }
-            // Execute precisely when the animation event SetAttackPressedFalse fires
-            if (!_actionsInput.AttackPressed && _wasAttacking)
-            {
-                TryPushOtherPlayers();
-            }
             _wasAttacking = _actionsInput.AttackPressed;
 
             _syncAttack.value = _actionsInput.AttackPressed;
@@ -160,20 +165,54 @@ public class FirstPersonNetworkState : NetworkBehaviour
         }
     }
 
-    private void TryPushOtherPlayers()
+    private void OnAttackStarted()
     {
-        Camera cam = _playerController != null ? _playerController.PlayerCamera : null;
-        if (cam == null) cam = Camera.main;
-        if (cam == null)
+        if (!isSpawned || !isOwner)
             return;
-        Ray r = new Ray(cam.transform.position, cam.transform.forward);
+
+        if (Time.time < _nextPushTime)
+            return;
+
+        Camera cam = _playerController != null ? _playerController.PlayerCamera : null;
+        if (cam == null)
+            cam = Camera.main;
+        if (cam == null)
+        {
+            Debug.LogWarning($"[PUSH-DBG INPUT] Could not find a camera for {gameObject.name}");
+            return;
+        }
+
+        _nextPushTime = Time.time + pushCooldown;
+        Vector3 origin = cam.transform.position;
+        Vector3 direction = cam.transform.forward.normalized;
+
+        Debug.Log($"[PUSH-DBG INPUT] AttackStarted on {gameObject.name}. Requesting server push from {origin} dir={direction}");
+        RequestPushServerRpc(origin, direction);
+    }
+
+    [ServerRpc]
+    private void RequestPushServerRpc(Vector3 rayOrigin, Vector3 rayDirection)
+    {
+        Vector3 fallbackOrigin = transform.position + Vector3.up * 1.4f;
+        if (Vector3.Distance(rayOrigin, fallbackOrigin) > pushRange + 2f)
+            rayOrigin = fallbackOrigin;
+
+        if (rayDirection.sqrMagnitude < 0.0001f)
+            rayDirection = transform.forward;
+
+        TryPushOtherPlayers(rayOrigin, rayDirection.normalized);
+    }
+
+    private void TryPushOtherPlayers(Vector3 rayOrigin, Vector3 rayDirection)
+    {
+        Ray r = new Ray(rayOrigin, rayDirection);
 
         // Include Layer 0 (Default) since your Player Prefab is currently on the Default layer
         int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
 
         // SphereCast forgives exact aiming
         RaycastHit[] hits = Physics.SphereCastAll(r, 0.4f, pushRange, layerMask, QueryTriggerInteraction.Ignore);
-        Debug.Log($"[PUSH-DBG 1] TryPushOtherPlayers fired. isServer={isServer} isOwner={isOwner} hits={hits.Length} from cam={cam.name} pos={cam.transform.position}");
+        Debug.Log($"[PUSH-DBG 1] TryPushOtherPlayers fired. isServer={isServer} isOwner={isOwner} hits={hits.Length} rayOrigin={rayOrigin} rayDir={rayDirection}");
         foreach (var hit in hits)
         {
             if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
@@ -186,11 +225,11 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
             if (otherState != null)
             {
-                Vector3 forceDir = cam.transform.forward;
+                Vector3 forceDir = rayDirection;
                 forceDir.y = 0.2f;
 
-                Debug.Log($"[PUSH-DBG 2] About to call PushServerRpc on {otherState.gameObject.name}. otherState.isOwner={otherState.isOwner} otherState.owner={otherState.owner}");
-                otherState.PushServerRpc(forceDir.normalized * pushForce);
+                Debug.Log($"[PUSH-DBG 2] Server applying push to {otherState.gameObject.name}. otherState.isOwner={otherState.isOwner} otherState.owner={otherState.owner}");
+                otherState.ReceivePushOnServer(forceDir.normalized * pushForce);
                 break;
             }
         }

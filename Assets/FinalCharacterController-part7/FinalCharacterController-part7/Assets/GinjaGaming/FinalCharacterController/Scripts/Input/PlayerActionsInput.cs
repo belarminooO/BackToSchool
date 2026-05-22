@@ -1,4 +1,5 @@
 // removed Cinemachine namespace as it's not used here and is breaking build with 3.x versioning
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace GinjaGaming.FinalCharacterController
         private FirstPersonNetworkState _networkState;
         public bool GatherPressed { get; private set; }
         public bool AttackPressed { get; private set; }
+        public event Action AttackStarted;
         private PlayerControls _ownControls;
         #endregion
 
@@ -109,6 +111,7 @@ namespace GinjaGaming.FinalCharacterController
             Debug.Log($"[ActionsInput] OnAttacking PERFORMED on '{gameObject.name}'", gameObject);
 
             AttackPressed = true;
+            AttackStarted?.Invoke();
             CancelInvoke(nameof(SetAttackPressedFalse));
             Invoke(nameof(SetAttackPressedFalse), 0.8f);
         }

@@ -57,6 +57,9 @@ namespace GinjaGaming.FinalCharacterController
         public float playerModelRotationSpeed = 10f;
         public float rotateToTargetTime = 0.67f;
 
+        [Header("Impact Settings")]
+        public float maxExternalForce = 18f;
+
         [Header("Camera Settings")]
         public float lookSenseH = 0.1f;
         public float lookSenseV = 0.1f;
@@ -88,7 +91,7 @@ namespace GinjaGaming.FinalCharacterController
 
         public void ApplyKnockback(Vector3 force)
         {
-            _externalForce += force;
+            _externalForce = Vector3.ClampMagnitude(_externalForce + force, maxExternalForce);
         }
 
         public bool IsMovementEnabled
