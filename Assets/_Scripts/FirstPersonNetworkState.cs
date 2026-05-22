@@ -184,13 +184,15 @@ public class FirstPersonNetworkState : NetworkBehaviour
         _nextPushTime = Time.time + pushCooldown;
         Vector3 origin = sourceTransform.position;
         Vector3 direction = sourceTransform.forward.normalized;
+        FirstPersonNetworkState localTarget = FindLocalPushTarget(sourceTransform);
+        NetworkIdentity targetIdentity = localTarget != null ? localTarget.GetComponent<NetworkIdentity>() : null;
 
-        Debug.Log($"[PUSH-DBG INPUT] AttackStarted on {gameObject.name}. source={sourceTransform.name} origin={origin} dir={direction}");
-        RequestPushServerRpc(origin, direction);
+        Debug.Log($"[PUSH-DBG INPUT] AttackStarted on {gameObject.name}. source={sourceTransform.name} origin={origin} dir={direction} localTarget={(localTarget == null ? "NULL" : localTarget.gameObject.name)}");
+        RequestPushServerRpc(targetIdentity, origin, direction);
     }
 
     [ServerRpc]
-    private void RequestPushServerRpc(Vector3 rayOrigin, Vector3 rayDirection)
+    private void RequestPushServerRpc(NetworkIdentity targetIdentity, Vector3 rayOrigin, Vector3 rayDirection)
     {
         Vector3 fallbackOrigin = transform.position + Vector3.up * 1.4f;
         if (Vector3.Distance(rayOrigin, fallbackOrigin) > pushRange + 2f)
@@ -199,7 +201,77 @@ public class FirstPersonNetworkState : NetworkBehaviour
         if (rayDirection.sqrMagnitude < 0.0001f)
             rayDirection = transform.forward;
 
+        if (targetIdentity != null)
+        {
+            FirstPersonNetworkState targetState = targetIdentity.GetComponent<FirstPersonNetworkState>();
+            if (IsValidClientChosenTarget(targetState, rayDirection))
+            {
+                Debug.Log($"[PUSH-DBG TARGET] Client-selected target accepted: {targetState.gameObject.name}");
+                ApplyPushToTarget(targetState, rayDirection);
+                return;
+            }
+
+            Debug.Log($"[PUSH-DBG TARGET] Client-selected target rejected: {(targetState == null ? "NULL" : targetState.gameObject.name)}");
+        }
+
         TryPushOtherPlayers(rayOrigin, rayDirection.normalized);
+    }
+
+    private FirstPersonNetworkState FindLocalPushTarget(Transform sourceTransform)
+    {
+        Ray r = new Ray(sourceTransform.position, sourceTransform.forward);
+        int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
+        RaycastHit[] hits = Physics.SphereCastAll(r, 0.45f, pushRange + 0.75f, layerMask, QueryTriggerInteraction.Ignore);
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        foreach (var hit in hits)
+        {
+            if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
+                continue;
+
+            FirstPersonNetworkState otherState = hit.collider.GetComponentInParent<FirstPersonNetworkState>();
+            if (otherState != null && otherState != this)
+            {
+                Debug.Log($"[PUSH-DBG LOCAL] Local target candidate: {otherState.gameObject.name} via {hit.collider.name} at distance={hit.distance}");
+                return otherState;
+            }
+        }
+
+        Debug.Log($"[PUSH-DBG LOCAL] No local target found for {gameObject.name}");
+        return null;
+    }
+
+    private bool IsValidClientChosenTarget(FirstPersonNetworkState targetState, Vector3 rayDirection)
+    {
+        if (targetState == null || targetState == this)
+            return false;
+
+        Vector3 fromAttacker = targetState.transform.position - transform.position;
+        Vector3 flatToTarget = Vector3.ProjectOnPlane(fromAttacker, Vector3.up);
+        float planarDistance = flatToTarget.magnitude;
+        if (planarDistance > pushRange + 1.75f)
+            return false;
+
+        Vector3 flatForward = Vector3.ProjectOnPlane(rayDirection, Vector3.up).normalized;
+        if (flatForward.sqrMagnitude < 0.0001f)
+            flatForward = transform.forward;
+
+        if (planarDistance > 0.01f)
+        {
+            float facingDot = Vector3.Dot(flatForward, flatToTarget.normalized);
+            if (facingDot < -0.15f)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void ApplyPushToTarget(FirstPersonNetworkState targetState, Vector3 pushDirection)
+    {
+        Vector3 forceDir = pushDirection;
+        forceDir.y = 0.2f;
+        Debug.Log($"[PUSH-DBG 2] Server applying push to {targetState.gameObject.name}. owner={targetState.owner} pushDir={forceDir}");
+        targetState.ReceivePushOnServer(forceDir.normalized * pushForce);
     }
 
     private void TryPushOtherPlayers(Vector3 rayOrigin, Vector3 rayDirection)
@@ -263,10 +335,8 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
         if (bestTarget != null)
         {
-            Vector3 forceDir = flatForward;
-            forceDir.y = 0.2f;
-            Debug.Log($"[PUSH-DBG 2] Server applying push to {bestTarget.gameObject.name}. bestScore={bestScore} owner={bestTarget.owner}");
-            bestTarget.ReceivePushOnServer(forceDir.normalized * pushForce);
+            Debug.Log($"[PUSH-DBG 2-FALLBACK] Fallback server target={bestTarget.gameObject.name} bestScore={bestScore}");
+            ApplyPushToTarget(bestTarget, flatForward);
         }
         else
         {
