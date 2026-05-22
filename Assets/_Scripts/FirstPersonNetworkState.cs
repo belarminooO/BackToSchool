@@ -170,30 +170,22 @@ public class FirstPersonNetworkState : NetworkBehaviour
             if (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform))
                 continue;
             FirstPersonNetworkState otherState = hit.collider.GetComponentInParent<FirstPersonNetworkState>();
-            NetworkIdentity otherIdentity = hit.collider.GetComponentInParent<NetworkIdentity>();
-            
-            if (otherState != null && otherIdentity != null)
+
+            if (otherState != null)
             {
                 Vector3 forceDir = cam.transform.forward;
-                forceDir.y = 0.2f; 
-                
-                CmdPushPlayerServerRpc(otherIdentity, forceDir.normalized * pushForce);
-                break; 
+                forceDir.y = 0.2f;
+
+                otherState.PushServerRpc(forceDir.normalized * pushForce);
+                break;
             }
         }
     }
 
     [ServerRpc(requireOwnership: false)]
-    public void CmdPushPlayerServerRpc(NetworkIdentity targetIdentity, Vector3 forceVector)
+    public void PushServerRpc(Vector3 forceVector)
     {
-        if (targetIdentity != null)
-        {
-            FirstPersonNetworkState targetState = targetIdentity.GetComponent<FirstPersonNetworkState>();
-            if (targetState != null)
-            {
-                targetState.ReceivePushOnServer(forceVector);
-            }
-        }
+        ReceivePushOnServer(forceVector);
     }
 
     public void ReceivePushOnServer(Vector3 forceVector)
