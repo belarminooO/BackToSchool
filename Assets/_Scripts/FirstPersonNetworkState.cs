@@ -140,6 +140,10 @@ public class FirstPersonNetworkState : NetworkBehaviour
             _syncInput.value = _locomotionInput.MovementInput;
         if (_actionsInput != null)
         {
+            if (_actionsInput.AttackPressed != _wasAttacking)
+            {
+                Debug.Log($"[PUSH-DBG 0] AttackPressed transition on {gameObject.name}: was={_wasAttacking} now={_actionsInput.AttackPressed} isServer={isServer} isOwner={isOwner} _actionsInput.enabled={_actionsInput.enabled}");
+            }
             // Execute precisely when the animation event SetAttackPressedFalse fires
             if (!_actionsInput.AttackPressed && _wasAttacking)
             {
@@ -149,6 +153,10 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
             _syncAttack.value = _actionsInput.AttackPressed;
             _syncGather.value = _actionsInput.GatherPressed;
+        }
+        else
+        {
+            Debug.Log($"[PUSH-DBG 0-NULL] _actionsInput is NULL on {gameObject.name} isServer={isServer} isOwner={isOwner}");
         }
     }
 
