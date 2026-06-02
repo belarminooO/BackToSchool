@@ -139,7 +139,7 @@ MonoBehaviour:
   optionalNextInputFilter: {fileID: 0}
   metaVc: {fileID: 5717940884754737898}
   decibelThreshold: -45
-  currentVolumeDB: 0
+  currentVolumeDB: -80
 --- !u!1 &622246927644133346
 GameObject:
   m_ObjectHideFlags: 0

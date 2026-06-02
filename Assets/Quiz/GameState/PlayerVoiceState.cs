@@ -5,51 +5,66 @@ using MetaVoiceChat.AudioFilters;
 public class PlayerVoiceState : NetworkBehaviour
 {
     [Header("Settings")]
-
-    public float talkingThreshold = -45f; // Same as Vigia's noiseThreshold
+    public float talkingThreshold = -45f;
+    public float stopTalkingThreshold = -50f;
+    public float talkingStartDelay = 0.2f;
     public float talkingHangTime = 0.5f;
 
     public SyncVar<bool> isTalking = new SyncVar<bool>(false, ownerAuth: true);
 
     private NoiseGate _noiseGate;
-    private float _timeSinceLastSpoke = 0f;
+    private float _timeAboveThreshold;
+    private float _timeBelowThreshold;
 
     private void Start()
     {
         _noiseGate = GetComponentInChildren<NoiseGate>(true);
 
         if (_noiseGate == null)
-            _noiseGate = Object.FindFirstObjectByType<NoiseGate>();
-
-        if (_noiseGate == null)
-            Debug.LogWarning("[PlayerVoiceState] No NoiseGate found in scene — voice detection disabled.");
+            Debug.LogWarning("[PlayerVoiceState] Own NoiseGate missing - voice detection disabled.");
         else
             Debug.Log($"[PlayerVoiceState] Found NoiseGate: {_noiseGate.gameObject.name}");
     }
 
     private void Update()
     {
-        if (!isOwner || _noiseGate == null)
+        if (!isOwner)
             return;
 
-        bool currentlyDetecting = _noiseGate.currentVolumeDB > talkingThreshold;
-        if (currentlyDetecting)
+        if (_noiseGate == null || !_noiseGate.HasFreshSamples)
         {
-            _timeSinceLastSpoke = 0f;
-            if (!isTalking.value)
-            {
-                isTalking.value = true;
-                Debug.Log($"[PlayerVoiceState] Started talking (dB: {_noiseGate.currentVolumeDB:F1})");
-            }
+            SetTalking(false);
+            return;
         }
-        else
+
+        if (!isTalking.value)
         {
-            _timeSinceLastSpoke += Time.deltaTime;
-            if (_timeSinceLastSpoke > talkingHangTime && isTalking.value)
-            {
-                isTalking.value = false;
-                Debug.Log($"[PlayerVoiceState] Stopped talking after hang time.");
-            }
+            _timeAboveThreshold = _noiseGate.currentVolumeDB > talkingThreshold
+                ? _timeAboveThreshold + Time.deltaTime
+                : 0f;
+
+            if (_timeAboveThreshold >= talkingStartDelay)
+                SetTalking(true);
+
+            return;
         }
+
+        _timeBelowThreshold = _noiseGate.currentVolumeDB < stopTalkingThreshold
+            ? _timeBelowThreshold + Time.deltaTime
+            : 0f;
+
+        if (_timeBelowThreshold >= talkingHangTime)
+            SetTalking(false);
+    }
+
+    private void SetTalking(bool value)
+    {
+        if (isTalking.value == value)
+            return;
+
+        isTalking.value = value;
+        _timeAboveThreshold = 0f;
+        _timeBelowThreshold = 0f;
+        Debug.Log($"[PlayerVoiceState] Talking={value} (dB: {(_noiseGate != null ? _noiseGate.currentVolumeDB : -80f):F1})");
     }
 }

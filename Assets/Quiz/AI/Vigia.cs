@@ -170,12 +170,19 @@ public class Vigia : NetworkBehaviour
 
     private void CheckVision()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, viewDistance, playerMask);
+        int searchMask = playerMask.value | LayerMask.GetMask("Default");
+        Collider[] targets = Physics.OverlapSphere(transform.position, viewDistance, searchMask);
 
         foreach (var target in targets)
         {
+            if (!target.CompareTag("Player"))
+                continue;
+
             var p = target.GetComponentInParent<IPlayerController>();
-            if (p != null && p.isJailed) 
+            if (p == null)
+                continue;
+
+            if (p.isJailed)
                 continue;
 
             Vector3 dirToTarget = (target.transform.position - transform.position).normalized;
