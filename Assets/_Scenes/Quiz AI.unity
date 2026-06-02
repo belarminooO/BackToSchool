@@ -197,6 +197,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 76794556526234590, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: _ownerAuth
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 498295869698850712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roundNumber
       value: 4
@@ -6256,6 +6260,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 76794556526234590, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: _ownerAuth
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 498295869698850712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roundNumber
       value: 2
@@ -12340,6 +12348,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 76794556526234590, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: _ownerAuth
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 498295869698850712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roundNumber
       value: 3
@@ -17390,7 +17402,7 @@ MonoBehaviour:
   _minBufferSize: 1
   _maxBufferSize: 2
   _characterControllerPatch: 0
-  _ownerAuth: 1
+  _ownerAuth: 0
   _interpolationTiming: 0
 --- !u!114 &543051300
 MonoBehaviour:
@@ -34562,7 +34574,7 @@ MonoBehaviour:
   _minBufferSize: 1
   _maxBufferSize: 2
   _characterControllerPatch: 0
-  _ownerAuth: 1
+  _ownerAuth: 0
   _interpolationTiming: 0
 --- !u!114 &1122609008
 MonoBehaviour:
@@ -49979,6 +49991,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 76794556526234590, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: _ownerAuth
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 498295869698850712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roundNumber
       value: 5
@@ -56294,7 +56310,7 @@ MonoBehaviour:
   _minBufferSize: 1
   _maxBufferSize: 2
   _characterControllerPatch: 0
-  _ownerAuth: 1
+  _ownerAuth: 0
   _interpolationTiming: 0
 --- !u!114 &1864806821
 MonoBehaviour:
@@ -65332,6 +65348,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 76794556526234590, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: _ownerAuth
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 84174226967290569, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Material
       value: 

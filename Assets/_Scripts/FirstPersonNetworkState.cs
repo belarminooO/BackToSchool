@@ -31,6 +31,9 @@ public class FirstPersonNetworkState : NetworkBehaviour
     private PlayerLocomotionInput _locomotionInput;
     private PlayerController _playerController;
     private PlayerActionsInput _actionsInput;
+    private bool _ownerAttackSubscribed;
+
+    private static int PlayerPushMask => LayerMask.GetMask("Default", "Player");
 
     private void Awake()
     {
@@ -46,8 +49,19 @@ public class FirstPersonNetworkState : NetworkBehaviour
             _playerController.enabled = false;
         if (_actionsInput != null)       
             _actionsInput.enabled = false;   
-        if (_actionsInput != null)
+    }
+
+    private void SetOwnerAttackSubscription(bool subscribe)
+    {
+        if (_actionsInput == null || _ownerAttackSubscribed == subscribe)
+            return;
+
+        if (subscribe)
             _actionsInput.AttackStarted += OnAttackStarted;
+        else
+            _actionsInput.AttackStarted -= OnAttackStarted;
+
+        _ownerAttackSubscribed = subscribe;
     }
 
     // protected override void OnSpawned()
@@ -73,8 +87,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
         if (isOwner)
         {
-            // Fix: Layer name is "player" (lowercase) as seen in TagManager
-            int playerLayer = LayerMask.NameToLayer("player");
+            int playerLayer = LayerMask.NameToLayer("Player");
             if (playerLayer != -1 && Camera.main != null)
             {
                 Camera.main.cullingMask &= ~(1 << playerLayer);
@@ -88,6 +101,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
                 _playerController.enabled = true;
             if (_actionsInput != null)             
                 _actionsInput.enabled = true;   
+            SetOwnerAttackSubscription(true);
 
             // FORCE LOAD CAMERA STACK
             // if (playerCameraStack == null)
@@ -131,13 +145,13 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
     protected override void OnDespawned()
     {
+        SetOwnerAttackSubscription(false);
         _syncState.onChanged -= OnStateChanged;
     }
 
     private void OnDestroy()
     {
-        if (_actionsInput != null)
-            _actionsInput.AttackStarted -= OnAttackStarted;
+        SetOwnerAttackSubscription(false);
     }
 
     private void Update()
@@ -220,7 +234,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
     private FirstPersonNetworkState FindLocalPushTarget(Transform sourceTransform)
     {
         Ray r = new Ray(sourceTransform.position, sourceTransform.forward);
-        int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
+        int layerMask = PlayerPushMask;
         RaycastHit[] hits = Physics.SphereCastAll(r, 0.45f, pushRange + 0.75f, layerMask, QueryTriggerInteraction.Ignore);
         System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
@@ -276,7 +290,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
     private void TryPushOtherPlayers(Vector3 rayOrigin, Vector3 rayDirection)
     {
-        int layerMask = (1 << 0) | (1 << LayerMask.NameToLayer("player")) | (1 << LayerMask.NameToLayer("Player"));
+        int layerMask = PlayerPushMask;
         Vector3 searchOrigin = transform.position + Vector3.up * 0.9f;
         Vector3 flatForward = Vector3.ProjectOnPlane(rayDirection, Vector3.up).normalized;
         if (flatForward.sqrMagnitude < 0.0001f)
@@ -354,16 +368,36 @@ public class FirstPersonNetworkState : NetworkBehaviour
     public void ReceivePushOnServer(Vector3 forceVector)
     {
         Debug.Log($"[PUSH-DBG 4] ReceivePushOnServer on {gameObject.name}. isServer={isServer} owner.HasValue={owner.HasValue} owner={owner}");
-        if (owner.HasValue)
-            TargetPushRpc(owner.Value, forceVector);
+        if (!isServer || !owner.HasValue)
+            return;
+
+        PlayerID targetOwner = owner.Value;
+        bool applyLocally =
+            targetOwner == PlayerID.Server ||
+            (isHost && networkManager != null &&
+             targetOwner == networkManager.localPlayer);
+
+        if (applyLocally)
+        {
+            Debug.Log($"[PUSH-DBG 4-LOCAL] Applying knockback locally on {gameObject.name}. owner={targetOwner}");
+            ApplyKnockbackLocally(forceVector);
+            return;
+        }
+
+        TargetPushRpc(targetOwner, forceVector);
+    }
+
+    private void ApplyKnockbackLocally(Vector3 forceVector)
+    {
+        if (_playerController != null)
+            _playerController.ApplyKnockback(forceVector);
     }
 
     [TargetRpc]
     private void TargetPushRpc(PlayerID target, Vector3 forceVector)
     {
         Debug.Log($"[PUSH-DBG 5] TargetPushRpc fired on {gameObject.name}. target={target} isOwner={isOwner} _playerController={(_playerController == null ? "NULL" : "OK")}");
-        if (_playerController != null)
-            _playerController.ApplyKnockback(forceVector);
+        ApplyKnockbackLocally(forceVector);
     }
 
     // [ServerRpc(requireOwnership: false)]
