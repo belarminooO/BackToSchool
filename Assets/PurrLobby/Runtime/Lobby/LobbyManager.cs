@@ -57,6 +57,7 @@ namespace PurrLobby
 
         private void Awake()
         {
+            LobbyDataHolder.ResetCapturedGameStartData();
             _lastKnownState = new Lobby { IsValid = false };
 
             if (CurrentProvider != null)
@@ -389,7 +390,10 @@ namespace PurrLobby
                 await _currentProvider.SetAllReadyAsync();
 
                 OnAllReady?.Invoke();
+                return;
             }
+
+            IsStarting = false;
         }
 
         public async Task WaitForAllTasksAsync()

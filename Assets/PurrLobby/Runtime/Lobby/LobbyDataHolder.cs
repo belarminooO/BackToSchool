@@ -13,6 +13,13 @@ namespace PurrLobby
         // because Steam fires a phantom disconnect when one peer stops running its callbacks
         // during the scene switch — we can't trust the live count once we leave the lobby scene.
         public static int? CapturedExpectedPlayerCount;
+        public static string CapturedHostSteamId;
+
+        public static void ResetCapturedGameStartData()
+        {
+            CapturedExpectedPlayerCount = null;
+            CapturedHostSteamId = null;
+        }
 
         public void SetCurrentLobby(Lobby newLobby)
         {

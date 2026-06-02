@@ -162,34 +162,7 @@ namespace PurrLobby
 // #endif
 
 #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
-            if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
-            {
-                Steamworks.CSteamID lobbyId = new Steamworks.CSteamID(parsedLobbyId);
-                Steamworks.CSteamID ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
-                
-                
-                
-                void TrySetAddress(object t)
-                {
-                    if (t == null) return;
-                    
-                    // Direct cast forces the compiler to keep 'address' in the build
-                    if (t is PurrNet.Steam.SteamTransport steamTransport)
-                    {
-                        steamTransport.address = ownerId.m_SteamID.ToString();
-                        UnityEngine.Debug.Log($"[ConnectionStarter] Successfully set Steam address to: {ownerId.m_SteamID}");
-                    }
-                }
-
-                TrySetAddress(_networkManager.transport);
-                if (_networkManager.transport is CompositeTransport composite)
-                {
-                    foreach (var t in composite.transports)
-                    {
-                        TrySetAddress(t);
-                    }
-                }
-            }
+            TryApplySteamHostAddress();
 #endif
             // ----------------------------------------------
 
@@ -353,6 +326,50 @@ namespace PurrLobby
         }
 #endif
 
+#if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
+        private bool TryApplySteamHostAddress()
+        {
+            string hostId = LobbyDataHolder.CapturedHostSteamId;
+
+            if (string.IsNullOrWhiteSpace(hostId) || hostId == "0")
+            {
+                PurrLogger.LogError("[ConnectionStarter] Captured Steam host ID is missing.", this);
+                return false;
+            }
+
+            bool applied = false;
+
+            void TrySetAddress(object transport)
+            {
+                if (transport is PurrNet.Steam.SteamTransport steamTransport)
+                {
+                    steamTransport.address = hostId;
+                    applied = true;
+                }
+            }
+
+            TrySetAddress(_networkManager.transport);
+            if (_networkManager.transport is CompositeTransport composite)
+            {
+                foreach (var transport in composite.transports)
+                {
+                    TrySetAddress(transport);
+                }
+            }
+
+            if (applied)
+            {
+                PurrLogger.Log($"[ConnectionStarter] Applied captured Steam host ID: {hostId}", this);
+            }
+            else
+            {
+                PurrLogger.LogError("[ConnectionStarter] Steam transport was not found.", this);
+            }
+
+            return applied;
+        }
+#endif
+
         private IEnumerator StartHost()
         {
             IsHostStartingUp = true;
@@ -421,28 +438,9 @@ namespace PurrLobby
                 // ← Increased cooldown to give Steam SDR more time to reset cleanly
                 yield return new WaitForSeconds(6f); // ← was 4f
 
-                // ← Re-fetch host's Steam ID before each retry, in case lobby ownership changed
+                // Re-apply the host ID captured before leaving the lobby scene.
 #if STEAMWORKS_NET || STEAMWORKS_NET_PACKAGE
-                if (ulong.TryParse(_lobbyDataHolder.CurrentLobby.LobbyId, out ulong parsedLobbyId))
-                {
-                    var lobbyId = new Steamworks.CSteamID(parsedLobbyId);
-                    var ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(lobbyId);
-
-                    PurrLogger.Log($"[Steam Debug] Attempting to connect to Host Steam ID: {ownerId.m_SteamID}", this);
-
-                    void TrySetAddress(object t)
-                    {
-                        if (t is PurrNet.Steam.SteamTransport st) {
-                            st.address = ownerId.m_SteamID.ToString();
-                            PurrLogger.Log($"[Steam Debug] SUCCESS! Applied address to SteamTransport component.", this);
-                        }
-                    }
-
-                    TrySetAddress(_networkManager.transport);
-                    if (_networkManager.transport is CompositeTransport composite)
-                        foreach (var t in composite.transports)
-                            TrySetAddress(t);
-                }
+                TryApplySteamHostAddress();
 #endif
             }
 

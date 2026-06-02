@@ -338,7 +338,6 @@ namespace PurrLobby.Providers
                 && Steamworks.SteamUser.GetSteamID().m_SteamID == id)
             {
                 Steamworks.SteamMatchmaking.SetLobbyMemberData(_currentLobby, "IsReady", isReady.ToString());
-                Steamworks.SteamMatchmaking.SetLobbyData(_currentLobby, "UpdateTrigger", DateTime.UtcNow.Ticks.ToString());
             }
 
             return Task.FromResult(Task.CompletedTask);
@@ -354,13 +353,20 @@ namespace PurrLobby.Providers
 
         public Task SetLobbyStartedAsync()
         {
-            if (IsSteamClientAvailable)
-            {
-                Steamworks.SteamMatchmaking.SetLobbyGameServer(_currentLobby, 0, 0, Steamworks.SteamUser.GetSteamID());
-                Steamworks.SteamMatchmaking.SetLobbyData(_currentLobby, "Started", "True");
-            }
+            if (!IsSteamClientAvailable)
+                return Task.CompletedTask;
 
-            return Task.FromResult(Task.CompletedTask);
+            var localId = Steamworks.SteamUser.GetSteamID();
+            var ownerId = Steamworks.SteamMatchmaking.GetLobbyOwner(_currentLobby);
+
+            if (ownerId.m_SteamID != localId.m_SteamID)
+                return Task.CompletedTask;
+
+            Steamworks.SteamMatchmaking.SetLobbyGameServer(_currentLobby, 0, 0, localId);
+            Steamworks.SteamMatchmaking.SetLobbyData(_currentLobby, "HostSteamId", localId.m_SteamID.ToString());
+            Steamworks.SteamMatchmaking.SetLobbyData(_currentLobby, "Started", "True");
+
+            return Task.CompletedTask;
         }
 
         public void SetLobbyStarted(Steamworks.CSteamID serverId)
@@ -405,16 +411,6 @@ namespace PurrLobby.Providers
         public void Shutdown()
         {
             // Leave lobby on shutdown to prevent leftover lobbies in Steam
-            if (IsSteamClientAvailable && _currentLobby != Steamworks.CSteamID.Nil)
-            {
-                Steamworks.SteamMatchmaking.LeaveLobby(_currentLobby);
-                _currentLobby = Steamworks.CSteamID.Nil;
-            }
-        }
-
-        private void OnDestroy()
-        {
-            // Leave lobby when this component is destroyed (scene unload, editor stop, etc.)
             if (IsSteamClientAvailable && _currentLobby != Steamworks.CSteamID.Nil)
             {
                 Steamworks.SteamMatchmaking.LeaveLobby(_currentLobby);
