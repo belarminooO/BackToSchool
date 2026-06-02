@@ -34,7 +34,7 @@ public class ColegaEmpurrar : NetworkBehaviour
     [Header("Push Settings")]
     public float pushForce = 35f;
     public float pushDistance = 1.2f;
-    public float postPushDetectionCooldown = 4f;
+    public float postPushDetectionCooldown = 0.5f;
 
     [Header("Debug Visuals")]
     [Tooltip("Mostra o cone de visão.")]

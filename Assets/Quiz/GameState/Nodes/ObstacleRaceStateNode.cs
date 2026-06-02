@@ -2,7 +2,7 @@ using UnityEngine;
 using PurrNet.StateMachine;
 public class ObstacleRaceStateNode : StateNode
 {
-    [SerializeField] private float obstacleRaceTime = 45f;
+    [SerializeField] private float obstacleRaceTime = 75f;
     public StateNode nextState; // Connects to ChangeRoundStateNode
     public override void Enter(bool asServer)
     {

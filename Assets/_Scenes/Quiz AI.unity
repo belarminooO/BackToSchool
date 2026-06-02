@@ -17845,7 +17845,7 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  obstacleRaceTime: 45
+  obstacleRaceTime: 75
   nextState: {fileID: 2066836823}
 --- !u!4 &555437634
 Transform:
