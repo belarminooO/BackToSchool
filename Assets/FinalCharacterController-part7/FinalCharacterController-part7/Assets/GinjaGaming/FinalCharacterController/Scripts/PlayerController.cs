@@ -60,7 +60,6 @@ namespace GinjaGaming.FinalCharacterController
 
         [Header("Impact Settings")]
         public float maxExternalForce = 18f;
-        public float externalForceDecay = 5f;
 
         [Header("Camera Settings")]
         public float lookSenseH = 0.1f;
@@ -294,7 +293,7 @@ namespace GinjaGaming.FinalCharacterController
             if (_externalForce.magnitude > 0.1f)
             {
                 finalVelocity += _externalForce;
-                _externalForce *= Mathf.Exp(-externalForceDecay * Time.deltaTime);
+                _externalForce = Vector3.Lerp(_externalForce, Vector3.zero, 5f * Time.deltaTime);
             }
             else
             {
