@@ -354,36 +354,16 @@ public class FirstPersonNetworkState : NetworkBehaviour
     public void ReceivePushOnServer(Vector3 forceVector)
     {
         Debug.Log($"[PUSH-DBG 4] ReceivePushOnServer on {gameObject.name}. isServer={isServer} owner.HasValue={owner.HasValue} owner={owner}");
-        if (!isServer || !owner.HasValue)
-            return;
-
-        PlayerID targetOwner = owner.Value;
-        bool applyLocally =
-            targetOwner == PlayerID.Server ||
-            (isHost && networkManager != null &&
-             targetOwner == networkManager.localPlayer);
-
-        if (applyLocally)
-        {
-            Debug.Log($"[PUSH-DBG 5-LOCAL] Applying knockback locally on {gameObject.name}. owner={targetOwner}");
-            ApplyKnockbackLocally(forceVector);
-            return;
-        }
-
-        TargetPushRpc(targetOwner, forceVector);
-    }
-
-    private void ApplyKnockbackLocally(Vector3 forceVector)
-    {
-        if (_playerController != null)
-            _playerController.ApplyKnockback(forceVector);
+        if (owner.HasValue)
+            TargetPushRpc(owner.Value, forceVector);
     }
 
     [TargetRpc]
     private void TargetPushRpc(PlayerID target, Vector3 forceVector)
     {
         Debug.Log($"[PUSH-DBG 5] TargetPushRpc fired on {gameObject.name}. target={target} isOwner={isOwner} _playerController={(_playerController == null ? "NULL" : "OK")}");
-        ApplyKnockbackLocally(forceVector);
+        if (_playerController != null)
+            _playerController.ApplyKnockback(forceVector);
     }
 
     // [ServerRpc(requireOwnership: false)]
