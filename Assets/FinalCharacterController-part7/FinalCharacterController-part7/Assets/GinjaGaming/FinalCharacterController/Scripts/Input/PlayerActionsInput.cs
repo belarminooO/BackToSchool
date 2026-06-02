@@ -30,8 +30,17 @@ namespace GinjaGaming.FinalCharacterController
 
         private void OnEnable()
         {
+            TryInitializeControls();
+        }
+
+        private void TryInitializeControls()
+        {
+            if (_ownControls != null)
+                return;
+
             if (_networkState != null && !_networkState.isOwner)
                 return;
+
             _ownControls = new PlayerControls();
             _ownControls.PlayerActionsMap.Enable();
             _ownControls.PlayerActionsMap.SetCallbacks(this);
@@ -74,6 +83,8 @@ namespace GinjaGaming.FinalCharacterController
         #region Update
         private void Update()
         {
+            TryInitializeControls();
+
             if (_playerLocomotionInput.MovementInput != Vector2.zero ||
                 _playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping ||
                 _playerState.CurrentPlayerMovementState == PlayerMovementState.Falling)
