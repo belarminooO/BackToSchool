@@ -34,6 +34,7 @@ public class ColegaEmpurrar : NetworkBehaviour
     [Header("Push Settings")]
     public float pushForce = 35f;
     public float pushDistance = 1.2f;
+    public float postPushDetectionCooldown = 4f;
 
     [Header("Debug Visuals")]
     [Tooltip("Mostra o cone de visão.")]
@@ -46,6 +47,7 @@ public class ColegaEmpurrar : NetworkBehaviour
     private int currentWaypointIndex = 0;
     private bool isWaiting = false;
     private Vector3 investigationTarget;
+    private float detectionSuppressedUntil = 0f;
 
     private IPlayerController _currentDetectionTarget;
 
@@ -118,7 +120,8 @@ public class ColegaEmpurrar : NetworkBehaviour
             
             if (CurrentState.value == VigiaState.Wandering || CurrentState.value == VigiaState.Waiting)
             {
-                CheckVision();
+                if (Time.time >= detectionSuppressedUntil)
+                    CheckVision();
             }
 
             UpdateStateMachine();
@@ -293,6 +296,7 @@ public class ColegaEmpurrar : NetworkBehaviour
         pushDir.Normalize();
 
         Vector3 force = pushDir * pushForce;
+        detectionSuppressedUntil = Time.time + Mathf.Max(0f, postPushDetectionCooldown);
 
         FirstPersonNetworkState fps = player.gameObject.GetComponent<FirstPersonNetworkState>();
         if (fps != null)
