@@ -49,6 +49,9 @@ public class Vigia : NetworkBehaviour
 
     private IPlayerController _currentDetectionTarget;
     private float _gracePeriodTimer = 0f;
+    private GeneratedFootstepEmitter _footstepEmitter;
+    private VigiaState _lastAudioState;
+    private bool _audioStateInitialized;
 
     public SyncVar<VigiaState> CurrentState = new SyncVar<VigiaState>(VigiaState.Wandering);
     public SyncVar<float> SyncedSpeed = new SyncVar<float>(0f);
@@ -85,6 +88,12 @@ public class Vigia : NetworkBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        GeneratedQuizSfx.EnsureExists();
+
+        _footstepEmitter = GetComponent<GeneratedFootstepEmitter>();
+        if (_footstepEmitter == null)
+            _footstepEmitter = gameObject.AddComponent<GeneratedFootstepEmitter>();
+        _footstepEmitter.ConfigureForVigia();
 
         if (playerMask.value == 0) playerMask = LayerMask.GetMask("Player");
         if (visionMask.value == 0) visionMask = LayerMask.GetMask("Default", "Environment", "Ground");
@@ -100,6 +109,9 @@ public class Vigia : NetworkBehaviour
 
     private void Start()
     {
+        _lastAudioState = CurrentState.value;
+        _audioStateInitialized = true;
+
         if (waypoints != null && waypoints.Count > 0)
         {
             GoToNextWaypoint();
@@ -136,6 +148,7 @@ public class Vigia : NetworkBehaviour
         UpdateAnimations();
         UpdateDetectionUI();
         UpdateIndicatorLight();
+        UpdateAudioFeedback();
     }
 
     private void OnValidate()
@@ -502,6 +515,33 @@ public class Vigia : NetworkBehaviour
                 detectionBarRoot.transform.rotation = Camera.main.transform.rotation;
             }
         }
+    }
+
+    private void UpdateAudioFeedback()
+    {
+        if (_footstepEmitter != null)
+        {
+            _footstepEmitter.SetVigiaMovementMode(CurrentState.value == VigiaState.Investigating);
+            float speed = isServer ? agent.velocity.magnitude : SyncedSpeed.value;
+            _footstepEmitter.Tick(true, speed, Time.deltaTime);
+        }
+
+        if (!_audioStateInitialized)
+        {
+            _lastAudioState = CurrentState.value;
+            _audioStateInitialized = true;
+            return;
+        }
+
+        if (_lastAudioState == CurrentState.value)
+            return;
+
+        if (CurrentState.value == VigiaState.Investigating)
+        {
+            GeneratedQuizSfx.PlayVigiaAlert(transform.position + Vector3.up * 1.6f);
+        }
+
+        _lastAudioState = CurrentState.value;
     }
 
     private void OnDrawGizmos()

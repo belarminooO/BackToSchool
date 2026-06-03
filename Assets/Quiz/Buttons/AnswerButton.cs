@@ -21,6 +21,7 @@ public class AnswerButton : MonoBehaviour, IInteractable
     {
         if (manager != null)
         {
+            GeneratedQuizSfx.PlayButtonPress();
             manager.SubmitAnswer(this, interactor);
         }
         else
@@ -59,4 +60,4 @@ public class AnswerButton : MonoBehaviour, IInteractable
 
 
 
-}       
+}

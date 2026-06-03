@@ -99,6 +99,8 @@ public class AnswerButtonManager : NetworkBehaviour
     {
         if (ownerPlayer.value != null && ownerPlayer.value.isOwner)
         {
+            GeneratedQuizSfx.PlayAnswerResult(correctAnswer);
+
             var player = ownerPlayer.value.GetComponent<IPlayerController>();
             if (player != null)
                 player.ShowVignette(correctAnswer);

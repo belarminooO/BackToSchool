@@ -18,6 +18,7 @@ public class RoundBoardRefs
 public class QuizUIManager : MonoBehaviour
 {
     public static QuizUIManager Instance { get; private set; }
+    private string _lastStateName;
 
     [Header("Script")]
     public GenerateQuizJSON quizDataScript;
@@ -46,6 +47,18 @@ public class QuizUIManager : MonoBehaviour
 
     public void OnStateChanged(string stateName)
     {
+        if (stateName != _lastStateName)
+        {
+            if (stateName == "QuestionStateNode")
+                GeneratedQuizSfx.PlayQuestionStart();
+            else if (stateName == "ObstacleRaceStateNode")
+                GeneratedQuizSfx.PlayIntervalBell();
+            else if (stateName == "ChangeRoundStateNode" && _lastStateName == "ObstacleRaceStateNode")
+                GeneratedQuizSfx.PlayIntervalBell();
+
+            _lastStateName = stateName;
+        }
+
         if (stateName == "WaitingStateNode")
         {
             Cursor.lockState = CursorLockMode.None;

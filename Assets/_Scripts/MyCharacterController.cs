@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using KinematicCharacterController;
 using GinjaGaming.FinalCharacterController;
-
 using Unity.Cinemachine;
 
 [RequireComponent(typeof(KinematicCharacterMotor))]
@@ -54,6 +53,9 @@ public class MyCharacterController : MonoBehaviour, ICharacterController, IPlaye
     private float _targetPitch;
     private float _targetYaw;
     private bool _jumpRequested;
+    private GeneratedFootstepEmitter _footstepEmitter;
+    private Vector3 _previousFootstepPosition;
+    private bool _hasFootstepPosition;
 
     public bool isJailed { get; set; } = false;
 
@@ -61,6 +63,12 @@ public class MyCharacterController : MonoBehaviour, ICharacterController, IPlaye
     {
         if (Motor == null) Motor = GetComponent<KinematicCharacterMotor>();
         Motor.CharacterController = this;
+        GeneratedQuizSfx.EnsureExists();
+
+        _footstepEmitter = GetComponent<GeneratedFootstepEmitter>();
+        if (_footstepEmitter == null)
+            _footstepEmitter = gameObject.AddComponent<GeneratedFootstepEmitter>();
+        _footstepEmitter.ConfigureForPlayer();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -132,6 +140,8 @@ public class MyCharacterController : MonoBehaviour, ICharacterController, IPlaye
         {
             CameraTarget.localEulerAngles = new Vector3(_targetPitch, 0f, 0f);
         }
+
+        UpdateFootsteps();
     }
 
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
@@ -232,6 +242,40 @@ public class MyCharacterController : MonoBehaviour, ICharacterController, IPlaye
     public void TeleportTo(Vector3 position)
     {
         Motor.SetPosition(position);
+        _previousFootstepPosition = position;
+        _hasFootstepPosition = false;
+
+        if (_footstepEmitter != null)
+            _footstepEmitter.ResetCycle();
+    }
+
+    private void UpdateFootsteps()
+    {
+        if (_footstepEmitter == null)
+            return;
+
+        Vector3 currentPosition = transform.position;
+        if (!_hasFootstepPosition)
+        {
+            _previousFootstepPosition = currentPosition;
+            _hasFootstepPosition = true;
+            return;
+        }
+
+        Vector3 frameDelta = currentPosition - _previousFootstepPosition;
+        _previousFootstepPosition = currentPosition;
+
+        Vector3 planarDelta = Vector3.ProjectOnPlane(frameDelta, Vector3.up);
+        if (planarDelta.sqrMagnitude > 16f)
+        {
+            _footstepEmitter.ResetCycle();
+            return;
+        }
+
+        float deltaTime = Mathf.Max(Time.deltaTime, 0.0001f);
+        float speed = planarDelta.magnitude / deltaTime;
+        bool isGrounded = Motor == null || Motor.GroundingStatus.IsStableOnGround;
+        _footstepEmitter.Tick(isGrounded, speed, deltaTime);
     }
 
 }

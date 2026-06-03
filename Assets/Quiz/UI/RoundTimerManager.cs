@@ -9,6 +9,9 @@ public class RoundTimerManager : MonoBehaviour
     [SerializeField] private Slider timerBar;
     [SerializeField] private Image fillImage;
 
+    [Header("Audio Warning")]
+    [SerializeField] private float lowTimeWarningThreshold = 5f;
+
     [Header("State Colors")]
     [SerializeField] private Color freezeColor = new Color(0.8f, 0.8f, 0.8f); // Light Grey
     [SerializeField] private Color questionColor = new Color(0.20f, 0.60f, 1.00f); // Blue
@@ -17,6 +20,8 @@ public class RoundTimerManager : MonoBehaviour
 
     [Header("Dependencies")]
     [SerializeField] private QuizGameManager gameManager; 
+
+    private bool _playedLowTimeWarning;
 
     private void Awake()
     {
@@ -34,6 +39,7 @@ public class RoundTimerManager : MonoBehaviour
            return; 
         } 
 
+        string state = gameManager.currentStateName.value;
         float maximum = gameManager.maxTimer.value;
 
         if(maximum <= 0f) {
@@ -47,7 +53,6 @@ public class RoundTimerManager : MonoBehaviour
 
         if (fillImage != null) 
         {
-                string state = gameManager.currentStateName.value;
                 if (state == "QuestionStateNode")
                     fillImage.color = questionColor;
                 else if (state == "ObstacleRaceStateNode")
@@ -56,7 +61,32 @@ public class RoundTimerManager : MonoBehaviour
                     fillImage.color = changeColor;
                 else
                     fillImage.color = freezeColor;
-            }
+        }
 
+        UpdateLowTimeWarning(state, maximum, gameManager.currentTimer.value);
+    }
+
+    private void UpdateLowTimeWarning(string state, float maximum, float current)
+    {
+        if (state != "QuestionStateNode")
+        {
+            _playedLowTimeWarning = false;
+            return;
+        }
+
+        if (lowTimeWarningThreshold <= 0f || maximum <= lowTimeWarningThreshold)
+            return;
+
+        if (current > lowTimeWarningThreshold)
+        {
+            _playedLowTimeWarning = false;
+            return;
+        }
+
+        if (_playedLowTimeWarning)
+            return;
+
+        GeneratedQuizSfx.PlayQuestionTimeWarning();
+        _playedLowTimeWarning = true;
     }
 }

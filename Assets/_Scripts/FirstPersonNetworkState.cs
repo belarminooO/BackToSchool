@@ -31,6 +31,7 @@ public class FirstPersonNetworkState : NetworkBehaviour
     private PlayerLocomotionInput _locomotionInput;
     private PlayerController _playerController;
     private PlayerActionsInput _actionsInput;
+    private GeneratedFootstepEmitter _footstepEmitter;
 
     private void Awake()
     {
@@ -39,6 +40,12 @@ public class FirstPersonNetworkState : NetworkBehaviour
 
         _playerController = GetComponent<PlayerController>();
         _actionsInput = GetComponent<PlayerActionsInput>();
+        GeneratedQuizSfx.EnsureExists();
+
+        _footstepEmitter = GetComponent<GeneratedFootstepEmitter>();
+        if (_footstepEmitter == null)
+            _footstepEmitter = gameObject.AddComponent<GeneratedFootstepEmitter>();
+        _footstepEmitter.ConfigureForPlayer();
 
         if (_locomotionInput != null) 
             _locomotionInput.enabled = false;
@@ -143,7 +150,10 @@ public class FirstPersonNetworkState : NetworkBehaviour
     private void Update()
     {
         if (!isSpawned || !isOwner)
+        {
+            UpdateFootsteps(Time.deltaTime);
             return;
+        }
         if (_playerState != null)
             _syncState.value = (int)_playerState.CurrentPlayerMovementState;
         if (_locomotionInput != null)
@@ -163,6 +173,8 @@ public class FirstPersonNetworkState : NetworkBehaviour
         {
             Debug.Log($"[PUSH-DBG 0-NULL] _actionsInput is NULL on {gameObject.name} isServer={isServer} isOwner={isOwner}");
         }
+
+        UpdateFootsteps(Time.deltaTime);
     }
 
     private void OnAttackStarted()
@@ -398,6 +410,44 @@ public class FirstPersonNetworkState : NetworkBehaviour
         if (isOwner || _playerState == null)
             return;
         _playerState.SetPlayerMovementState((PlayerMovementState)newState);
+    }
+
+    private void UpdateFootsteps(float deltaTime)
+    {
+        if (_footstepEmitter == null)
+            return;
+
+        PlayerMovementState currentState = isOwner && _playerState != null
+            ? _playerState.CurrentPlayerMovementState
+            : SyncedMovementState;
+
+        Vector2 moveInput = isOwner && _locomotionInput != null
+            ? _locomotionInput.MovementInput
+            : SyncedMovementInput;
+
+        bool hasMovementInput = moveInput.sqrMagnitude > 0.02f;
+        bool isGroundedState =
+            currentState == PlayerMovementState.Walking ||
+            currentState == PlayerMovementState.Running ||
+            currentState == PlayerMovementState.Sprinting ||
+            currentState == PlayerMovementState.Crouching;
+
+        if (!isGroundedState || !hasMovementInput)
+        {
+            _footstepEmitter.Tick(false, 0f, deltaTime);
+            return;
+        }
+
+        float speed = currentState switch
+        {
+            PlayerMovementState.Sprinting => 7f,
+            PlayerMovementState.Running => 4f,
+            PlayerMovementState.Walking => 2.2f,
+            PlayerMovementState.Crouching => 1.6f,
+            _ => 0f
+        };
+
+        _footstepEmitter.Tick(true, speed, deltaTime);
     }
 
     
