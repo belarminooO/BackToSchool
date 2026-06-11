@@ -25,6 +25,11 @@ namespace GinjaGaming.FinalCharacterController
 
         public void Interact(PlayerController player)
         {
+            if (player == null)
+                return;
+
+            if (player.CurrentChair != null && player.CurrentChair != this)
+                return;
 
             if (_sittingPlayer == null && !isOccupied.value)
             {
@@ -73,6 +78,7 @@ namespace GinjaGaming.FinalCharacterController
 
             PlayerState playerState = _sittingPlayer.GetComponent<PlayerState>();
             playerState?.SetPlayerMovementState(PlayerMovementState.Idling);
+            _sittingPlayer.SetCurrentChair(null);
 
             _sittingPlayer = null;
 

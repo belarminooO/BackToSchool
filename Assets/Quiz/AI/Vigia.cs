@@ -52,6 +52,9 @@ public class Vigia : NetworkBehaviour
     private GeneratedFootstepEmitter _footstepEmitter;
     private VigiaState _lastAudioState;
     private bool _audioStateInitialized;
+    private bool _patrolInitialized;
+
+    private const float NavMeshSnapRadius = 5f;
 
     public SyncVar<VigiaState> CurrentState = new SyncVar<VigiaState>(VigiaState.Wandering);
     public SyncVar<float> SyncedSpeed = new SyncVar<float>(0f);
@@ -90,6 +93,11 @@ public class Vigia : NetworkBehaviour
         animator = GetComponent<Animator>();
         GeneratedQuizSfx.EnsureExists();
 
+        NpcVisualBootstrap.Configure(gameObject, animator);
+
+        if (agent != null)
+            agent.enabled = false;
+
         _footstepEmitter = GetComponent<GeneratedFootstepEmitter>();
         if (_footstepEmitter == null)
             _footstepEmitter = gameObject.AddComponent<GeneratedFootstepEmitter>();
@@ -107,15 +115,15 @@ public class Vigia : NetworkBehaviour
         }
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return null;
+
+        if (isServer)
+            EnsureAgentReadyForNavigation();
+
         _lastAudioState = CurrentState.value;
         _audioStateInitialized = true;
-
-        if (waypoints != null && waypoints.Count > 0)
-        {
-            GoToNextWaypoint();
-        }
     }
 
     private bool IsActiveDetectionState()
@@ -128,6 +136,25 @@ public class Vigia : NetworkBehaviour
 
     private void Update()
     {
+        bool agentReady = isServer ? EnsureAgentReadyForNavigation() : HasValidNavMeshAgent();
+
+        if (agentReady && !_patrolInitialized && waypoints != null && waypoints.Count > 0)
+        {
+            GoToNextWaypoint();
+        }
+
+        if (!agentReady)
+        {
+            if (isServer)
+                SyncedSpeed.value = 0f;
+
+            UpdateAnimations();
+            UpdateDetectionUI();
+            UpdateIndicatorLight();
+            UpdateAudioFeedback();
+            return;
+        }
+
         if (isServer) 
         {
             if (IsActiveDetectionState())
@@ -140,8 +167,15 @@ public class Vigia : NetworkBehaviour
                 DecayDetectionProgress(); 
             }
 
-            UpdateStateMachine();
-            SyncedSpeed.value = agent.velocity.magnitude;
+            if (_patrolInitialized)
+            {
+                UpdateStateMachine();
+                SyncedSpeed.value = agent.velocity.magnitude;
+            }
+            else
+            {
+                SyncedSpeed.value = 0f;
+            }
             
         }
 
@@ -166,6 +200,40 @@ public class Vigia : NetworkBehaviour
             nav.acceleration = 8f;
             nav.angularSpeed = 120f;
         }
+    }
+
+    private bool HasValidNavMeshAgent()
+    {
+        return agent != null && agent.enabled && agent.isOnNavMesh;
+    }
+
+    private bool TryAlignAgentToNavMesh(float searchRadius = NavMeshSnapRadius)
+    {
+        if (agent == null)
+            return false;
+
+        if (agent.enabled && agent.isOnNavMesh)
+            return true;
+
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, searchRadius, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+
+            if (!agent.enabled)
+                agent.enabled = true;
+
+            if (agent.isOnNavMesh)
+                return true;
+
+            return agent.Warp(hit.position);
+        }
+
+        return false;
+    }
+
+    private bool EnsureAgentReadyForNavigation()
+    {
+        return HasValidNavMeshAgent() || TryAlignAgentToNavMesh();
     }
 
     public void FindWaypointsInScene()
@@ -238,6 +306,9 @@ public class Vigia : NetworkBehaviour
 
     private void TriggerInvestigation(Vector3 origin)
     {
+        if (!EnsureAgentReadyForNavigation())
+            return;
+
         if (CurrentState.value == VigiaState.Investigating && Vector3.Distance(agent.destination, origin) < 0.5f)
             return;
 
@@ -253,6 +324,9 @@ public class Vigia : NetworkBehaviour
 
     private void UpdateStateMachine()
     {
+        if (!_patrolInitialized || !HasValidNavMeshAgent())
+            return;
+
         switch (CurrentState.value)
         {
             case VigiaState.Wandering:
@@ -348,19 +422,21 @@ public class Vigia : NetworkBehaviour
 
     private void GoToNextWaypoint()
     {
-        if (waypoints == null || waypoints.Count == 0) return;
+        _patrolInitialized = false;
+        if (!EnsureAgentReadyForNavigation() || waypoints == null || waypoints.Count == 0) return;
 
         CurrentState.value = VigiaState.Wandering;
         agent.isStopped = false;
         agent.speed = wanderSpeed;
         agent.SetDestination(waypoints[currentWaypointIndex].transform.position);
+        _patrolInitialized = true;
     }
 
     private void UpdateAnimations()
     {
         if (animator == null) return;
 
-        float currentSpeed = isServer ? agent.velocity.magnitude : SyncedSpeed.value;
+        float currentSpeed = isServer && HasValidNavMeshAgent() ? agent.velocity.magnitude : SyncedSpeed.value;
         float targetAnimValue = (CurrentState.value == VigiaState.Investigating) ? 1.5f : 0.5f;
         float maxSpeed = (CurrentState.value == VigiaState.Investigating) ? investigateSpeed : wanderSpeed;
         float magnitude = (maxSpeed > 0.01f) ? (currentSpeed / maxSpeed) * targetAnimValue : 0f;
@@ -522,7 +598,7 @@ public class Vigia : NetworkBehaviour
         if (_footstepEmitter != null)
         {
             _footstepEmitter.SetVigiaMovementMode(CurrentState.value == VigiaState.Investigating);
-            float speed = isServer ? agent.velocity.magnitude : SyncedSpeed.value;
+            float speed = isServer && HasValidNavMeshAgent() ? agent.velocity.magnitude : SyncedSpeed.value;
             _footstepEmitter.Tick(true, speed, Time.deltaTime);
         }
 

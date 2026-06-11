@@ -172,6 +172,8 @@ namespace GinjaGaming.FinalCharacterController
         }
 
         public void SetCurrentChair(ChairInteraction chair) { _currentChair = chair; }
+        public ChairInteraction CurrentChair => _currentChair;
+        public bool IsSitting => _currentChair != null;
 
         public void TryStandUp()
         {
@@ -486,9 +488,37 @@ namespace GinjaGaming.FinalCharacterController
 
         public void TeleportTo(Vector3 position)
         {
+            ClearSittingStateBeforeTeleport();
+
             _characterController.enabled = false;
             transform.position = position;
             _characterController.enabled = true;
+
+            _velocity = Vector3.zero;
+            _verticalVelocity = 0f;
+            _externalForce = Vector3.zero;
+            _jumpedLastFrame = false;
+            _interactionCooldownTimer = 0f;
+            _rotatingToTargetTimer = 0f;
+
+            if (_playerState != null && _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
+                _playerState.SetPlayerMovementState(PlayerMovementState.Idling);
+        }
+
+        private void ClearSittingStateBeforeTeleport()
+        {
+            if (_currentChair != null)
+            {
+                _currentChair.StandUp();
+                _currentChair = null;
+                return;
+            }
+
+            if (_playerState != null && _playerState.CurrentPlayerMovementState == PlayerMovementState.Sitting)
+                _playerState.SetPlayerMovementState(PlayerMovementState.Idling);
+
+            if (_characterController != null && !_characterController.enabled)
+                _characterController.enabled = true;
         }
     }
 }

@@ -35,6 +35,10 @@ public class ColegaVaguear : NetworkBehaviour
     public SyncVar<VigiaState> CurrentState = new SyncVar<VigiaState>(VigiaState.Wandering);
     public SyncVar<float> SyncedSpeed = new SyncVar<float>(0f);
 
+    private bool _patrolInitialized;
+
+    private const float NavMeshSnapRadius = 5f;
+
     // Hashes de animação
     private static int inputXHash = Animator.StringToHash("inputX");
     private static int inputYHash = Animator.StringToHash("inputY");
@@ -53,6 +57,11 @@ public class ColegaVaguear : NetworkBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
+        NpcVisualBootstrap.Configure(gameObject, animator);
+
+        if (agent != null)
+            agent.enabled = false;
+
         gameObject.isStatic = false;
 
         if (waypoints == null || waypoints.Count == 0)
@@ -61,22 +70,44 @@ public class ColegaVaguear : NetworkBehaviour
         }
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return null;
 
-        if (waypoints != null && waypoints.Count > 0)
-        {
-            GoToNextWaypoint();
-        }
+        if (isServer)
+            EnsureAgentReadyForNavigation();
     }
 
 
     private void Update()
     {
+        bool agentReady = isServer ? EnsureAgentReadyForNavigation() : HasValidNavMeshAgent();
+
+        if (agentReady && !_patrolInitialized && waypoints != null && waypoints.Count > 0)
+        {
+            GoToNextWaypoint();
+        }
+
+        if (!agentReady)
+        {
+            if (isServer)
+                SyncedSpeed.value = 0f;
+
+            UpdateAnimations();
+            return;
+        }
+
         if (isServer) 
         {
-            UpdateStateMachine();
-            SyncedSpeed.value = agent.velocity.magnitude;
+            if (_patrolInitialized)
+            {
+                UpdateStateMachine();
+                SyncedSpeed.value = agent.velocity.magnitude;
+            }
+            else
+            {
+                SyncedSpeed.value = 0f;
+            }
         }
 
         UpdateAnimations();
@@ -94,6 +125,40 @@ public class ColegaVaguear : NetworkBehaviour
         }
     }
 
+    private bool HasValidNavMeshAgent()
+    {
+        return agent != null && agent.enabled && agent.isOnNavMesh;
+    }
+
+    private bool TryAlignAgentToNavMesh(float searchRadius = NavMeshSnapRadius)
+    {
+        if (agent == null)
+            return false;
+
+        if (agent.enabled && agent.isOnNavMesh)
+            return true;
+
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, searchRadius, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+
+            if (!agent.enabled)
+                agent.enabled = true;
+
+            if (agent.isOnNavMesh)
+                return true;
+
+            return agent.Warp(hit.position);
+        }
+
+        return false;
+    }
+
+    private bool EnsureAgentReadyForNavigation()
+    {
+        return HasValidNavMeshAgent() || TryAlignAgentToNavMesh();
+    }
+
     public void FindWaypointsInScene()
     {
         VigilaWaypoint[] foundWps = Object.FindObjectsByType<VigilaWaypoint>(FindObjectsSortMode.InstanceID);
@@ -104,6 +169,9 @@ public class ColegaVaguear : NetworkBehaviour
 
     private void UpdateStateMachine()
     {
+        if (!_patrolInitialized || !HasValidNavMeshAgent())
+            return;
+
         switch (CurrentState.value)
         {
             case VigiaState.Wandering:
@@ -158,19 +226,21 @@ public class ColegaVaguear : NetworkBehaviour
 
     private void GoToNextWaypoint()
     {
-        if (waypoints == null || waypoints.Count == 0) return;
+        _patrolInitialized = false;
+        if (!EnsureAgentReadyForNavigation() || waypoints == null || waypoints.Count == 0) return;
 
         CurrentState.value = VigiaState.Wandering;
         agent.isStopped = false;
         agent.speed = wanderSpeed;
         agent.SetDestination(waypoints[currentWaypointIndex].transform.position);
+        _patrolInitialized = true;
     }
 
     private void UpdateAnimations()
     {
         if (animator == null) return;
 
-        float currentSpeed = isServer ? agent.velocity.magnitude : SyncedSpeed.value;
+        float currentSpeed = isServer && HasValidNavMeshAgent() ? agent.velocity.magnitude : SyncedSpeed.value;
         float magnitude = (wanderSpeed > 0.01f) ? (currentSpeed / wanderSpeed) * 0.5f : 0f;
 
         animator.SetFloat(inputXHash, 0f);

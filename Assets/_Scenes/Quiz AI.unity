@@ -118,7 +118,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 305f0bd0e40124ecea0ddaf968dc0272, type: 2}
 --- !u!1001 &3289119
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -197,6 +197,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 180164742489900250, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.37
+      objectReference: {fileID: 0}
     - target: {fileID: 498295869698850712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roundNumber
       value: 4
@@ -281,8 +285,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Classroom 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8563362702262587712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 186472771043608366, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       insertIndex: -1
@@ -510,6 +519,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -5614686516281157212, guid: b09515447785899489f7d84a3e3cdafd, type: 3}
   m_PrefabInstance: {fileID: 1058432886}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &23342454
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &28188518
 GameObject:
   m_ObjectHideFlags: 0
@@ -6340,8 +6362,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Classroom 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8563362702262587712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 186472771043608366, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       insertIndex: -1
@@ -6691,7 +6718,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 234140741}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9775a1e9f7c4020488e0efc1c21d3d01, type: 3}
   m_Name: 
@@ -10080,11 +10107,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.34268
+      value: 39.342644
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7656851
+      value: 1.7633619
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -11114,7 +11141,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 346491119}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 0
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_Intensity: 1
@@ -11166,7 +11193,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -11518,15 +11545,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.3348
+      value: 39.33469
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7651815
+      value: 1.7645348
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -43.687305
+      value: -43.688675
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12317,6 +12344,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b75530599bfcfa49ae4ecfe6ed3d21e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.StateMachine.StateMachine
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -12324,8 +12353,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _ownerAuth: 0
   _states:
   - {fileID: 1848090773}
@@ -12345,6 +12372,14 @@ PrefabInstance:
       propertyPath: roundNumber
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 504949710787704674, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.3299999
+      objectReference: {fileID: 0}
+    - target: {fileID: 504949710787704674, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -34.33
+      objectReference: {fileID: 0}
     - target: {fileID: 997891869540689653, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Room Spawnpoint 3
@@ -12352,6 +12387,14 @@ PrefabInstance:
     - target: {fileID: 1203814603202867398, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Jail Spawnpoint Round 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280720834005252246, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280720834005252246, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -31.84
       objectReference: {fileID: 0}
     - target: {fileID: 1571399430281496347, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: roomIndex
@@ -12364,6 +12407,14 @@ PrefabInstance:
     - target: {fileID: 2688160369032791507, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Jail Spawnpoint Round 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458923632528558505, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458923632528558505, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -33.13
       objectReference: {fileID: 0}
     - target: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12405,13 +12456,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4190188200756476759, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.3299999
+      objectReference: {fileID: 0}
+    - target: {fileID: 4190188200756476759, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -32.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 5184983194416600872, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5184983194416600872, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -34.31
+      objectReference: {fileID: 0}
     - target: {fileID: 5420873905889932062, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Room Volume Trigger 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5798086072620734113, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5798086072620734113, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -35.45
+      objectReference: {fileID: 0}
     - target: {fileID: 5920854638978582637, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Outside Spawnpoint 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931590434532177602, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931590434532177602, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -31.59
       objectReference: {fileID: 0}
     - target: {fileID: 6554816123605006258, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Material
@@ -12421,12 +12504,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Round 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8436012793782931927, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.1399999
+      objectReference: {fileID: 0}
+    - target: {fileID: 8436012793782931927, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -35.72
+      objectReference: {fileID: 0}
     - target: {fileID: 8554884588838295084, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Name
       value: Classroom 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8563362702262587712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 186472771043608366, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       insertIndex: -1
@@ -12790,15 +12886,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41.941643
+      value: 41.982258
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7646077
+      value: 1.7661259
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.679905
+      value: -44.68307
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13541,15 +13637,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 42.462006
+      value: 42.460266
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.040006
+      value: 2.0299506
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.431004
+      value: -44.435253
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13717,6 +13813,7 @@ GameObject:
   - component: {fileID: 431145391}
   - component: {fileID: 431145390}
   - component: {fileID: 431145389}
+  - component: {fileID: 431145392}
   m_Layer: 0
   m_Name: CompassPivot 1
   m_TagString: Untagged
@@ -13733,7 +13830,7 @@ Transform:
   m_GameObject: {fileID: 431145387}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.4834442, y: 26.043224, z: -45.414772}
+  m_LocalPosition: {x: -3.4834442, y: 25.02, z: -45.414772}
   m_LocalScale: {x: 200.00002, y: 200, z: 200.00002}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13752,6 +13849,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -13759,8 +13858,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &431145390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13773,6 +13870,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -13780,8 +13879,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 431145391}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -13808,6 +13905,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &431145392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431145387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fddc14ad7c8241908512f55c6af3fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstaclePlayerPushZone
+  pushForce: 20
+  pushCooldown: 0.15
 --- !u!1001 &437222637
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15023,15 +15134,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.82001
+      value: 39.82
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.0299997
+      value: 2.029896
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.000015
+      value: -43.990013
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -15608,6 +15719,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f69fc67f58effa40a7818c7d7319509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FreezeStateNode
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -15615,8 +15728,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   questionState: {fileID: 1980334819}
 --- !u!4 &512507348
 Transform:
@@ -16383,6 +16494,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66905730f6c66a458915807810cfdd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -16390,8 +16503,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   roundSpawns:
   - spawnPoints:
     - {fileID: 3046843591528170763}
@@ -16502,6 +16613,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ae9e3e92c846ab4e9312306b142c14a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -16509,8 +16622,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   team1Score:
     _value: 0
     _ownerAuth: 0
@@ -16563,6 +16674,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea4957673204cb94394a802f6171c5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuizGameManager
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -16570,8 +16683,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   requiredPlayers: 1
   stateMachine: {fileID: 364223067}
   waitingState: {fileID: 1848090773}
@@ -17192,6 +17303,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -17199,8 +17312,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &532044655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17213,6 +17324,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -17220,8 +17333,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 532044653}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -17422,6 +17533,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -17429,8 +17542,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _syncPosition: 1
   _syncRotation: 1
   _syncScale: 1
@@ -17453,6 +17564,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -17460,8 +17573,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!195 &543051302
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -17469,7 +17580,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148178917448}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.05
   m_Speed: 0.05
@@ -17531,6 +17642,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c21cf49947a9fc4a973dde1b0e864f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColegaEmpurrar
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -17538,8 +17651,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   waypoints:
   - {fileID: 2002934586}
   - {fileID: 695189653}
@@ -17886,6 +17997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e921704bde7bd5449a4b92cd54983b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleRaceStateNode
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -17893,8 +18006,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   obstacleRaceTime: 75
   nextState: {fileID: 2066836823}
 --- !u!4 &555437634
@@ -19566,15 +19677,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41.93916
+      value: 41.97999
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7646303
+      value: 1.7648306
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.19187
+      value: -44.192307
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -20839,43 +20950,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 79.439
+      value: 78.493
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 25.126
+      value: 25.021
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -47.697
+      value: -47.108
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99088055
+      value: 0.9673807
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.13341343
+      value: -0.03606529
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.01888672
+      value: -0.16789977
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0001394757
+      value: 0.18623553
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -15.331
+      value: -0.415
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 2.222
+      value: -19.773
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -0.283
+      value: 21.866
       objectReference: {fileID: 0}
     - target: {fileID: 6085035509634083645, guid: ac2b1e7122ff2ce4eadeed4d74069e09, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -22560,6 +22671,7 @@ GameObject:
   - component: {fileID: 662211872}
   - component: {fileID: 662211871}
   - component: {fileID: 662211870}
+  - component: {fileID: 662211873}
   m_Layer: 0
   m_Name: CompassPivot 2
   m_TagString: Untagged
@@ -22576,7 +22688,7 @@ Transform:
   m_GameObject: {fileID: 662211868}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.4834976, y: 24.043224, z: -51.414787}
+  m_LocalPosition: {x: -3.4834976, y: 23.02, z: -51.414787}
   m_LocalScale: {x: 200.00005, y: 200, z: 200.00005}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22595,6 +22707,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -22602,8 +22716,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &662211871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22616,6 +22728,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -22623,8 +22737,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 662211872}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -22651,6 +22763,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &662211873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662211868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fddc14ad7c8241908512f55c6af3fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstaclePlayerPushZone
+  pushForce: 20
+  pushCooldown: 0.15
 --- !u!1 &664873736
 GameObject:
   m_ObjectHideFlags: 0
@@ -26219,7 +26345,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 2.1059508, y: 2.314684, z: 2.2164605}
   m_Center: {x: 0.0037550866, y: 0.09265804, z: 0.023464745}
@@ -27070,6 +27196,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f014b693bd3adaa479f1b53c939c176e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlanetSpawner
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -27077,8 +27205,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   planetPrefabs:
   - {fileID: 8966891313913285825, guid: 4e49ddbea7f41dc4fa16feb16e34b065, type: 3}
   - {fileID: 1613903335844460569, guid: 001e8081652021443bf456de5cd53356, type: 3}
@@ -27118,6 +27244,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -27125,8 +27253,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!1001 &857689761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27223,7 +27349,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 859003443}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1.2
@@ -27275,7 +27401,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -29713,6 +29839,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -29720,8 +29848,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 910737708}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -31409,15 +31535,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 42.46201
+      value: 42.460274
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.04
+      value: 2.0299447
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.44101
+      value: -44.445255
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -32896,7 +33022,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054658990}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 0
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_Intensity: 1
@@ -32948,7 +33074,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -33659,15 +33785,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41.942142
+      value: 41.982998
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7657976
+      value: 1.7648249
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.193153
+      value: -44.191296
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -33905,6 +34031,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a2bb2bdb812054b81946c1c70abc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColegaVaguear
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -33912,8 +34040,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   waypoints:
   - {fileID: 1241615959}
   - {fileID: 209861917}
@@ -33999,6 +34125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -34006,8 +34134,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _syncPosition: 1
   _syncRotation: 1
   _syncScale: 1
@@ -34030,6 +34156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -34037,8 +34165,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!195 &1082368434
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -34046,7 +34172,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1082368427}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.05
   m_Speed: 0.5
@@ -34254,6 +34380,7 @@ GameObject:
   - component: {fileID: 1101533629}
   - component: {fileID: 1101533628}
   - component: {fileID: 1101533627}
+  - component: {fileID: 1101533631}
   m_Layer: 0
   m_Name: CompassPivot 3
   m_TagString: Untagged
@@ -34273,6 +34400,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -34280,8 +34409,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &1101533628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34294,6 +34421,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -34301,8 +34430,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1101533629}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -34338,13 +34465,27 @@ Transform:
   m_GameObject: {fileID: 1101533626}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.4834442, y: 26.043224, z: -57.414772}
+  m_LocalPosition: {x: -3.4834442, y: 25.02, z: -57.414772}
   m_LocalScale: {x: 200.00002, y: 200, z: 200.00002}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1157169511}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1101533631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1101533626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fddc14ad7c8241908512f55c6af3fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstaclePlayerPushZone
+  pushForce: 20
+  pushCooldown: 0.15
 --- !u!1001 &1103317268
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34887,6 +35028,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -34894,8 +35037,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _syncPosition: 1
   _syncRotation: 1
   _syncScale: 1
@@ -34918,6 +35059,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -34925,8 +35068,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!195 &1122609010
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -34934,7 +35075,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149019864733}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.05
   m_Speed: 0.05
@@ -34996,6 +35137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c21cf49947a9fc4a973dde1b0e864f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColegaEmpurrar
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -35003,8 +35146,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   waypoints:
   - {fileID: 1743822494}
   - {fileID: 1646150546}
@@ -36832,15 +36973,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41.936474
+      value: 41.977417
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.764638
+      value: 1.7641783
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.17291
+      value: -44.171978
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -36967,15 +37108,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41.94164
+      value: 41.982353
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.764615
+      value: 1.7654753
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.409904
+      value: -44.411705
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -37128,6 +37269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5160c49ea3e2849a8abaa9a1e4abb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkPushable
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -37135,8 +37278,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &1211214958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37149,6 +37290,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -37156,8 +37299,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!1001 &1212785928
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39824,43 +39965,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.07
+      value: 47.678
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.255
+      value: 18.335
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -62.559
+      value: -63.341
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.38268295
+      value: 0.7337122
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.046786536
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9238797
+      value: 0.67758745
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.018779699
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -2.476
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -135
+      value: -274.44202
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -5.224
       objectReference: {fileID: 0}
     - target: {fileID: -7773069721792559148, guid: e68069b76b09af5429c8538542f42218, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -39888,6 +40029,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 146742096613951128, guid: e68069b76b09af5429c8538542f42218, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1276479911}
+    - targetCorrespondingSourceObject: {fileID: 146742096613951128, guid: e68069b76b09af5429c8538542f42218, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1276479913}
   m_SourcePrefab: {fileID: -4161369568681901532, guid: e68069b76b09af5429c8538542f42218, type: 3}
 --- !u!4 &1276479910 stripped
 Transform:
@@ -39937,6 +40081,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.16
   m_Center: {x: 0, y: 0.27, z: 0}
+--- !u!114 &1276479913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237298639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fddc14ad7c8241908512f55c6af3fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstaclePlayerPushZone
+  pushForce: 12
+  pushCooldown: 0.15
 --- !u!1 &1279657651
 GameObject:
   m_ObjectHideFlags: 0
@@ -40542,15 +40700,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 42.66
+      value: 42.621994
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.12
+      value: -0.119993076
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -46.43
+      value: -46.415676
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -42416,7 +42574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 78.98
+      value: 78.976
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -42424,35 +42582,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -47.27
+      value: -47.074
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99765706
+      value: 0.7596099
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.068413995
+      value: -0.0022349397
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.6467291
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.06877034
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 7.846
+      value: -5.299
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -80.551
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -5.856
       objectReference: {fileID: 0}
     - target: {fileID: 3653855744193016225, guid: 9938310c278605e44b186651abac8ca8, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -42493,6 +42651,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6561436928574600090, guid: 9938310c278605e44b186651abac8ca8, type: 3}
+--- !u!134 &1363889784
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!4 &1366646645 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
@@ -43063,6 +43234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -43070,8 +43243,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1387147372}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -44528,15 +44699,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41.934143
+      value: 41.974922
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7646437
+      value: 1.763423
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.13391
+      value: -44.136204
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -44946,7 +45117,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 2.1059508, y: 2.314684, z: 2.2164605}
   m_Center: {x: 0.0037550866, y: 0.09265804, z: 0.023464745}
@@ -46675,15 +46846,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4978500525314536361, guid: 9f46e7f2ed025504f8c6d556421264bd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 87.069
+      value: 87.066
       objectReference: {fileID: 0}
     - target: {fileID: 4978500525314536361, guid: 9f46e7f2ed025504f8c6d556421264bd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 23.135
+      value: 23.13
       objectReference: {fileID: 0}
     - target: {fileID: 4978500525314536361, guid: 9f46e7f2ed025504f8c6d556421264bd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -48.129
+      value: -48.128
       objectReference: {fileID: 0}
     - target: {fileID: 4978500525314536361, guid: 9f46e7f2ed025504f8c6d556421264bd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -47440,6 +47611,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -7972895839924012665, guid: 462d2e9be54e48f42a197d151f3f2060, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1597886548}
+    - targetCorrespondingSourceObject: {fileID: -7972895839924012665, guid: 462d2e9be54e48f42a197d151f3f2060, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1597886549}
   m_SourcePrefab: {fileID: -4161369568681901532, guid: 462d2e9be54e48f42a197d151f3f2060, type: 3}
 --- !u!1 &1597886547 stripped
 GameObject:
@@ -47468,6 +47642,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5652343270563746650, guid: 462d2e9be54e48f42a197d151f3f2060, type: 3}
+--- !u!114 &1597886549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597886547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fddc14ad7c8241908512f55c6af3fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstaclePlayerPushZone
+  pushForce: 12
+  pushCooldown: 0.15
 --- !u!1 &1600775326
 GameObject:
   m_ObjectHideFlags: 0
@@ -47691,19 +47879,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.000000059604645, z: 0}
---- !u!134 &1614138685
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance)'
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1001 &1618023588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49367,6 +49542,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -49374,8 +49551,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _syncPosition: 1
   _syncRotation: 1
   _syncScale: 1
@@ -49398,6 +49573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -49405,8 +49582,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!195 &1656286187
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -49414,7 +49589,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656286179}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.05
   m_Speed: 0.5
@@ -49441,6 +49616,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a2bb2bdb812054b81946c1c70abc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColegaVaguear
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -49448,8 +49625,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   waypoints:
   - {fileID: 1284454205}
   - {fileID: 1080157362}
@@ -50830,8 +51005,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Classroom 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8563362702262587712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 186472771043608366, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       insertIndex: -1
@@ -53927,6 +54107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -53934,8 +54116,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!1001 &1798458435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -56527,6 +56707,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -56534,8 +56716,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!1 &1845098197 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8127626115527993175, guid: e9e70fcc6ef1c8045944c7d435e485ef, type: 3}
@@ -56678,6 +56858,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad60fbb329bd7741b0d2f0de604e5c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaitingStateNode
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -56685,8 +56867,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   freezeState: {fileID: 512507347}
 --- !u!4 &1850734763 stripped
 Transform:
@@ -56957,6 +57137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -56964,8 +57146,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1860184563}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -57004,7 +57184,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148453569101}
-  m_Material: {fileID: 1884634566}
+  m_Material: {fileID: 1363889784}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -57032,6 +57212,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817fe5016bd0a2a49a95b6eb338bb132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkTransform
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -57039,8 +57221,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _syncPosition: 1
   _syncRotation: 1
   _syncScale: 1
@@ -57063,6 +57243,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -57070,8 +57252,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!195 &1864806823
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -57079,7 +57259,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148453569101}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.05
   m_Speed: 0.05
@@ -57141,6 +57321,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c21cf49947a9fc4a973dde1b0e864f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColegaEmpurrar
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -57148,8 +57330,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   waypoints:
   - {fileID: 430191168}
   - {fileID: 1321602436}
@@ -57336,19 +57516,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
   m_PrefabInstance: {fileID: 1881018966}
   m_PrefabAsset: {fileID: 0}
---- !u!134 &1884634566
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!4 &1887986738 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
@@ -58217,6 +58384,7 @@ GameObject:
   - component: {fileID: 1908256014}
   - component: {fileID: 1908256013}
   - component: {fileID: 1908256012}
+  - component: {fileID: 1908256016}
   m_Layer: 0
   m_Name: CompassPivot 4
   m_TagString: Untagged
@@ -58236,6 +58404,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -58243,8 +58413,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!114 &1908256013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58257,6 +58425,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b598b9d8509d64abb9fdaf07fa3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkAnimator
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -58264,8 +58434,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   _animator: {fileID: 1908256014}
   _ownerAuth: 1
   _autoSyncParameters: 1
@@ -58301,13 +58469,27 @@ Transform:
   m_GameObject: {fileID: 1908256011}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.4834976, y: 24.043224, z: -63.414787}
+  m_LocalPosition: {x: -3.4834976, y: 23.02, z: -63.414787}
   m_LocalScale: {x: 200.00005, y: 200, z: 200.00005}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1004362343}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1908256016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908256011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fddc14ad7c8241908512f55c6af3fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstaclePlayerPushZone
+  pushForce: 20
+  pushCooldown: 0.15
 --- !u!1 &1910270422
 GameObject:
   m_ObjectHideFlags: 0
@@ -58409,6 +58591,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -58611,6 +58794,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -59049,7 +59233,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 2.1059508, y: 2.314684, z: 2.2164605}
   m_Center: {x: 0.0037550866, y: 0.09265804, z: 0.023464745}
@@ -60025,7 +60209,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949524216}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.05
   m_Speed: 0.5
@@ -60173,15 +60357,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.82001
+      value: 39.820004
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.0299997
+      value: 2.029896
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -44.000015
+      value: -44.00002
       objectReference: {fileID: 0}
     - target: {fileID: 4673116164797152, guid: 5b97ca6353ad429419598d36d1a55e6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -60842,6 +61026,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88c9277b1ca02584f9043ec6fae459df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestionStateNode
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -60849,8 +61035,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   nextPhase: {fileID: 555437633}
   freezeState: {fileID: 512507347}
 --- !u!4 &1980334820
@@ -61204,6 +61388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5681fe548eb84304ea28a286062791f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PurrNet.Runtime::PurrNet.NetworkIdentity
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -61211,8 +61397,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
 --- !u!1 &1988444875 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e67e254a13bb0b940838c9341b408ff9, type: 3}
@@ -63044,6 +63228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d86101f0062c5d149a6c400728d22ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChangeRoundStateNode
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   _isSetup: 0
   _prefabId: -2147483648
   _componentIndex: -2147483648
@@ -63051,8 +63237,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _networkRules: {fileID: 0}
-  _visitiblityRules: {fileID: 0}
   freezeState: {fileID: 512507347}
 --- !u!1001 &2072326961
 PrefabInstance:
@@ -63297,6 +63481,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -63464,43 +63649,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 42.309
+      value: 42.316
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 26.68
+      value: 26.848
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -48.027
+      value: -47.997
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.56424624
+      value: 0.57515186
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7276863
+      value: 0.7153296
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.30820137
+      value: -0.30708253
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.23897867
+      value: 0.25140473
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 104.42
+      value: 102.244995
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -1.7390137
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 45.908997
+      value: 45.063995
       objectReference: {fileID: 0}
     - target: {fileID: 3189927671627085129, guid: 624a03b3f0ba9f143b826123f740aa25, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -63810,7 +63995,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2133230979}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 0
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_Intensity: 1
@@ -63862,7 +64047,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -66700,7 +66885,7 @@ PrefabInstance:
     - target: {fileID: 6554816123605006258, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1614138685}
+      objectReference: {fileID: 23342454}
     - target: {fileID: 6993802167666145601, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Material
       value: 
@@ -66709,12 +66894,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Classroom 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8563362702262587712, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8739596193054401662, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 501796396}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 186472771043608366, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4166289956497374213, guid: b5ba7149e50dc3c4381761f3261ed62e, type: 3}
       insertIndex: -1

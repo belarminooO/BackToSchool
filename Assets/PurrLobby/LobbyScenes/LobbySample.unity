@@ -118,7 +118,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 376c0a7317e7f4e7eac3e35f4792c606, type: 2}
 --- !u!21 &8916736
 Material:
   serializedVersion: 8
@@ -3989,8 +3989,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 759898768}
   m_HandleRect: {fileID: 759898767}
   m_Direction: 2
-  m_Value: 0.9999957
-  m_Size: 0.9835277
+  m_Value: 1.0000043
+  m_Size: 0.9835278
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9448,7 +9448,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.65
+  m_fontSize: 40
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9980,7 +9980,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 97.45
+  m_fontSize: 98.3
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -15995,7 +15995,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43.5
+  m_fontSize: 31.7
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
