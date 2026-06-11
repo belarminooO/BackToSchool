@@ -5,8 +5,8 @@ using MetaVoiceChat.AudioFilters;
 public class PlayerVoiceState : NetworkBehaviour
 {
     [Header("Settings")]
-    public float talkingThreshold = -45f;
-    public float stopTalkingThreshold = -50f;
+    public float talkingThreshold = -38f;
+    public float stopTalkingThreshold = -43f;
     public float talkingStartDelay = 0.2f;
     public float talkingHangTime = 0.5f;
 

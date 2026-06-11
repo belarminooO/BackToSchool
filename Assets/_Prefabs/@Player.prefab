@@ -744,7 +744,7 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  talkingThreshold: -45
+  talkingThreshold: -38
   talkingHangTime: 0.5
   isTalking:
     _value: 0
@@ -1094,8 +1094,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 10
-  MaxDistance: 50
+  MinDistance: 3
+  MaxDistance: 15
   Pan2D: 0
   rolloffMode: 1
   BypassEffects: 0
