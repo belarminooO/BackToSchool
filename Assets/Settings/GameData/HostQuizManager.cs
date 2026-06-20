@@ -12,9 +12,18 @@ public class HostQuizManager : MonoBehaviour
 
     [SerializeField] private Slider roundTimerSlider;
     [SerializeField] private Slider roundNumberSlider;
+    [SerializeField] private Slider difficultySlider;
     [SerializeField] private TMP_Text roundTimerDisplay;
     [SerializeField] private TMP_Text roundNumberDisplay;
+    [SerializeField] private TMP_Text difficultyDisplay;
     [SerializeField] private TMP_InputField quizThemesInput;
+
+    private static readonly string[] DifficultyLabels = { "Easy", "Medium", "Hard" };
+
+    private static string DifficultyToLabel(int value)
+    {
+        return DifficultyLabels[Mathf.Clamp(value, 0, DifficultyLabels.Length - 1)];
+    }
 
     private string csvFilePath;
 
@@ -24,16 +33,20 @@ public class HostQuizManager : MonoBehaviour
 
         int prefsTimer  = PlayerPrefs.GetInt("Quiz_QuestionTimer", 30);
         int prefsRounds = PlayerPrefs.GetInt("Quiz_RoundNumber", 3);
+        int prefsDifficulty = PlayerPrefs.GetInt("Quiz_Difficulty", 1);
         string loadedThemes = LoadThemesFromFile();
 
         if (roundTimerSlider)   roundTimerSlider.value  = prefsTimer;
         if (roundNumberSlider)  roundNumberSlider.value = prefsRounds;
+        if (difficultySlider)   difficultySlider.value  = prefsDifficulty;
         if (quizThemesInput)    quizThemesInput.text    = loadedThemes;
         if (roundTimerDisplay)  roundTimerDisplay.text  = $"{prefsTimer} Sec";
         if (roundNumberDisplay) roundNumberDisplay.text = $"{prefsRounds} Rounds";
+        if (difficultyDisplay)  difficultyDisplay.text  = DifficultyToLabel(prefsDifficulty);
 
         roundTimerSlider?.onValueChanged.AddListener((_) => OnChangedSlider());
         roundNumberSlider?.onValueChanged.AddListener((_) => OnChangedSlider());
+        difficultySlider?.onValueChanged.AddListener((_) => OnChangedSlider());
         quizThemesInput?.onEndEdit.AddListener((_) => SaveThemesToCSV());
 
         if (hostPanel != null) 
@@ -69,10 +82,13 @@ public class HostQuizManager : MonoBehaviour
     {
         int newTimer  = Mathf.RoundToInt(roundTimerSlider.value);
         int newRounds = Mathf.RoundToInt(roundNumberSlider.value);
+        int newDifficulty = difficultySlider ? Mathf.RoundToInt(difficultySlider.value) : 1;
         if (roundTimerDisplay)  roundTimerDisplay.text  = $"{newTimer} Sec";
         if (roundNumberDisplay) roundNumberDisplay.text = $"{newRounds} Rounds";
+        if (difficultyDisplay)  difficultyDisplay.text  = DifficultyToLabel(newDifficulty);
         PlayerPrefs.SetInt("Quiz_QuestionTimer",  newTimer);
         PlayerPrefs.SetInt("Quiz_RoundNumber", newRounds);
+        PlayerPrefs.SetInt("Quiz_Difficulty", newDifficulty);
         PlayerPrefs.Save();
     }
 

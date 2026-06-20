@@ -15,7 +15,10 @@ public class GenerateQuizJSON : MonoBehaviour
     [SerializeField] public string themes;
     [SerializeField] public int roundNumber = 3;
     [SerializeField] public int questionsPerRound = 5;
+    [SerializeField] public string difficulty = "Medium";
     [SerializeField] public string currentQuestionText;
+
+    private static readonly string[] DifficultyLabels = { "Easy", "Medium", "Hard" };
 
     [Header("UI")]
     [SerializeField] public int currentRound = 1;
@@ -40,6 +43,8 @@ public class GenerateQuizJSON : MonoBehaviour
     void Start()
     {
         roundNumber = PlayerPrefs.GetInt("Quiz_RoundNumber", roundNumber);
+        int difficultyIndex = PlayerPrefs.GetInt("Quiz_Difficulty", 1);
+        difficulty = DifficultyLabels[Mathf.Clamp(difficultyIndex, 0, DifficultyLabels.Length - 1)];
 
         LoadEnvFile();
         //LoadExistingQuiz();
@@ -210,6 +215,7 @@ public class GenerateQuizJSON : MonoBehaviour
         sb.AppendLine($"Generate a trivia game with exactly {roundNumber} rounds.");
         sb.AppendLine();
         sb.AppendLine($"Each round must have exactly {questionsPerRound} questions.");
+        sb.AppendLine($"All questions must be at {difficulty} difficulty level.");
         sb.AppendLine("Themes must ONLY come from the following list:");
         sb.AppendLine(csvData);
         sb.AppendLine();
