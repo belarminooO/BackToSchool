@@ -1,6 +1,6 @@
 # 🎒 Back To School
 
-**Back To School** é um *party game* multijogador em primeira pessoa, desenvolvido em Unity. Os jogadores respondem a quizzes gerados por inteligência artificial, comunicam por voz de proximidade sem alertar o Vigia e correm por corredores cheios de obstáculos entre cada ronda.
+**Back To School** é um jogo multijogador em 3D do género “Party Game” para WindowsPC, desenvolvido em Unity3D. Neste jogo, os jogadores assumem o papel de alunos numa escola e competem em questionários sobre diversos temas, os quais são escolhidos pelos jogadores, mas gerados por inteligência artificial. Os jogadores deverão conseguir resolver os questionários sem que o vigia da prova escute possíveis conversas. Neste contexto será implementado um sistema de “Proximity Voice Chat”. Sempre que o tema muda, os jogadores deslocam-se a uma nova sala, enfrentando uma corrida de obstáculos pelos corredores. No final, vence quem tiver maior pontuação total.
 
 ![Sala de quiz do jogo](docs/figures/quiz_ai_classroom2.png)
 
@@ -37,13 +37,7 @@ O ciclo de cada partida alterna entre perguntas, transição, corrida de obstác
 - Voz de proximidade como mecânica de jogo, integrada com a deteção do Vigia.
 - Navegação de NPCs com NavMesh e interações físicas em primeira pessoa.
 
-## 🔧 Possíveis melhorias
 
-- Equilibrar penalizações, tempos e pontuação a partir de mais sessões de jogo.
-- Consolidar testes multijogador com mais jogadores e diferentes condições de rede.
-- Tornar a configuração da chave da API mais guiada dentro do jogo.
-- Expandir os temas, salas e obstáculos disponíveis.
-- Melhorar o polimento visual, sonoro e de acessibilidade dos menus.
 
 ## ▶️ Executar o projeto
 
