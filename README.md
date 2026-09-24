@@ -1,4 +1,4 @@
-# 🎒 Back To School
+# 🎒 Final Project - Back To School
 
 **Back To School** é um jogo multijogador em 3D do género “Party Game” para WindowsPC, desenvolvido em Unity3D. Neste jogo, os jogadores assumem o papel de alunos numa escola e competem em questionários sobre diversos temas, os quais são escolhidos pelos jogadores, mas gerados por inteligência artificial. Os jogadores deverão conseguir resolver os questionários sem que o vigia da prova escute possíveis conversas. Neste contexto será implementado um sistema de “Proximity Voice Chat”. Sempre que o tema muda, os jogadores deslocam-se a uma nova sala, enfrentando uma corrida de obstáculos pelos corredores. No final, vence quem tiver maior pontuação total.
 
