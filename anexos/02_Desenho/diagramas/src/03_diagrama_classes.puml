@@ -1,0 +1,152 @@
+@startuml diagrama_classes
+!pragma layout smetana
+title Back To School - Diagrama de Classes (subsistemas principais)
+
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam classFontStyle bold
+skinparam class {
+  BackgroundColor #FDFDFD
+  BorderColor #333333
+  ArrowColor #555555
+}
+skinparam packageStyle rectangle
+hide empty members
+
+package "PurrNet (framework)" #F2F2F2 {
+  abstract class NetworkBehaviour
+  abstract class StateNode
+}
+
+package "Estado do Jogo" #EFF7FF {
+  class QuizGameManager {
+    +{static} instance
+    +SyncVar<int> currentRound
+    +SyncVar<float> currentTimer
+    +SyncVar<int> totalRoundsSettings
+    +SyncVar<string> currentStateName
+    +OnSpawned()
+    +InitializeGamePlayers()
+    +RPC_SyncCurrentQuestion()
+    +RPC_NotifyStateChange()
+  }
+  class WaitingStateNode
+  class FreezeStateNode
+  class QuestionStateNode {
+    -EvaluateAnswers(manager)
+  }
+  class ObstacleRaceStateNode
+  class ChangeRoundStateNode
+}
+
+package "Dados / Pontuacao" #FFF7E6 {
+  class GenerateQuizJSON {
+    +themes / roundNumber / difficulty
+    +Action onQuizReady
+    +AutoGenerateQuiz()
+    -BuildPrompt(csv)
+    -SendRequest(prompt) : Gemini
+    -ParseQuiz(json) : bool
+    +UpdateCurrentQuestion()
+  }
+  class ScoreManager {
+    +SyncVar<int> team1..team8 Score
+    +List<IPlayerController> allPlayers
+    +ChooseTeams()
+    +AddScoreToTeam(team,amt)
+    +PenalizePlayers()
+    +UpdateLeaderboard()
+    +EvaluateRoundCosmetics()
+  }
+  class SpawnManager {
+    +TeleportAllPlayersToRound()
+    +TeleportAllPlayersToOutside()
+    +GetJailPosition(round)
+  }
+  class QuizUIManager {
+    +UpdateUI()
+    +OnStateChanged(state)
+  }
+}
+
+package "Estacoes do Quiz" #EAF7EA {
+  interface IInteractable {
+    +Interact(interactor)
+  }
+  class AnswerButton {
+    +int answerIndex
+    +Interact(interactor)
+  }
+  class AnswerButtonManager {
+    +SyncVar<NetworkIdentity> ownerPlayer
+    +int lockedAnswerIndex
+    +SubmitAnswer(btn,who)
+    +RPC_SubmitAnswerToServer()
+    +RPC_ShowVignette(ok)
+    +RPC_ResetButtons()
+  }
+  class StationManager {
+    +int roundNumber
+    +AssignStations(players)
+  }
+}
+
+package "Jogador / IA" #F7EAF7 {
+  interface IPlayerController {
+    +Team team
+    +bool isJailed
+    +bool hasAnswered
+    +ShowVignette(ok)
+    +TeleportTo(pos)
+    +AssignTeam(team)
+  }
+  class Interactor {
+    +InteractRange
+    -OnInteract()
+  }
+  class PlayerVoiceState {
+    +SyncVar<bool> isTalking
+  }
+  class Vigia {
+    +SyncVar<VigiaState> CurrentState
+    +SyncVar<float> DetectionProgress
+    -CheckVision()
+    -CheckHearing()
+    -UpdateJailDetection()
+    -SendPlayerToJail(p)
+  }
+}
+
+NetworkBehaviour <|-- QuizGameManager
+NetworkBehaviour <|-- ScoreManager
+NetworkBehaviour <|-- AnswerButtonManager
+NetworkBehaviour <|-- Vigia
+NetworkBehaviour <|-- PlayerVoiceState
+StateNode <|-- WaitingStateNode
+StateNode <|-- FreezeStateNode
+StateNode <|-- QuestionStateNode
+StateNode <|-- ObstacleRaceStateNode
+StateNode <|-- ChangeRoundStateNode
+
+QuizGameManager "1" *-- "5" StateNode : state nodes
+QuizGameManager --> ScoreManager
+QuizGameManager --> SpawnManager
+QuizGameManager --> GenerateQuizJSON
+QuizGameManager ..> QuizUIManager : RPC notify
+
+QuestionStateNode ..> AnswerButtonManager : avalia respostas
+QuestionStateNode ..> ScoreManager
+ChangeRoundStateNode ..> StationManager
+ChangeRoundStateNode ..> SpawnManager
+
+AnswerButton ..|> IInteractable
+AnswerButton --> AnswerButtonManager
+Interactor ..> IInteractable : raycast + Interact()
+AnswerButtonManager ..> IPlayerController
+StationManager ..> IPlayerController
+
+ScoreManager ..> IPlayerController
+Vigia ..> IPlayerController : jaula
+Vigia ..> PlayerVoiceState : ouve voz
+@enduml

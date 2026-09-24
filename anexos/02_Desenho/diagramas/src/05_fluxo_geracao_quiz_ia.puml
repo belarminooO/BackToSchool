@@ -1,0 +1,25 @@
+@startuml
+skinparam shadowing false
+title Back To School - Fluxo de geração do quiz com IA
+[Temas do quiz
+CSV/opções do lobby] --> [GenerateQuizJSON
+lê temas e prepara pedido]
+[GenerateQuizJSON
+lê temas e prepara pedido] --> [Prompt
+regras de formato e conteúdo]
+[Prompt
+regras de formato e conteúdo] --> [Gemini API
+gera perguntas em JSON]
+[Gemini API
+gera perguntas em JSON] --> [Validação e parse
+limpeza, classes e retries]
+[Validação e parse
+limpeza, classes e retries] --> [quiz_current.json
+perguntas usadas na ronda]
+[quiz_current.json
+perguntas usadas na ronda] --> [QuestionStateNode
+sincroniza pergunta e avalia respostas]
+[quiz_current.json
+perguntas usadas na ronda] --> [QuizUIManager
+apresenta pergunta e opções]
+@enduml

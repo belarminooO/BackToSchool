@@ -1,0 +1,67 @@
+@startuml arquitetura_p2p
+!pragma layout smetana
+title Back To School - Arquitetura P2P (Host autoritativo)
+
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam componentStyle rectangle
+skinparam rectangleBackgroundColor #FDFDFD
+skinparam rectangleBorderColor #333333
+skinparam componentBackgroundColor #FDFDFD
+skinparam componentBorderColor #333333
+skinparam databaseBackgroundColor #EFF7FF
+skinparam databaseBorderColor #2F6FAD
+skinparam cloudBackgroundColor #FFF3E0
+skinparam cloudBorderColor #B36B00
+
+actor "Jogador / Host" as host
+actor "Jogador / Peer" as peer
+
+cloud "Steam" as steam {
+  component "Steamworks\n(lobby + transport)" as steamworks
+}
+
+cloud "Google Gemini\n(gemini-2.5-flash, REST)" as gemini
+
+node "Instancia HOST (servidor autoritativo)" as hostnode {
+  component "PurrLobby\n(menus / LobbyDataHolder)" as lobby
+  component "PurrNet\n(NetworkManager, SyncVar, RPCs)" as purrnet
+  component "QuizGameManager\n+ StateMachine" as qgm
+  component "GenerateQuizJSON\n(prompt -> JSON)" as quizgen
+  component "ScoreManager / SpawnManager" as managers
+  component "Vigia (NavMesh / IA)" as vigia
+  component "MetaVoiceChat\n(proximity voice)" as voice
+}
+
+node "Instancia PEER (cliente)" as peernode {
+  component "PurrNet (cliente)" as purrnet2
+  component "QuizUIManager / HUD" as ui2
+  component "Player (FPS) + Interactor" as player2
+  component "MetaVoiceChat" as voice2
+}
+
+host --> lobby
+peer --> purrnet2
+
+lobby --> steamworks : criar/entrar lobby
+purrnet --> steamworks : transporte P2P (Steam)
+purrnet2 --> steamworks
+
+quizgen --> gemini : POST prompt (CSV temas)
+gemini --> quizgen : JSON (rondas/perguntas)
+
+qgm --> quizgen : AutoGenerateQuiz()
+qgm --> managers : pontuacao / spawns
+qgm ..> vigia : estado da ronda
+
+purrnet <--> purrnet2 : SyncVar / ServerRpc / ObserversRpc\n(estado, quiz, pontuacao)
+voice <--> voice2 : audio por proximidade
+
+note bottom of hostnode
+  Fluxo: Lobby (Steam) -> geracao IA do quiz ->
+  sincronizacao de estado (PurrNet) -> jogo.
+  O HOST e autoritativo: so o servidor altera SyncVars
+  e decide transicoes de estado / pontuacao / jaula.
+end note
+@enduml

@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: 00_PRJ_main.aux
+Reallocating 'name_of_file' (item size: 1) to 30 items.
+A level-1 auxiliary file: ./00a_PRJ_resumo_abstract.aux
+Reallocating 'name_of_file' (item size: 1) to 10 items.
+The style file: apalikeMy.bst
+Reallocating 'name_of_file' (item size: 1) to 5 items.
+Database file #1: XBib.bib
+You've used 14 entries,
+            1935 wiz_defined-function locations,
+            552 strings with 5537 characters,
+and the built_in function-call counts, 3474 in all, are:
+= -- 370
+> -- 98
+< -- 14
++ -- 28
+- -- 28
+* -- 210
+:= -- 699
+add.period$ -- 45
+call.type$ -- 14
+change.case$ -- 84
+chr.to.int$ -- 14
+cite$ -- 14
+duplicate$ -- 140
+empty$ -- 211
+format.name$ -- 42
+if$ -- 637
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 0
+newline$ -- 76
+num.names$ -- 42
+pop$ -- 39
+preamble$ -- 1
+purify$ -- 84
+quote$ -- 0
+skip$ -- 127
+stack$ -- 0
+substring$ -- 168
+swap$ -- 0
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 84
+warning$ -- 0
+while$ -- 28
+width$ -- 0
+write$ -- 176

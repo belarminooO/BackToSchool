@@ -1,0 +1,77 @@
+\begin{thebibliography}{}
+
+\bibitem[{Boxophobic}, 2023]{Boxophobic2023}
+{Boxophobic} (2023).
+\newblock {Skybox Cubemap Extended for Unity}.
+\newblock \url{https://assetstore.unity.com/publishers/17691/}.
+
+\bibitem[{Google DeepMind}, 2025]{GoogleDeepMind2025}
+{Google DeepMind} (2025).
+\newblock {Gemini API Developer Guide (gemini-2.5-flash)}.
+\newblock \url{https://ai.google.dev/}.
+
+\bibitem[Jalbert, 2024]{Jalbert2024}
+Jalbert, D. (2024).
+\newblock {Tiny Low Poly Cars / Low Poly People (Version 1.0.0)}.
+\newblock \url{https://assetstore.unity.com/packages/slug/274814/}.
+
+\bibitem[{Kahoot! AS}, 2013]{Kahoot2013}
+{Kahoot! AS} (2013).
+\newblock {Kahoot! Learning Platform}.
+\newblock \url{https://kahoot.com/}.
+
+\bibitem[Labrecque, 2024]{Labrecque2024}
+Labrecque, R. (2024).
+\newblock {Steamworks.NET: Steamworks Wrapper for Unity (Version 2024.8.0)}.
+\newblock \url{https://github.com/rlabrecque/Steamworks.NET/}.
+
+\bibitem[{Mediatonic}, 2020]{Mediatonic2020}
+{Mediatonic} (2020).
+\newblock {Fall Guys: Ultimate Knockout}.
+\newblock \url{https://www.fallguys.com/}.
+\newblock Epic Games.
+
+\bibitem[{Metater}, 2024]{Metater2024}
+{Metater} (2024).
+\newblock {MetaVoiceChat: Proximity-based voice communication for Unity}.
+\newblock \url{https://github.com/Metater/MetaVoiceChat/}.
+
+\bibitem[{PurrNet}, 2026]{PurrNet2026}
+{PurrNet} (2026).
+\newblock {PurrNet Documentation}.
+\newblock \url{https://purrnet.dev/docs}.
+\newblock Acedido em 7 de julho de 2026.
+
+\bibitem[Spaderdabomb, 2024]{GinjaGaming2024}
+Spaderdabomb (2024).
+\newblock {Final Character Controller for Unity}.
+\newblock \url{https://github.com/spaderdabomb/FinalCharacterController}.
+\newblock GitHub, branch part7.
+
+\bibitem[{Striped Labs}, 2024]{StripedLabs2024}
+{Striped Labs} (2024).
+\newblock {Dale \& Dawson Stationery Supplies}.
+\newblock
+  \url{https://store.steampowered.com/app/2924120/Dale__Dawson_Stationery_Supplies/}.
+
+\bibitem[{Styloo}, 2024]{Styloo2024}
+{Styloo} (2024).
+\newblock {Classroom Asset Pack (Low Poly)}.
+\newblock \url{https://styloo.itch.io/}.
+
+\bibitem[{Unity Technologies}, 2024]{UnityCinemachine2024}
+{Unity Technologies} (2024).
+\newblock {Cinemachine Package (Version 3.1.5)}.
+\newblock \url{https://docs.unity3d.com/Packages/com.unity.cinemachine@3.1/}.
+
+\bibitem[{Unity Technologies}, 2026]{UnityTechnologies2026}
+{Unity Technologies} (2026).
+\newblock {Unity Game Engine (Version 6000.3.9f1)}.
+\newblock \url{https://unity.com/}.
+
+\bibitem[{Valve Corporation}, site]{ValveSteamworks}
+{Valve Corporation} (site).
+\newblock {Steamworks Web API Reference}.
+\newblock \url{https://partner.steamgames.com/}.
+
+\end{thebibliography}

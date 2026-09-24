@@ -1,0 +1,49 @@
+@startuml arquitetura_p2p_quadrado
+' Versão redesenhada para relatório. Preserva os componentes e fluxos de 01_arquitetura_p2p.puml.
+title Back To School - Arquitetura P2P (Host autoritativo)
+actor "Jogador / Host" as host
+actor "Jogador / Peer" as peer
+cloud "Steam" as steam { component "Steamworks
+(lobby + transport)" as steamworks }
+cloud "Google Gemini
+(gemini-2.5-flash, REST)" as gemini
+node "Instância HOST (servidor autoritativo)" as hostnode {
+  component "PurrLobby
+(menus / LobbyDataHolder)" as lobby
+  component "PurrNet
+(NetworkManager, SyncVar, RPCs)" as purrnet
+  component "QuizGameManager
++ StateMachine" as qgm
+  component "GenerateQuizJSON
+(prompt -> JSON)" as quizgen
+  component "ScoreManager / SpawnManager" as managers
+  component "Vigia (NavMesh / IA)" as vigia
+  component "MetaVoiceChat
+(proximity voice)" as voice
+}
+node "Instância PEER (cliente)" as peernode {
+  component "PurrNet (cliente)" as purrnet2
+  component "QuizUIManager / HUD" as ui2
+  component "Player (FPS) + Interactor" as player2
+  component "MetaVoiceChat" as voice2
+}
+host --> lobby
+peer --> purrnet2
+lobby --> steamworks : criar/entrar lobby
+purrnet --> steamworks : transporte P2P (Steam)
+purrnet2 --> steamworks
+quizgen --> gemini : POST prompt (CSV temas)
+gemini --> quizgen : JSON (rondas/perguntas)
+qgm --> quizgen : AutoGenerateQuiz()
+qgm --> managers : pontuação / spawns
+qgm ..> vigia : estado da ronda
+purrnet <--> purrnet2 : SyncVar / ServerRpc / ObserversRpc
+(estado, quiz, pontuação)
+voice <--> voice2 : áudio por proximidade
+note bottom of hostnode
+  Fluxo: Lobby (Steam) -> geração IA do quiz ->
+  sincronização de estado (PurrNet) -> jogo.
+  O HOST é autoritativo: só o servidor altera SyncVars
+  e decide transições de estado / pontuação / jaula.
+end note
+@enduml

@@ -1,0 +1,60 @@
+@startuml sequencia_responder_quiz
+title Back To School - Diagrama de Sequencia: "Responder ao Quiz" (com Vigia)
+
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam sequenceMessageAlign center
+skinparam participantBackgroundColor #FDFDFD
+skinparam participantBorderColor #333333
+skinparam actorBackgroundColor #FFF3E0
+
+actor "Jogador\n(cliente)" as P
+participant "Interactor" as I
+participant "AnswerButton" as B
+participant "AnswerButtonManager" as M
+participant "HOST\n(servidor)" as S
+participant "QuestionStateNode" as Q
+participant "ScoreManager" as SC
+participant "Vigia\n(servidor)" as V
+participant "QuizUIManager\n(todos)" as UI
+
+== Fase de pergunta (QuestionState ativo) ==
+P -> I : prime tecla E
+activate I
+I -> I : Raycast (InteractRange 5m)\nprocura IInteractable
+I -> B : Interact(jogador)
+deactivate I
+activate B
+B -> B : GeneratedQuizSfx.PlayButtonPress()
+B -> M : SubmitAnswer(this, jogador)
+deactivate B
+activate M
+M -> S : [ServerRpc] RPC_SubmitAnswerToServer(answerIndex)
+deactivate M
+activate S
+S -> S : lockedAnswerIndex = answerIndex
+S -> M : [ObserversRpc] RPC_AnimateButton(idx)
+note right of M : botao desce em todos os clientes
+deactivate S
+
+== Em paralelo: vigilancia do Vigia ==
+V -> V : CheckVision() / CheckHearing()\n(cone de visao + ruido de voz)
+alt jogador detetado a falar perto
+  V -> V : DetectionProgress += dt\n(>= jailDetectionTime)
+  V -> P : [TargetRpc] Rpc_JailPlayer(jailPos)
+  note right of V : jogador isJailed = true,\nteleportado para a jaula
+end
+
+== Fim do tempo da pergunta ==
+S -> Q : StateUpdate(): timer <= 0
+activate Q
+Q -> Q : EvaluateAnswers()\ncompara lockedAnswerIndex\ncom correct_option_index
+Q -> SC : AddScoreToTeam(team, 1)  [se correto]
+Q -> M : [ObserversRpc] RPC_ShowVignette(ok)\n+ RPC_ResetButtons()
+Q -> SC : RPC_UpdateLeaderboard()
+deactivate Q
+activate SC
+SC -> UI : atualiza leaderboard / HUD
+deactivate SC
+@enduml

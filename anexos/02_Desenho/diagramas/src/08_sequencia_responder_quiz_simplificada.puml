@@ -1,0 +1,21 @@
+@startuml sequencia_responder_quiz_simplificada
+title Back To School - Sequencia principal de resposta ao Quiz
+
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam activity {
+  BackgroundColor #EFF7FF
+  BorderColor #2F6FAD
+  FontColor #11314f
+}
+
+start
+:1. Jogador prime a tecla de interacao;
+:2. Interactor usa raycast e encontra o AnswerButton;
+:3. AnswerButtonManager recebe a opcao escolhida;
+:4. HOST guarda lockedAnswerIndex e sincroniza a animacao do botao;
+:5. No fim do tempo, QuestionStateNode avalia a resposta;
+:6. ScoreManager atualiza a pontuacao e o QuizUIManager atualiza o HUD;
+stop
+@enduml

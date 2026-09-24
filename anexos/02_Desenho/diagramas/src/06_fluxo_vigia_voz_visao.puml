@@ -1,0 +1,32 @@
+@startuml
+skinparam shadowing false
+title Back To School - Deteção do Vigia por voz e visão
+[Microfone
+voz do jogador] --> [MetaVoiceChat
+captura e transmissão]
+[MetaVoiceChat
+captura e transmissão] --> [NoiseGate
+limiar RMS/dB]
+[NoiseGate
+limiar RMS/dB] --> [PlayerVoiceState
+SyncVar isTalking]
+[PlayerVoiceState
+SyncVar isTalking] --> [Vigia
+CheckHearing + CheckVision]
+[Jogador na sala
+posição e equipa] --> [Cone de visão
+distância e ângulo]
+[Cone de visão
+distância e ângulo] --> [Linecast
+sem obstáculos]
+[Linecast
+sem obstáculos] --> [Vigia
+CheckHearing + CheckVision]
+[Vigia
+CheckHearing + CheckVision] --> [DetectionProgress]
+[DetectionProgress] --> [Rpc_JailPlayer
+teleporta para a jaula]
+[Rpc_JailPlayer
+teleporta para a jaula] --> [Penalização
+sem responder na ronda]
+@enduml

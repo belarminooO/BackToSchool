@@ -1,0 +1,39 @@
+@startuml maquina_estados_vigia
+!pragma layout smetana
+title Back To School - Maquina de estados do Vigia
+
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam state {
+  BackgroundColor #EFF7FF
+  BorderColor #2F6FAD
+  FontColor #11314f
+}
+
+[*] --> Wandering
+
+state "Wandering" as Wandering : Patrulha por waypoints\npresentes na sala
+state "Waiting" as Waiting : Espera no waypoint\nantes de nova patrulha
+state "Percecao ativa" as Perception : Durante QuestionStateNode\nCheckVision e CheckHearing
+state "Investigating" as Investigating : Desloca-se ate a posicao\ndetetada por visao ou voz
+state "DetectionProgress" as DetectionProgress : Jogador proximo continua a falar\nprogresso interno ate jailDetectionTime
+state "SendPlayerToJail" as Jail : Teleporta para a jaula\nmarca jogador como isJailed
+
+Wandering --> Waiting : chega ao waypoint
+Waiting --> Wandering : termina espera\nGoToNextWaypoint()
+Wandering --> Perception
+Waiting --> Perception
+Perception --> Investigating : jogador no cone de visao\nou voz no raio de audicao
+Investigating --> Waiting : chega a posicao\nsem jogador a falar
+Investigating --> DetectionProgress : jogador proximo\nainda a falar
+DetectionProgress --> Jail : DetectionProgress >=\njailDetectionTime
+Jail --> Wandering : GoToNextWaypoint()
+
+note bottom of DetectionProgress
+  A visao apenas inicia a investigacao.
+  A detencao exige um jogador proximo a falar.
+  Se o jogador deixar de falar, o valor decai
+  depois de voiceGracePeriod.
+end note
+@enduml

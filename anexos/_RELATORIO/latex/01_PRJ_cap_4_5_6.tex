@@ -1,0 +1,307 @@
+%%________________________________________________________________________
+%% LEIM | PROJETO -- Back To School
+%% Capitulos 4, 5 e 6
+%%________________________________________________________________________
+
+
+
+
+%%________________________________________________________________________
+\chapter{Implementação do Modelo}
+\label{ch:implementacaoDoModelo}
+%%________________________________________________________________________
+
+Após a definição do modelo proposto, a fase de implementação teve como objetivo transformar os requisitos e casos de utilização definidos anteriormente num protótipo funcional do jogo \textit{Back To School}. A implementação foi realizada em Unity, recorrendo a C\# para o desenvolvimento da lógica de jogo e integrando várias dependências externas para suportar funcionalidades como rede, voz por proximidade, controlo do jogador, navegação de NPCs e geração dinâmica de questionários.
+
+A cena principal do jogo é QuizAI, onde decorrem as rondas de quiz, a interação com as estações, a presença do Vigia, a corrida de obstáculos e a pontuação dos jogadores. Existe também a cena LobbySample, usada para iniciar a sessão, incluindo a entrada dos jogadores e as opções associadas ao lobby. Este capítulo descreve a concretização técnica dos principais sistemas desenvolvidos, relacionando-os com os requisitos definidos no capítulo anterior.
+
+
+%%________________________________________________________________________
+\section{Tecnologias e justificação das dependências}
+\label{sec:tecnologias}
+%%________________________________________________________________________
+
+A Secção~\ref{sec:fundamentos} apresentou as tecnologias e os conceitos técnicos que serviram de base ao projeto. Nesta secção descreve-se de que forma essas tecnologias foram integradas na implementação do protótipo funcional.
+
+A implementação foi desenvolvida em Unity~\cite{UnityTechnologies2026}, usando C\# como linguagem principal. A cena principal do jogo reúne os sistemas de quiz, corrida, NPCs, interface, áudio e rede, enquanto a cena de lobby prepara a entrada dos jogadores e as opções da sessão.
+
+Na componente de rede, o \textit{PurrNet}~\cite{PurrNet2026} foi integrado nos scripts que necessitam de sincronização entre jogadores, através de \textit{NetworkBehaviour}, variáveis sincronizadas e chamadas remotas. O \textit{PurrLobby} foi usado como suporte à criação e gestão do lobby. Estas dependências permitiram sincronizar rondas, pontuação, respostas, temporizadores, posição dos jogadores e penalizações.
+
+A comunicação por voz foi suportada por \textit{MetaVoiceChat}~\cite{Metater2024}, sendo depois ligada à lógica própria do jogo através de scripts como \textit{PlayerVoiceController}, \textit{PlayerVoiceState} e \textit{NoiseGate}. Esta integração permitiu usar a voz simultaneamente como meio de comunicação entre jogadores e como sinal de risco interpretado pelo Vigia.
+
+Foram ainda integradas outras dependências técnicas. O controlador de personagem foi adaptado ao projeto para suportar movimento, interação, teletransporte e estados específicos da partida; a \textit{Cinemachine}~\cite{UnityCinemachine2024} foi usada no suporte à câmara; o \textit{Input System} na leitura dos comandos; o \textit{NavMesh} na movimentação autónoma de NPCs; e o \textit{TextMeshPro} na interface textual. A geração dos questionários foi ligada à API Gemini~\cite{GoogleDeepMind2025} através do script \textit{GenerateQuizJSON}, usando o modelo Gemini 2.5 Flash.
+
+Estas tecnologias não substituem a lógica principal do projeto. A contribuição do grupo centra-se na integração destas dependências com as regras do jogo, nomeadamente na gestão das fases de quiz e corrida, na geração de perguntas, na atribuição de estações, na deteção do Vigia, na aplicação de penalizações, no sistema de pontuação e na progressão das rondas.
+
+
+%%________________________________________________________________________
+\section{Arquitetura de rede e máquina de estados}
+\label{sec:arquiteturaRede}
+%%________________________________________________________________________
+
+A arquitetura da sessão foi implementada seguindo uma abordagem de host autoritativo. Neste modelo, uma das instâncias assume o papel de host, sendo responsável pelas principais decisões da sessão, enquanto as restantes instâncias atuam como clientes que recebem o estado sincronizado. Esta abordagem revelou-se adequada ao projeto, uma vez que a partida depende da partilha consistente de informação entre jogadores, como a pergunta ativa, o tempo restante, o bloqueio de respostas, a pontuação, a posição dos jogadores e as penalizações aplicadas.
+
+O componente central desta organização é o QuizGameManager, que deriva de NetworkBehaviour e junta a máquina de estados da partida. Este script mantém variáveis sincronizadas, como currentRound, currentTimer, totalRoundsSettings, roundDurationSettings e currentStateName, e utiliza chamadas remotas para comunicar alterações relevantes entre as instâncias. Por exemplo, RPC\_SyncCurrentQuestion distribui a pergunta atual pelos clientes, RPC\_ResetJailedPlayers repõe o estado dos jogadores penalizados e RPC\_NotifyStateChange informa a interface quando existe mudança de estado.
+
+A Figura~\ref{fig:arquiteturaP2P} apresenta a relação entre a instância host, os clientes e os serviços externos utilizados pelo jogo. O diagrama mostra que os sistemas de rede, comunicação por voz e geração de questionários estão integrados com os componentes desenvolvidos no projeto, como o QuizGameManager, GenerateQuizJSON, ScoreManager, SpawnManager e Vigia.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=0.9\linewidth,height=0.28\textheight,keepaspectratio]{./fig_arquitetura_p2p}
+   \caption{Arquitetura de rede P2P com host autoritativo.}
+   \label{fig:arquiteturaP2P}
+\end{figure}
+
+Como foi apresentado na Figura~\ref{fig:maquinaEstados}, o ciclo principal do jogo foi modelado como uma máquina de estados. Na implementação, essa estrutura foi feita através dos scripts WaitingStateNode, FreezeStateNode, QuestionStateNode, ObstacleRaceStateNode e ChangeRoundStateNode.
+
+Esta separação contribui para uma maior independência entre as diferentes fases da partida, uma vez que cada estado define o comportamento e as regras específicas da respetiva etapa, incluindo a espera pelos jogadores, a preparação da pergunta, a resposta ao quiz, a corrida de obstáculos e a transição para a ronda seguinte.
+
+No QuestionStateNode, o temporizador da pergunta é atualizado e, quando acaba, as respostas registadas nos AnswerButtonManager são comparadas com a resposta correta do questionário. Caso a resposta esteja correta, o ScoreManager atualiza a pontuação da equipa correspondente e atualiza o leaderboard. No ObstacleRaceStateNode, a lógica encontra-se focada na gestão da fase de corrida, incluindo o transporte dos jogadores para o percurso e a aplicação de penalizações aos jogadores que não concluam a etapa no tempo definido.
+
+
+%%________________________________________________________________________
+\section{Geração de questionários com IA}
+\label{sec:geracaoIA}
+%%________________________________________________________________________
+
+Este sistema é responsável pela leitura dos temas definidos pelo host para o quiz, constrói um pedido textual com regras definidas e envia esse pedido para a API Gemini. A resposta esperada é um JSON com rondas, perguntas, quatro opções de resposta e a indicação da opção correta.
+
+O script encontra-se dividido em diferentes partes, sendo que ReadQuizCSV é responsável pela obtenção dos temas a partir do ficheiro quiz\_info.csv, localizado em Application.persistentDataPath. O BuildPrompt constrói o pedido enviado ao modelo, o SendRequest realiza a comunicação HTTP através de UnityWebRequest e o ParseQuiz valida e converte a resposta recebida. O resultado é armazenado no ficheiro quiz\_current.json, também localizado em Application.persistentDataPath, sendo posteriormente utilizado durante a partida.
+
+A decisão de guardar o resultado num ficheiro local facilita a ligação entre a geração de conteúdo e a execução das rondas. Após a criação do questionário, o jogo consegue carregar as perguntas sem necessitar de realizar uma nova chamada à API para cada pergunta. Além disso, o script implementa mecanismos de repetição e tratamento de erros, reduzindo o risco de interrupção da partida quando a resposta da API apresenta um formato inesperado.
+
+A Figura~\ref{fig:fluxoQuiz} apresenta o fluxo implementado. A IA é utilizada para a geração de conteúdo textual estruturado, enquanto a interpretação desse conteúdo e a aplicação das regras do jogo permanecem sob responsabilidade dos scripts desenvolvidos no âmbito da implementação.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=0.9\linewidth,height=0.28\textheight,keepaspectratio]{./fig_fluxo_quiz}
+   \caption{Fluxo de geração do questionário com IA.}
+   \label{fig:fluxoQuiz}
+\end{figure}
+
+Esta funcionalidade dá resposta aos requisitos relacionados com a gestão de perguntas, temas e respostas persistidas. Para além disso, suporta a experiência proposta no modelo, permitindo a variação dos conteúdos das partidas sem necessidade de modificar manualmente a cena Unity.
+
+
+%%________________________________________________________________________
+\section{O Vigia: perceção e penalização}
+\label{sec:vigiaImpl}
+%%________________________________________________________________________
+
+O Vigia representa o NPC autónomo principal da fase de quiz. A sua implementação encontra-se definida no script Vigia, que integra navegação através de NavMeshAgent, patrulha baseada em waypoints, perceção visual, perceção sonora e aplicação de penalizações. O comportamento deste NPC é executado do lado do servidor, garantindo que as decisões tomadas são consistentes entre os diferentes clientes numa partida multijogador.
+
+A perceção visual é realizada através de CheckVision, considerando fatores como posição do jogador, distância, ângulo de visão e existência de obstáculos entre o Vigia e o alvo. A perceção sonora é realizada através de CheckHearing, que procura jogadores com PlayerVoiceState ativo. Esta combinação permite que o NPC reaja não apenas à posição do jogador, mas também ao uso da voz durante a ronda.
+
+A Figura~\ref{fig:estadosVigia} resume o comportamento implementado no script Vigia. O NPC alterna entre patrulha, espera nos waypoints e investigação. A transição para investigação pode ser iniciada pela visão de um jogador ou pela deteção de voz, mas a visão apenas serve para iniciar a deslocação até à posição detetada. A penalização só progride quando, durante a investigação, existe um jogador próximo ainda a falar. Nessa situação, o valor DetectionProgress aumenta internamente até atingir o tempo definido em jailDetectionTime. Nesse momento, SendPlayerToJail envia o jogador para a jaula e o Vigia regressa à patrulha.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=0.9\linewidth,height=0.28\textheight,keepaspectratio]{./fig_estados_vigia}
+   \caption{Máquina de estados do comportamento do Vigia.}
+   \label{fig:estadosVigia}
+\end{figure}
+
+Esta implementação responde aos requisitos associados aos NPCs autónomos e às penalizações. Ao mesmo tempo, contribui para reforçar o sentimento de tensão da fase de quiz, uma vez que o jogador tem de equilibrar a necessidade de comunicar com o risco de ser apanhado pelo Vigia.
+
+
+%%________________________________________________________________________
+\section{Voz por proximidade e deteção de ruído}
+\label{sec:vozImpl}
+%%________________________________________________________________________
+
+A comunicação por voz em proximidade foi suportada através do MetaVoiceChat, sendo a sua integração como mecânica de jogo realizada através de scripts desenvolvidos no âmbito do projeto. O PlayerVoiceController estabelece a ligação entre o jogador e o componente de voz, enquanto o PlayerVoiceState mantém sincronizada em rede a indicação de que o jogador se encontra a falar através da SyncVar isTalking.
+
+Para evitar que os níveis reduzidos de ruído sejam interpretados como comunicação ativa, foi desenvolvido o filtro NoiseGate. Este componente avalia a intensidade do sinal áudio e apenas considera uma comunicação ativa quando o valor ultrapassa o limiar definido. Desta forma, a voz é utilizada em dois contextos distintos, como meio de comunicação entre jogadores e como sinal que pode ser interpretado pelo Vigia.
+
+A Figura~\ref{fig:vozVigia} apresenta a relação entre os sistemas de áudio e o comportamento do NPC. A biblioteca externa é responsável pela captura e transmissão da voz, enquanto a lógica desenvolvida no jogo transforma o áudio num fator de risco durante a fase de perguntas.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=0.9\linewidth,height=0.28\textheight,keepaspectratio]{./fig_voz_vigia}
+   \caption{Relação entre voz, visão e penalização pelo Vigia.}
+   \label{fig:vozVigia}
+\end{figure}
+
+Esta abordagem de implementação é significativa porque evita que a comunicação por voz seja tratada apenas como uma funcionalidade adicional. No \textit{Back To School}, a utilização da voz permite aos jogadores discutir respostas, mas introduz também o risco de serem detetados pelo Vigia. Desta forma, a implementação estabelece uma ligação entre os requisitos de áudio, interface, autonomia e regras de jogo.
+
+
+%%________________________________________________________________________
+\section{Estações de quiz, interação e sabotagem}
+\label{sec:estacoes}
+%%________________________________________________________________________
+
+As respostas ao quiz são realizadas através de estações físicas existentes na sala. Cada jogador é associado a uma estação através do StationManager, utilizando o método AssignStations. Cada estação possui botões de resposta representados pelo AnswerButton e geridos pelo AnswerButtonManager.
+
+O processo de interação inicia-se no Interactor, que utiliza um raycast com alcance limitado para identificar objetos interativos quando o jogador pressiona a tecla de interação. Quando o objeto detetado corresponde a um AnswerButton, o método Interact executa o envio da resposta através do método SubmitAnswer do respetivo AnswerButtonManager. A resposta é depois enviada para o servidor por uma chamada RPC, ficando armazenada em lockedAnswerIndex. Para garantir a consistência visual entre os diferentes clientes, o método RPC\_AnimateButton sincroniza a animação do botão e o RPC\_ResetButtons repõe o estado inicial no final da pergunta.
+
+A Figura~\ref{fig:sequenciaQuiz} apresenta a sequência principal da resposta ao quiz, desde a interação do jogador com a estação até ao registo da resposta no servidor. A avaliação da resposta e a atualização da pontuação ocorrem no final do tempo da pergunta, mantendo a consistência entre os diferentes clientes da partida.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=0.9\linewidth,height=0.28\textheight,keepaspectratio]{./fig_sequencia_quiz_simplificada}
+   \caption{Sequência principal de resposta ao quiz.}
+   \label{fig:sequenciaQuiz}
+\end{figure}
+
+O QuizUIManager complementa este sistema através da atualização dos elementos visuais associados à pergunta e às opções de resposta. O ChairInteraction acrescenta uma componente de interação física, permitindo controlar o estado do jogador quando este se senta ou se levanta. Em conjunto, estes scripts estabelecem a ligação entre o espaço 3D, a interface e as regras associadas ao sistema de resposta.
+
+A mecânica de sabotagem surge da possibilidade de interação entre os jogadores e as estações durante a ronda. Como a resposta bloqueada fica associada à estação e não apenas ao conhecimento do jogador, a posição dos jogadores na sala e a forma como interagem com as estações passam também a ter impacto na dinâmica do jogo. Esta componente precisa de ser validada através de testes, uma vez que o seu funcionamento depende não só do código desenvolvido, mas também da configuração das estações, das collisions e das permissões de interação definidas na cena QuizAI.
+
+
+%%________________________________________________________________________
+\section{Corrida, NPCs, pontuação e restantes sistemas}
+\label{sec:corridaImpl}
+%%________________________________________________________________________
+
+A fase de corrida é gerida pelo ObstacleRaceStateNode. Quando o jogo transita para este estado, o temporizador passa a representar o tempo disponível para os jogadores alcançarem a sala seguinte e o SpawnManager realiza o transporte dos jogadores para o início do percurso correspondente à sala. Quando o tempo disponível termina, os jogadores que não chegaram à sala seguinte dentro do tempo limite são penalizados na pontuação. Após esta verificação, todos os jogadores são transportados para a sala correspondente, garantindo a continuação da partida.
+
+A chegada à sala seguinte é identificada através do RoomTrigger.cs, enquanto o VoidTeleporter.cs recupera os jogadores que caiam do percurso, transportando-os para o início da corrida correspondente. Os obstáculos presentes no percurso são implementados através de scripts como PlanetSpawner.cs e PlanetDespawner.cs (responsáveis pela geração e remoção de planetas físicos no percurso), NetworkPushable.cs e ObstaclePlayerPushZone.cs. Adicionalmente, o cenário conta com obstáculos móveis cujas rotações e movimentos cíclicos são animados pelo componente Animator, sendo sincronizados em rede via NetworkAnimator. Estes componentes introduzem desafios diferentes ao movimento dos jogadores, tornando a fase de corrida mais dinâmica e exigente.
+
+O controlo do jogador é implementado principalmente em PlayerController.cs, um controlador de terceiros (\textit{Final Character Controller}~\cite{GinjaGaming2024}) adaptado pelo grupo para integrar a lógica de jogo, nomeadamente a equipa, o estado de resposta e a detenção do jogador. Este utiliza o componente CharacterController nativo da Unity, o Input System e a Cinemachine para gerir o movimento, salto, agachamento, rotação da câmara, interações (como sentar) e teletransporte. O FirstPersonNetworkState.cs sincroniza a informação relevante do jogador na rede, como o input, o estado de movimento e as ações de empurrão (knockback).
+
+Para além do Vigia, existem NPCs secundários associados aos Colegas. O ColegaVaguear.cs implementa a deslocação por waypoints usando o NavMeshAgent, enquanto o ColegaEmpurrar.cs acrescenta a capacidade de aplicar uma força de empurrão (knockback) ao jogador quando este é detetado no campo de visão. Estes NPCs reforçam a dificuldade da corrida e tornam o cenário mais dinâmico.
+
+A pontuação é centralizada no ScoreManager.cs. Este script mantém os pontos das equipas, atualiza o leaderboard através da chamada de rede RPC\_UpdateLeaderboard, e apresenta o resultado final com RPC\_ShowEndGameScreen. Esta abordagem permite que ações diferentes do jogo, como responder corretamente, sofrer uma penalização ou chegar atrasado à sala seguinte, sejam refletidas num único sistema de pontuação.
+
+Os restantes sistemas completam a experiência de jogo. O GeneratedQuizSfx gere efeitos sonoros associados a botões, avisos, passos e alertas do Vigia, enquanto o GeneratedFootstepEmitter ajusta os passos de jogadores e NPCs. No lobby, o LobbyCharacterDisplay.cs e o SkinSelection.cs gerem a visualização e a seleção de skins dos jogadores ligados via Steam~\cite{Labrecque2024}, que são posteriormente aplicadas pelo SkinApplier.cs no spawner do jogo, garantindo que cada participante inicia a partida com o modelo visual correspondente.
+
+
+%%________________________________________________________________________
+\section{Da especificação ao código}
+\label{sec:especificacaoCodigo}
+%%________________________________________________________________________
+
+A implementação foi organizada de acordo com os requisitos definidos no Capítulo~\ref{ch:modeloProposto}.
+
+A Tabela~\ref{tab:reqImpl} resume a relação entre os requisitos, os sistemas desenvolvidos e os principais scripts associados a cada funcionalidade. Esta tabela complementa a descrição técnica apresentada nas secções anteriores, permitindo visualizar de que forma os requisitos definidos foram aplicados na implementação do jogo.
+
+\begin{table}[htbp]
+   \centering
+   \caption{Relação entre requisitos, sistemas implementados e scripts principais.}
+   \label{tab:reqImpl}
+   {
+   \scriptsize
+   \setlength{\tabcolsep}{4pt}
+   \renewcommand{\arraystretch}{1.2}
+   \begin{tabular}{|p{1.9cm}|p{3.6cm}|p{5.0cm}|p{3.8cm}|}
+      \hline
+      \textbf{Requisitos} & \textbf{Sistema implementado} & \textbf{Scripts principais} & \textbf{Evidência}
+      \\ \hline
+      R1.1-R1.5 & Ciclo de jogo, quiz, corrida, penalizações e fim da partida & QuizGameManager; WaitingStateNode; FreezeStateNode; QuestionStateNode; ObstacleRaceStateNode; ChangeRoundStateNode; ScoreManager & Mudança de estados, temporizador, avaliação de respostas, corrida e ecrã final
+      \\ \hline
+      R2.1-R2.6 & Controlo do jogador, câmara e interação com objetos & PlayerController; FirstPersonNetworkState; Interactor; ChairInteraction & Movimento, salto, raycast de interação, cadeiras e teletransporte
+      \\ \hline
+      R3.1-R3.3 & Temas, perguntas, respostas e pontuação persistida durante a sessão & GenerateQuizJSON; AnswerButtonManager; ScoreManager & Leitura de temas, geração de JSON, resposta bloqueada e atualização de pontos
+      \\ \hline
+      R4.1-R4.6 & Interface de quiz, leaderboard, feedback visual e lobby & QuizUIManager; ScoreManager; LobbyCharacterDisplay; SkinSelection & Perguntas no quadro/HUD, leaderboard, nomes/skins e feedback de resposta
+      \\ \hline
+      R5.1-R5.5 & NPCs autónomos, patrulha, deteção e obstáculos humanos & Vigia; VigilaWaypoint; ColegaVaguear; ColegaEmpurrar & Visão, audição, jaula, waypoints e empurrões durante a corrida
+      \\ \hline
+      R6.1-R6.4 & Voz, efeitos sonoros e feedback áudio & PlayerVoiceController; PlayerVoiceState; NoiseGate; GeneratedQuizSfx; GeneratedFootstepEmitter & Voz por proximidade, deteção de fala, sons de botões, alertas e passos
+      \\ \hline
+   \end{tabular}
+   }
+\end{table}
+
+Esta relação entre requisitos e implementação é importante para a fase de validação, uma vez que permite orientar os testes de acordo com funcionalidades específicas do jogo. Em vez de verificar apenas se a aplicação executa corretamente, permite também confirmar se cada grupo de requisitos está refletido no funcionamento do jogo através de funcionalidades específicas, como responder a perguntas, comunicar por voz, ser detetado pelo Vigia, completar a corrida, atualizar a pontuação e utilizar o lobby.
+
+A associação dos scripts desenvolvidos aos respetivos GameObjects e a configuração dos componentes em Unity, incluindo valores definidos no Inspector, colocação dos waypoints das patrulhas, zonas de jaula e triggers da corrida, foram organizadas através de prefabs e objetos nas cenas do jogo. Esta abordagem permite manter a lógica do sistema separada das configurações específicas de cada cena, facilitando a organização do projeto e a validação das funcionalidades.
+
+Desta forma, o Capítulo~\ref{ch:implementacaoDoModelo} apresenta a forma como o modelo foi implementado no jogo, sem repetir todos os detalhes presentes nos documentos de análise e desenho. A descrição dos scripts, figuras e tabela de relação entre requisitos e sistemas permite enquadrar a fase de validação, onde o funcionamento de cada sistema será verificado através do comportamento observado durante a execução do jogo.
+
+
+
+
+%%________________________________________________________________________
+\chapter{Validação e Testes}
+\label{ch:validacaoTestes}
+%%________________________________________________________________________
+
+
+%%________________________________________________________________________
+\section{Procedimento de validação}
+\label{sec:procedimentoValidacao}
+%%________________________________________________________________________
+
+A validação realizada teve como objetivo perceber se o modelo proposto conseguia proporcionar uma experiência de jogo funcional e fácil de compreender por utilizadores que não estiveram envolvidos no desenvolvimento do jogo. O teste teve como foco principal o ciclo de ronda apresentado na secção~\ref{subsec:maquinaEstados}, incluindo a fase de quiz, a corrida de obstáculos, a interação física entre jogadores, o Vigia e a voz de proximidade.
+
+Para a realização de testes foram organizadas várias sessões com um total de 10 participantes. Todos os participantes jogaram em grupo e experimentaram pelo menos uma fase de quiz e uma fase de corrida. No final, responderam a um questionário com perguntas específicas sobre o \textit{Back To School} e com itens do Game Experience Questionnaire (GEQ).
+
+
+%%________________________________________________________________________
+\section{Resultados obtidos}
+\label{sec:resultados}
+%%________________________________________________________________________
+
+A Tabela~\ref{tab:resultados} apresenta os principais resultados obtidos. As perguntas específicas do jogo usam uma escala de 1 a 5, em que 5 representa maior concordância. Os indicadores GEQ usam uma escala de 0 a 4. Nas perguntas específicas, a coluna de respostas positivas corresponde à percentagem de respostas com valor 4 ou 5.
+
+\begin{table}[H]
+   \centering
+   \caption{Resultados quantitativos do questionário de validação.}
+   \label{tab:resultados}
+   \small
+   \begin{tabular}{|p{6.2cm}|c|c|c|c|}
+      \hline
+      \textbf{Dimensão avaliada} & \textbf{Escala} & \textbf{Média} & \textbf{DP} & \textbf{Positivas}
+      \\ \hline
+      Objetivo geral do jogo & 1-5 & 4,60 & 0,52 & 100\%
+      \\ \hline
+      Fase de quiz & 1-5 & 4,10 & 1,20 & 90\%
+      \\ \hline
+      Controlos & 1-5 & 4,10 & 0,99 & 80\%
+      \\ \hline
+      Feedback visual e sonoro & 1-5 & 3,60 & 1,07 & 60\%
+      \\ \hline
+      Alternância quiz/corrida & 1-5 & 3,80 & 1,55 & 80\%
+      \\ \hline
+      Vigia & 1-5 & 2,40 & 1,17 & 20\%
+      \\ \hline
+      Interações físicas & 1-5 & 3,90 & 0,74 & 70\%
+      \\ \hline
+      Equilíbrio conhecimento/caos/corrida & 1-5 & 3,80 & 1,23 & 60\%
+      \\ \hline
+      Diferença face a quiz tradicional & 1-5 & 4,40 & 0,52 & 100\%
+      \\ \hline
+      GEQ - Competência & 0-4 & 2,36 & 1,23 & -
+      \\ \hline
+      GEQ - Afeto positivo & 0-4 & 2,30 & 0,86 & -
+      \\ \hline
+      GEQ - Fluxo & 0-4 & 1,30 & 0,61 & -
+      \\ \hline
+      GEQ - Afeto negativo & 0-4 & 1,76 & 0,79 & -
+      \\ \hline
+      GEQ pós-jogo - Experiência negativa & 0-4 & 0,63 & 0,57 & -
+      \\ \hline
+   \end{tabular}
+\end{table}
+
+Os resultados mais positivos foram registados na compreensão do objetivo geral do jogo e na perceção de que o \textit{Back To School} apresenta uma experiência diferente de um quiz tradicional. Estes resultados mostram que a ideia principal do modelo foi compreendida pelos participantes, nomeadamente a combinação entre responder a perguntas e a corrida de obstáculos.
+
+Por outro lado, os valores mais baixos estiveram relacionados com a mecânica do Vigia e, em menor medida, com o feedback visual e sonoro apresentado durante o jogo. Estes resultados indicam que esta mecânica, descrita na secção~\ref{subsec:vigia}, ainda precisa de alguns ajustes, principalmente na forma como comunica ao jogador que foi detetado, o motivo da penalização e o impacto do ruído durante a ronda.
+
+Além disso, o valor reduzido associado ao fluxo no GEQ sugere que a experiência de jogo não decorreu de forma totalmente contínua. Isto significa que alguns jogadores sentiram que a jogabilidade era interrompida por momentos de confusão ou dificuldade. As respostas abertas ajudam a explicar este resultado pois foram referidos problemas na identificação da própria mesa, dificuldades com os controlos e frustração com alguns obstáculos na fase de corrida.
+
+Foi também referido nas respostas abertas que as perguntas eram demasiado fáceis, o que indica a necessidade de ajustar a dificuldade e variedade dos questionários gerados.
+
+Desta forma, percebe-se que as principais dificuldades encontradas estão associadas a aspetos específicos da jogabilidade e à forma como algumas mecânicas são apresentadas ao jogador, e não ao conceito geral do jogo, que foi bem compreendido pelos participantes.
+
+
+%%________________________________________________________________________
+\section{Conclusões da validação}
+\label{sec:conclusoesValidacao}
+%%________________________________________________________________________
+
+A validação realizada demonstra que o conceito desenvolvido está alinhado com os objetivos definidos para o projeto, embora a versão que foi testada ainda precise de alguns aspetos a melhorar. A partir dos resultados obtidos, foram identificadas prioridades para melhorar o jogo, nomeadamente reforçar a clareza visual do jogo, tornar o papel do Vigia mais percetível para os jogadores, facilitar a identificação da mesa de cada participante, ajustar o nível de dificuldade das perguntas e melhorar o equilíbrio na fase de corrida de obstáculos. Após esta fase de testes foram implementadas duas melhorias: a possibilidade de alterar a dificuldade das perguntas e a apresentação visual do nome do jogador associado à respetiva mesa. Estas alterações respondem a problemas identificados no questionário e servem de base para uma nova iteração do jogo, na qual poderão ser corrigidos outros aspetos antes da realização de uma nova ronda de testes.
+
+
+
+
+%%________________________________________________________________________
+\chapter{Conclusões e Trabalho Futuro}
+\label{ch:conclusoesTrabalhoFuturo}
+%%________________________________________________________________________
+
+Após todo o trabalho realizado, conclui-se que o \textit{Back To School} atingiu o objetivo principal proposto: criar uma experiência multijogador competitiva que combina a estrutura de um \textit{party game} com a integração de inteligência artificial generativa. A alternância entre a fase de quiz e a fase de corrida de obstáculos mostrou-se jogável e capaz de proporcionar um ritmo dinâmico e envolvente para os jogadores. Destas duas fases, a fase de quiz foi particularmente valorizada pela forma como a comunicação por voz de proximidade se impôs como um elemento central da experiência, equilibrando a cooperação entre jogadores com o risco de deteção pelo Vigia.
+
+A fase de validação e testes, apresentada no Capítulo~\ref{ch:validacaoTestes}, confirmou o valor da solução proposta. Os resultados obtidos (Tabela~\ref{tab:resultados}) evidenciam uma resposta muito positiva à proposta central do jogo, com destaque para a compreensão do objetivo geral (100\% de respostas positivas) e para a distinção face aos formatos de quiz tradicionais (4,40/5). A fase de quiz e as interações físicas entre jogadores foram igualmente bem avaliadas, confirmando que a experiência de jogo une de forma equilibrada o conhecimento dos jogadores, a interação social e o desafio físico da corrida de obstáculos. Esta avaliação permitiu ainda identificar, como discutido na secção~\ref{sec:conclusoesValidacao}, um conjunto de pontos de melhoria que servem de base às propostas de trabalho futuro descritas a seguir.
+
+Relativamente ao trabalho futuro, restam ainda dois pontos prioritários previamente identificados na secção de validação e testes. O primeiro consiste em tornar o jogo mais claro para um novo jogador, uma vez que, ao entrar numa partida pela primeira vez, este não dispõe de qualquer informação sobre o funcionamento do jogo, as suas mecânicas ou as ações do Vigia. Esta lacuna poderá ser colmatada através da colocação de cards informativos numa primeira entrada no jogo. O segundo ponto consiste em equilibrar melhor algumas partes da fase de corrida de obstáculos: alguns jogadores reportaram falta de tempo em certos troços do percurso, enquanto outros identificaram dificuldade excessiva em alguns obstáculos. Por fim, deve ser realizada uma nova ronda de testes após a implementação destas melhorias, de modo a obter o feedback necessário para validar o seu impacto na experiência de jogo.

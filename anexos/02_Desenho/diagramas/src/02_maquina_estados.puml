@@ -1,0 +1,38 @@
+@startuml maquina_estados
+!pragma layout smetana
+title Back To School - Maquina de Estados do Jogo (PurrNet StateMachine, lado servidor)
+
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam state {
+  BackgroundColor #EFF7FF
+  BorderColor #2F6FAD
+  FontColor #11314f
+}
+
+[*] --> WaitingState
+
+state "WaitingState" as WaitingState : Gera o quiz por IA em fundo;\nespera jogadores registados + spawnados
+state "FreezeState" as FreezeState : Congela 3s;\nmostra a proxima pergunta
+state "QuestionState" as QuestionState : Pergunta ativa (timer da ronda);\nVigia ativo; avalia respostas no fim
+state "ObstacleRaceState" as ObstacleRace : Corrida de obstaculos (75s);\nultimo a chegar e penalizado
+state "ChangeRoundState" as ChangeRound : 10s; ronda++,\nteleporta, atribui estacoes, cosmeticos
+state "Fim de Jogo" as EndGame : RPC_ShowEndGameScreen\n(leaderboard final)
+
+WaitingState --> FreezeState : quiz pronto &&\njogadores spawnados
+FreezeState --> QuestionState : apos 3s
+QuestionState --> FreezeState : ainda ha perguntas\nna ronda (GoNextQuestion)
+QuestionState --> ObstacleRace : perguntas da ronda\nterminadas && nao e a ultima ronda
+QuestionState --> EndGame : ultima ronda terminada
+ObstacleRace --> ChangeRound : tempo esgotado ||\ntodos chegaram
+ChangeRound --> FreezeState : apos 10s (ronda seguinte)
+EndGame --> [*]
+
+note right of QuestionState
+  Avaliacao (EvaluateAnswers):
+  compara AnswerButtonManager.lockedAnswerIndex
+  com quizData.currentCorrectAnswerIndex e
+  chama ScoreManager.AddScoreToTeam.
+end note
+@enduml

@@ -1,0 +1,281 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8925424077610825539
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1658a329beeb4544810492081323d8b, type: 3}
+  m_Name: HatchingVolume
+  m_EditorClassIdentifier: Assembly-CSharp::HatchingVolume
+  active: 1
+  <displayName>k__BackingField: 
+  _UseVolumeComponent:
+    <fieldHash>k__BackingField: -545400472
+    m_OverrideState: 1
+    m_Value: 1
+  _HatchTextures:
+    <fieldHash>k__BackingField: -306050080
+    m_OverrideState: 1
+    m_Value: {fileID: 18700000, guid: b77d982d7964e2b41b9f2163c63d2920, type: 2}
+  _HatchTextureTiling:
+    <fieldHash>k__BackingField: -66699688
+    m_OverrideState: 1
+    m_Value: {x: 8, y: 8}
+  _HatchTextureCount:
+    <fieldHash>k__BackingField: 172650704
+    m_OverrideState: 1
+    m_Value: 6
+  _ColorIntensity:
+    <fieldHash>k__BackingField: 412001096
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraBrightness:
+    <fieldHash>k__BackingField: 651351488
+    m_OverrideState: 1
+    m_Value: 0
+  _ExtraBrightnessStrength:
+    <fieldHash>k__BackingField: 890701880
+    m_OverrideState: 1
+    m_Value: 0.25
+  _FresnelPower:
+    <fieldHash>k__BackingField: 1369402664
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraFresnelTuning:
+    <fieldHash>k__BackingField: 1608753056
+    m_OverrideState: 1
+    m_Value: 1
+  _InvertHatchColour:
+    <fieldHash>k__BackingField: 1848103448
+    m_OverrideState: 1
+    m_Value: 0
+  _InvertStrength:
+    <fieldHash>k__BackingField: 2087453840
+    m_OverrideState: 1
+    m_Value: 3.1
+  _AnimationCyclesPerSecond:
+    <fieldHash>k__BackingField: -1968163064
+    m_OverrideState: 1
+    m_Value: 12
+--- !u!114 &-7519045864998048972
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1658a329beeb4544810492081323d8b, type: 3}
+  m_Name: HatchingVolume
+  m_EditorClassIdentifier: Assembly-CSharp::HatchingVolume
+  active: 1
+  <displayName>k__BackingField: 
+  _UseVolumeComponent:
+    <fieldHash>k__BackingField: -545400472
+    m_OverrideState: 1
+    m_Value: 1
+  _HatchTextures:
+    <fieldHash>k__BackingField: -306050080
+    m_OverrideState: 1
+    m_Value: {fileID: 18700000, guid: b77d982d7964e2b41b9f2163c63d2920, type: 2}
+  _HatchTextureTiling:
+    <fieldHash>k__BackingField: -66699688
+    m_OverrideState: 1
+    m_Value: {x: 8, y: 8}
+  _HatchTextureCount:
+    <fieldHash>k__BackingField: 172650704
+    m_OverrideState: 1
+    m_Value: 50
+  _ColorIntensity:
+    <fieldHash>k__BackingField: 412001096
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraBrightness:
+    <fieldHash>k__BackingField: 651351488
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraBrightnessStrength:
+    <fieldHash>k__BackingField: 890701880
+    m_OverrideState: 1
+    m_Value: 0.25
+  _FresnelPower:
+    <fieldHash>k__BackingField: 1369402664
+    m_OverrideState: 1
+    m_Value: 1
+  _ExtraFresnelTuning:
+    <fieldHash>k__BackingField: 1608753056
+    m_OverrideState: 1
+    m_Value: 1
+  _InvertHatchColour:
+    <fieldHash>k__BackingField: 1848103448
+    m_OverrideState: 1
+    m_Value: 0
+  _InvertStrength:
+    <fieldHash>k__BackingField: 2087453840
+    m_OverrideState: 1
+    m_Value: 3.1
+  _AnimationCyclesPerSecond:
+    <fieldHash>k__BackingField: -1968163064
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-6738880673181308072
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
+  m_Name: ColorAdjustments
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.ColorAdjustments
+  active: 1
+  postExposure:
+    m_OverrideState: 1
+    m_Value: 0.3
+  contrast:
+    m_OverrideState: 1
+    m_Value: 1
+  colorFilter:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  hueShift:
+    m_OverrideState: 0
+    m_Value: 0
+  saturation:
+    m_OverrideState: 1
+    m_Value: 5
+--- !u!114 &-1926665265289229027
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38f3adaab4db4f8f9fbc58713914aa1b, type: 3}
+  m_Name: LightShaft
+  m_EditorClassIdentifier: Assembly-CSharp::Toguchi.Rendering.LightShaft
+  active: 1
+  maxIterations:
+    m_OverrideState: 1
+    m_Value: 64
+  maxDistance:
+    m_OverrideState: 1
+    m_Value: 12
+  minDistance:
+    m_OverrideState: 1
+    m_Value: 0.4
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Global Volume Profile
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
+  components:
+  - {fileID: -6738880673181308072}
+  - {fileID: 6370227699857596644}
+  - {fileID: 4342580912151333662}
+--- !u!114 &4342580912151333662
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdfbdbb87d3286943a057f7791b43141, type: 3}
+  m_Name: ChannelMixer
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.ChannelMixer
+  active: 1
+  redOutRedIn:
+    m_OverrideState: 0
+    m_Value: 100
+  redOutGreenIn:
+    m_OverrideState: 0
+    m_Value: 0
+  redOutBlueIn:
+    m_OverrideState: 0
+    m_Value: 0
+  greenOutRedIn:
+    m_OverrideState: 0
+    m_Value: 0
+  greenOutGreenIn:
+    m_OverrideState: 0
+    m_Value: 100
+  greenOutBlueIn:
+    m_OverrideState: 1
+    m_Value: -5
+  blueOutRedIn:
+    m_OverrideState: 0
+    m_Value: 0
+  blueOutGreenIn:
+    m_OverrideState: 0
+    m_Value: 0
+  blueOutBlueIn:
+    m_OverrideState: 0
+    m_Value: 100
+--- !u!114 &6370227699857596644
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01700fd266d6914ababb731e09af2eb, type: 3}
+  m_Name: DepthOfField
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.DepthOfField
+  active: 0
+  mode:
+    m_OverrideState: 1
+    m_Value: 1
+  gaussianStart:
+    m_OverrideState: 1
+    m_Value: 60
+  gaussianEnd:
+    m_OverrideState: 1
+    m_Value: 150
+  gaussianMaxRadius:
+    m_OverrideState: 0
+    m_Value: 1
+  highQualitySampling:
+    m_OverrideState: 0
+    m_Value: 0
+  focusDistance:
+    m_OverrideState: 0
+    m_Value: 10
+  aperture:
+    m_OverrideState: 0
+    m_Value: 5.6
+  focalLength:
+    m_OverrideState: 0
+    m_Value: 50
+  bladeCount:
+    m_OverrideState: 0
+    m_Value: 5
+  bladeCurvature:
+    m_OverrideState: 0
+    m_Value: 1
+  bladeRotation:
+    m_OverrideState: 0
+    m_Value: 0

@@ -1,0 +1,310 @@
+%%________________________________________________________________________
+%% LEIM | PROJETO -- Back To School
+%% Capitulos 1, 2 e 3
+%%________________________________________________________________________
+
+
+
+
+%%________________________________________________________________________
+\chapter{Introdução}
+\label{ch:introducao}
+%%________________________________________________________________________
+
+\textit{Back To School} é um jogo de computador multijogador, desenvolvido em Unity, que serviu como projeto final da Licenciatura de Informática e Multimédia. O objetivo foi criar uma experiência de jogo completa, reunindo mecânicas de resposta a questionários com corridas de obstáculos num único jogo e que suporta vários jogadores ao mesmo tempo.
+
+Os jogadores participam em rondas com duas fases distintas. Na primeira fase, encontram-se numa sala e respondem a perguntas de escolha múltipla enquanto tentam perturbar os seus adversários e evitar serem detetados pelo Vigia (NPC que patrulha a sala e prende os jogadores que fizerem demasiado barulho). Na segunda fase, após as questões terminarem, os jogadores enfrentam uma corrida de obstáculos com vários objetos em movimento e Colegas (NPC que empurra o jogador) de forma a chegarem à sala seguinte antes do tempo terminar. Este ciclo constitui a experiência de jogo desenvolvida.
+
+
+%%________________________________________________________________________
+\section{Motivação}
+\label{sec:motivacao}
+%%________________________________________________________________________
+
+A motivação para o desenvolvimento deste projeto surgiu do interesse do grupo em explorar a combinação entre os jogos multijogador e a inteligência artificial generativa, duas áreas que serviram como base para o desenvolvimento do trabalho. O projeto procurou integrar estas duas áreas numa única experiência de jogo, onde ambas têm impacto na forma como a partida decorre. A ideia passou por criar uma dinâmica em que a geração de perguntas, a comunicação entre jogadores e a pressão do tempo estivessem ligadas entre si e contribuíssem diretamente para a experiência de jogo.
+
+A diferença do \textit{Back To School} está na forma como junta estes elementos dentro da mesma experiência. A geração de perguntas permite criar partidas com conteúdos adaptados aos temas definidos pelo \textit{host}. Ao mesmo tempo, a utilização da voz acrescenta uma nova maneira de interagir, uma vez que o jogador tem a opção de comunicar para colaborar, no entanto, essa comunicação pode influenciar o comportamento do Vigia. Esta mecânica cria um equilíbrio entre cooperação e risco, sendo uma das características centrais do jogo.
+
+
+%%________________________________________________________________________
+\section{Principais contribuições}
+\label{sec:contribuicoes}
+%%________________________________________________________________________
+
+As principais contribuições próprias deste trabalho resultam da integração e adaptação dos sistemas necessários para concretizar o ciclo de jogo proposto. Em particular, destacam-se:
+
+\begin{itemize}
+   \item A concretização de um ciclo de jogo multijogador sincronizado, com fases de quiz, corrida de obstáculos, transição de rondas, pontuação e penalizações.
+   \item A integração de uma arquitetura de rede \textit{peer-to-peer}, usando \textit{PurrNet} e \textit{PurrLobby} como dependências externas para sincronizar estado, jogadores, respostas e progresso da partida.
+   \item Um sistema de geração dinâmica de questionários com recurso à API Gemini, usando o modelo Gemini 2.5 Flash, incluindo construção do pedido, validação da resposta e conversão do conteúdo gerado para dados utilizáveis pelo jogo.
+   \item A implementação do Vigia como NPC autónomo, com patrulha, perceção visual, perceção sonora e penalização de jogadores durante a fase de quiz.
+   \item A integração da voz por proximidade como mecânica de jogo, em que a comunicação entre jogadores pode ajudar na resposta ao quiz, mas também aumenta o risco de deteção pelo Vigia.
+   \item A implementação de estações físicas de resposta e de uma mecânica de sabotagem, permitindo que a posição dos jogadores e a interação com os botões influenciem a resposta registada.
+\end{itemize}
+
+
+%%________________________________________________________________________
+\section{Processo de desenvolvimento e validação}
+\label{sec:processoDesenvolvimento}
+%%________________________________________________________________________
+
+O desenvolvimento do projeto foi feito incrementalmente, iniciando-se pela implementação das funcionalidades principais, o sistema de rede, a geração de perguntas, a estrutura das rondas e movimento dos jogadores. Após esta primeira fase, foram integradas as mecânicas mais específicas do jogo, incluindo o Vigia e a corrida de obstáculos. Durante este processo, foram utilizadas ferramentas de inteligência artificial generativa em tarefas de apoio bem delimitadas, nomeadamente na organização inicial de ideias, na criação e afinação de \textit{prompts} para a geração de questionários, na clarificação de soluções técnicas e no apoio à depuração (\textit{debugging}) e resolução de erros. Em concreto, estas ferramentas auxiliaram na conceção da lógica da máquina de estados do Vigia (NPC autónomo), na estruturação do processo de leitura e interpretação das perguntas em formato JSON geradas pela API Gemini e na correção de problemas de sincronização de dados em rede e de chamadas de procedimentos remotos (RPCs) com a biblioteca PurrNet. As decisões finais, a integração no código e a validação funcional foram realizadas pelo grupo.
+
+A validação do projeto envolveu a realização de testes funcionais, com o objetivo de verificar os requisitos e o modelo definidos no Capítulo~\ref{ch:modeloProposto}, juntamente com uma avaliação da experiência de jogo através de um questionário feito a utilizadores. Os resultados desta fase, apresentados no Capítulo~\ref{ch:validacaoTestes}, permitiram analisar a experiência dos participantes e identificar melhorias a implementar numa versão posterior do jogo.
+
+
+%%________________________________________________________________________
+\section{Estrutura do relatório}
+\label{sec:estrutura}
+%%________________________________________________________________________
+
+O Capítulo~\ref{ch:trabalhoRelacionado} apresenta o trabalho relacionado e as principais referências que serviram de inspiração para a definição do conceito do jogo. No Capítulo~\ref{ch:modeloProposto} é apresentado o modelo proposto, incluindo os requisitos, fundamentos e a abordagem seguida no desenvolvimento. O Capítulo~\ref{ch:implementacaoDoModelo} descreve a implementação do modelo e as principais decisões tecnológicas tomadas ao longo do projeto. O Capítulo~\ref{ch:validacaoTestes} apresenta o processo de validação, incluindo os testes realizados e os resultados obtidos. Por fim, o Capítulo~\ref{ch:conclusoesTrabalhoFuturo} apresenta as conclusões do trabalho e as possíveis direções para trabalho futuro. Os apêndices contêm informação complementar relacionada com a gestão de versões e com a utilização de ferramentas de inteligência artificial como apoio ao desenvolvimento.
+
+
+%%________________________________________________________________________
+\section{Nota sobre o apoio de Inteligência Artificial}
+\label{sec:notaIA}
+%%________________________________________________________________________
+
+Durante o desenvolvimento do projeto foram utilizadas ferramentas de inteligência artificial generativa como apoio ao processo de desenvolvimento do jogo. Estas ferramentas contribuíram para a exploração de possíveis soluções, criação de \textit{prompts}, análise de problemas, apoio ao \textit{debugging} e compreensão de tecnologias utilizadas no projeto. A sua utilização teve como objetivo complementar o trabalho realizado pelo grupo, funcionando como uma ferramenta de suporte ao desenvolvimento.
+
+
+%%________________________________________________________________________
+\section{Convenções de escrita}
+\label{sec:convencoes}
+%%________________________________________________________________________
+
+Neste relatório, os nomes de jogos, bibliotecas e ferramentas são apresentados de forma consistente. Alguns termos técnicos em inglês, como \textit{host}, \textit{prompt} ou \textit{peer-to-peer}, são mantidos quando não existe uma tradução direta adequada ou quando a utilização da versão inglesa é mais comum na área.
+
+
+
+
+%%________________________________________________________________________
+\chapter{Trabalho Relacionado}
+\label{ch:trabalhoRelacionado}
+%%________________________________________________________________________
+
+O conceito de \textit{Back To School} resultou da combinação de ideias de três jogos já existentes, cada um responsável por uma parte distinta da experiência. Esta secção descreve essas influências, delimita o contexto em que o projeto se insere e clarifica o que o distingue.
+
+
+%%________________________________________________________________________
+\section{Kahoot}
+\label{sec:kahoot}
+%%________________________________________________________________________
+
+\textit{Kahoot!}~\cite{Kahoot2013} é uma plataforma de aprendizagem baseada em quizes lançada em 2013 e amplamente utilizada em ambientes de ensino. A forma de funcionamento é simples, o apresentador projeta no quadro uma questão com 4 hipóteses possíveis, vários alunos respondem ao mesmo tempo uma das quatro opções identificadas por cores distintas. São atribuídos pontos pela resposta correta e pela rapidez da própria resposta. Entre cada questão é apresentado um \textit{leaderboard} temporário que mostra a pontuação atual dos participantes, tornando a experiência mais tensa e competitiva.
+
+A influência desta plataforma é determinante na estrutura do jogo. Na primeira fase da ronda, os jogadores respondem ao questionário, através dos botões disponíveis na sua mesa, cada um correspondente a uma das quatro opções de resposta. O tempo limitado para responder a cada questão e a atualização do \textit{leaderboard} entre perguntas são inspiradas no modelo do \textit{Kahoot}.
+
+Assim, esta plataforma demonstrou que um quiz pode ser igualmente competitivo e divertido no contexto certo, com a pressão do tempo para responder às questões e \textit{leaderboard} temporários entre cada pergunta. \textit{Kahoot} foi uma das grandes inspirações para a Fase de Quiz em \textit{Back To School}.
+
+
+%%________________________________________________________________________
+\section{Dale \& Dawson Stationery Supplies}
+\label{sec:daleDawson}
+%%________________________________________________________________________
+
+\textit{Dale \& Dawson Stationery Supplies}~\cite{StripedLabs2024} é um jogo indie multijogador de dedução social lançado em 2024. O jogo foi desenvolvido em Unity e ganhou alguma visibilidade nas plataformas de \textit{streaming} como YouTube e Twitch.
+
+A premissa do jogo é simples, os jogadores trabalham num escritório, no entanto, estes são divididos em três papéis distintos:
+
+\begin{itemize}
+   \item \textbf{Especialistas:} cujo objetivo é completar tarefas produtivas no trabalho;
+   \item \textbf{Preguiçosos:} que fingem trabalhar mas na realidade estão a tentar sabotar o trabalho sem serem apanhados;
+   \item \textbf{Gerente:} observa o comportamento de todos e decide quem despedir.
+\end{itemize}
+
+A influência de \textit{Dale \& Dawson} é visível pela aposta do caos em vez da ordem. Adaptámos o conceito para o ambiente de uma escola, incentivando a confusão e a atrapalhação entre jogadores como forma de proporcionar uma experiência divertida, mas com a exceção de que, se o jogador fizer demasiado barulho, é preso pelo Vigia.
+
+Assim, pretendemos replicar um ambiente familiar, que tal como o escritório, promove uma experiência competitiva e social. Tal como \textit{Dale \& Dawson}, o conceito é acessível, não sendo necessário qualquer conhecimento prévio para perceber, rapidamente, o que é preciso fazer para jogar.
+
+
+%%________________________________________________________________________
+\section{Fall Guys: Ultimate Knockout}
+\label{sec:fallGuys}
+%%________________________________________________________________________
+
+Este jogo~\cite{Mediatonic2020} foi lançado em 2020 e rapidamente se tornou num dos títulos multijogador mais conhecidos. A sua proposta baseia-se numa competição entre 60 jogadores através de vários minijogos e percursos de obstáculos, onde apenas um jogador consegue vencer no final. O jogo combina elementos do género \textit{battle royale} com características de \textit{party game}.
+
+O que torna o \textit{Fall Guys} divertido são os vários percursos existentes e as mecânicas de agarrar, criando momentos caóticos e de interação com outros jogadores, aumentando a competitividade entre os mesmos.
+
+A influência do \textit{Fall Guys} em \textit{Back To School} é bastante óbvia. Este projeto combina dois tipos de atividades, os questionários e a corrida de obstáculos. Na fase dos questionários, os jogadores respondem a perguntas enquanto tentam perturbar os adversários e evitar o Vigia. Quando esta fase termina, inicia-se o percurso de obstáculos. Os jogadores podem empurrar outros jogadores para os impedir de progredir. A combinação com o tempo limite e interações entre jogadores torna esta fase numa experiência interativa e competitiva.
+
+
+%%________________________________________________________________________
+\section{Conceito Final}
+\label{sec:conceitoFinal}
+%%________________________________________________________________________
+
+\textit{Back To School} é um \textit{party game} competitivo, pensado para ser jogado com amigos, através da internet. Não é preciso ter muito conhecimento sobre este tipo de jogos, pelo que as regras são fáceis de entender, o ambiente é familiar, e os melhores momentos surgem da interação entre jogadores. A escola é um contexto que toda a gente conhece, o que torna o jogo imediatamente reconhecível e acessível. O jogo divide-se em rondas, cada uma com duas fases.
+
+Na Fase de quiz, os jogadores estão sentados em secretárias numa sala de aula e respondem a perguntas de escolha múltipla usando quatro botões de cores diferentes. A pergunta tem tempo limite e responder corretamente dá pontos ao jogador. Durante esta fase, o Vigia percorre a sala e se apanhar um jogador a falar demasiado alto, prende esse jogador, sendo que o mesmo fica impedido de responder até à Fase da Corrida de Obstáculos.
+
+Quando as perguntas acabam, começa a Corrida de Obstáculos. Os jogadores são transportados para fora da sala e têm um tempo limite para chegar à sala seguinte, passando por um caminho com obstáculos e podendo empurrar os adversários de modo a atrapalhá-los. Quem não chegar a tempo perde pontos e no final de todas as rondas, os jogadores com mais pontos ganham o jogo.
+
+
+
+
+%%________________________________________________________________________
+\chapter{Modelo Proposto}
+\label{ch:modeloProposto}
+%%________________________________________________________________________
+
+Este capítulo apresenta o modelo proposto para o desenvolvimento do \textit{Back To School}. Primeiro são apresentados os requisitos principais do jogo, depois são explicadas as ideias base da solução e, por fim, a forma como as várias partes do jogo funcionam em conjunto.
+
+A ideia principal do modelo é juntar uma fase de quiz com uma fase de corrida. Assim, os jogadores não estão apenas a responder a perguntas, mas também têm de comunicar entre si, evitar o Vigia, lidar com os outros jogadores e chegar à sala seguinte antes do tempo acabar.
+
+
+%%________________________________________________________________________
+\section{Requisitos}
+\label{sec:requisitos}
+%%________________________________________________________________________
+
+Os requisitos principais foram definidos a partir do GDD e depois organizados no documento da tradução do GDD para requisitos. A parte mais importante do projeto é o ciclo de jogo por rondas, onde existem duas fases, uma fase de perguntas e uma fase de corrida de obstáculos. Esta divisão contribui para um ritmo de jogo mais dinâmico, tornando a experiência mais variada do que um quiz tradicional.
+
+Para facilitar a compreensão da relação entre os requisitos e os principais casos de utilização, nomeadamente Mudar opções de jogo, Mudar opções do lobby, Completar rondas de jogo, Responder ao quiz e Deslocar até à sala seguinte, a Tabela~\ref{tab:requisitos} resume os grupos de requisitos definidos durante a análise, evitando repetições.
+
+\begin{table}[H]
+   \centering
+   \caption{Síntese dos grupos de requisitos e casos de utilização.}
+   \label{tab:requisitos}
+   {
+   \scriptsize
+   \setlength{\tabcolsep}{4pt}
+   \renewcommand{\arraystretch}{1.05}
+   \begin{tabular}{|p{2.5cm}|p{2.0cm}|p{4.4cm}|p{5.1cm}|}
+      \hline
+      \textbf{Grupo} & \textbf{Requisitos} & \textbf{Casos de utilização associados} & \textbf{Síntese}
+      \\ \hline
+      Regras de jogo & R1.1-R1.5 & Completar rondas; Responder ao quiz; Deslocar até à sala & Alternância entre quiz e corredores, perguntas, penalizações, vencedor e castigo pelo Vigia.
+      \\ \hline
+      Controlo do jogador & R2.1-R2.6 & Responder ao quiz; Deslocar até à sala & Movimento em primeira pessoa, sprint, salto, agachamento, cadeiras, botões, voz e câmara.
+      \\ \hline
+      Persistência & R3.1-R3.3 & Mudar opções do lobby; Responder ao quiz & Temas, perguntas geradas e registo de respostas/pontuações.
+      \\ \hline
+      Interface & R4.1-R4.6 & Mudar opções; Completar rondas & Mira, barra de tempo, leaderboard, indicador de voz e menus.
+      \\ \hline
+      Autonomia e NPC & R5.1-R5.5 & Responder ao quiz; Deslocar até à sala & Vigia com visão/reação a ruído e Colegas como obstáculos.
+      \\ \hline
+      Som & R6.1-R6.4 & Mudar opções; Completar rondas & Música, efeitos sonoros, avisos de tempo e volume.
+      \\ \hline
+   \end{tabular}
+   }
+\end{table}
+
+Na fase de quiz, são apresentadas cinco perguntas de escolha múltipla por ronda. Cada pergunta tem quatro opções de resposta, associadas aos botões existentes nas mesas de cada jogador. O jogo guarda a resposta escolhida por cada jogador, controla o tempo disponível e atualiza a pontuação no fim de cada pergunta.
+
+Outro requisito importante é a interação entre jogadores. Os jogadores podem falar entre si através de voz de proximidade, mas também podem tentar atrapalhar os seus adversários. Por exemplo, um jogador pode aproximar-se da mesa de outro e tentar carregar num botão de resposta errado. Desta forma, o desempenho no quiz depende também da interação com o espaço, da cooperação entre jogadores e da gestão da pressão durante cada ronda.
+
+O jogo também inclui NPCs com funções diferentes. O Vigia aparece na sala de aula e reage ao comportamento dos jogadores, principalmente quando estes falam durante a fase das perguntas. Se um jogador for detetado, pode ser enviado para a jaula e deixa de conseguir responder no restante dessa ronda. Os Colegas aparecem nos corredores e funcionam como obstáculos móveis durante a corrida.
+
+Depois da fase de perguntas, os jogadores passam para a corrida de obstáculos. Nesta fase, o objetivo é chegar à sala seguinte antes do tempo acabar. Quem não chegar a tempo perde pontos. Para além destes requisitos, também foram considerados aspetos como correr o jogo em Windows PC, usar rato e teclado, ter menus simples, uma interface legível e uma resposta rápida o suficiente para uma partida multijogador.
+
+
+%%________________________________________________________________________
+\section{Fundamentos}
+\label{sec:fundamentos}
+%%________________________________________________________________________
+
+O desenvolvimento do jogo baseou-se em diferentes tecnologias e conceitos teóricos que suportam o ambiente 3D, o multijogador e as restantes mecânicas. A plataforma escolhida para o projeto foi o Unity~\cite{UnityTechnologies2026}, com C\# como linguagem principal, por permitir a criação de uma experiência 3D em tempo real com física, interface gráfica, controlo do jogador, cenas e integração de componentes externos.
+
+Na componente multijogador, o projeto assenta numa arquitetura \textit{peer-to-peer} com \textit{host} autoritativo. Neste modelo, uma das instâncias assume a responsabilidade pelo estado principal da partida, incluindo a pergunta ativa, o tempo restante, as respostas, a pontuação e as penalizações, enquanto os restantes jogadores recebem esse estado de forma sincronizada. Para suportar esta base foram usadas as bibliotecas \textit{PurrNet}~\cite{PurrNet2026}, para comportamentos em rede, variáveis sincronizadas e chamadas remotas, e \textit{PurrLobby}, para a criação e gestão do lobby.
+
+A geração dinâmica de questionários usa inteligência artificial generativa através da API Gemini~\cite{GoogleDeepMind2025}. O modelo configurado no projeto é o Gemini 2.5 Flash. Neste contexto, a IA é usada para produzir conteúdo textual estruturado, com enunciado, quatro opções de resposta e indicação da opção correta. Como a resposta de um modelo generativo pode variar, o conteúdo gerado tem de ser validado e convertido para uma estrutura de dados utilizável pelo jogo antes de ser apresentado aos jogadores.
+
+A comunicação por voz é outro fundamento importante, uma vez que faz parte da experiência social do jogo e também influencia as regras da ronda. A voz por proximidade é suportada por \textit{MetaVoiceChat}~\cite{Metater2024}, sendo depois associada a um estado de fala usado pelo sistema do Vigia. Desta forma, falar pode ajudar os jogadores a discutir respostas, mas também aumenta o risco de deteção durante a fase de quiz.
+
+O controlo do jogador e a apresentação da experiência recorrem a componentes próprios do ecossistema Unity e a dependências externas. O movimento em primeira pessoa parte de um controlador de personagem adaptado ao projeto, apoiado pelo componente \textit{CharacterController}, pelo \textit{Input System} e pela \textit{Cinemachine}~\cite{UnityCinemachine2024}. A interface textual usa \textit{TextMeshPro}, permitindo apresentar perguntas, respostas, pontuações e informação de estado de forma legível.
+
+O comportamento dos NPCs assenta em navegação e perceção. A movimentação autónoma usa \textit{NavMesh} e pontos de patrulha, permitindo que os NPCs se desloquem no cenário sem depender de trajetórias fixas escritas manualmente. No caso do Vigia, a perceção combina visão e som: o som serve para atrair o NPC até ao jogador que está a falar, enquanto a visão é usada para confirmar a deteção e aplicar a penalização.
+
+Por fim, a organização da partida baseia-se numa máquina de estados. Esta abordagem divide o jogo em fases com responsabilidades distintas, como esperar pelos jogadores, preparar a pergunta, apresentar o quiz, executar a corrida de obstáculos e preparar a ronda seguinte. Esta divisão reduz a mistura de regras entre fases diferentes e facilita a implementação e validação das mecânicas.
+
+
+%%________________________________________________________________________
+\section{Abordagem}
+\label{sec:abordagem}
+%%________________________________________________________________________
+
+A abordagem proposta organiza o jogo em rondas, sendo que cada ronda é composta por duas fases principais. Na primeira fase, os jogadores estão numa sala de aula e respondem a perguntas, podendo também comunicar por voz, movimentar-se e interagir com as mesas. Na segunda fase, os jogadores têm de percorrer os corredores até à sala seguinte, evitando obstáculos e outros elementos que dificultam o percurso.
+
+Esta estrutura permite combinar diferentes tipos de interação dentro do mesmo ciclo de jogo, juntando a resposta a perguntas, a comunicação entre jogadores e o movimento em tempo real. Nas secções seguintes são apresentados os principais elementos desta abordagem, incluindo a máquina de estados do ciclo de jogo, o sistema de geração do questionário, o comportamento do Vigia, a utilização da voz, a corrida de obstáculos e um exemplo de uma ronda completa.
+
+
+%%________________________________________________________________________
+\subsection{Ciclo de jogo como máquina de estados}
+\label{subsec:maquinaEstados}
+%%________________________________________________________________________
+
+O ciclo de jogo foi modelado como uma máquina de estados porque a partida tem fases com regras diferentes. Esta decisão evita que todas as regras estejam misturadas no mesmo fluxo. Em vez disso, cada estado tem uma responsabilidade clara: esperar pelos jogadores, preparar a pergunta, apresentar a pergunta, realizar a corrida de obstáculos ou preparar a ronda seguinte.
+
+Assim, a partida começa num estado de espera. Quando todos os jogadores estão prontos, passa para uma fase de preparação, onde a pergunta seguinte é apresentada. Depois entra no estado de pergunta, no qual os jogadores escolhem respostas e onde o Vigia pode atuar. Quando acabam as perguntas da ronda, o jogo passa para a corrida de obstáculos. No fim da corrida, o estado de transição prepara a próxima ronda ou termina a partida.
+
+A Figura~\ref{fig:maquinaEstados} sintetiza a sequência de estados proposta para o ciclo principal do jogo e as transições entre a fase de quiz, a corrida de obstáculos e o fim da partida.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=0.9\linewidth,height=0.28\textheight,keepaspectratio]{./fig_maquina_estados}
+   \caption{Máquina de estados proposta para o ciclo principal do jogo.}
+   \label{fig:maquinaEstados}
+\end{figure}
+
+Esta máquina de estados também facilita a validação. Por exemplo, é possível verificar se o Vigia só penaliza jogadores durante a fase de responder às perguntas, ou se a penalização da corrida só acontece depois do estado de corrida terminar.
+
+
+%%________________________________________________________________________
+\subsection{Geração do questionário}
+\label{subsec:geracaoQuestionario}
+%%________________________________________________________________________
+
+A geração do questionário começa com a escolha dos tópicos do quiz. A partir desses temas, o sistema envia um pedido à API Gemini \cite{GoogleDeepMind2025} para gerar perguntas de escolha múltipla relacionadas com o conteúdo escolhido. O modelo configurado para este pedido é o Gemini 2.5 Flash. O resultado gerado tem de seguir uma estrutura que o jogo consiga ler e utilizar durante a ronda.
+
+Cada pergunta deve ter um enunciado claro, quatro opções de resposta e uma opção correta. Esta estrutura é necessária porque cada opção fica associada a um botão da secretária, permitindo ao jogo verificar automaticamente se a resposta escolhida pelo jogador está certa ou errada.
+
+Como as respostas geradas por IA podem nem sempre vir no formato esperado, é necessário validar o conteúdo antes de o usar na partida. Depois disso, o jogo lê essa informação, apresenta as perguntas e opções aos jogadores, e avalia as respostas com base na opção correta definida.
+
+
+%%________________________________________________________________________
+\subsection{O Vigia: perceção e penalização}
+\label{subsec:vigia}
+%%________________________________________________________________________
+
+O Vigia foi pensado para criar pressão durante a fase de quiz. A sua presença faz com que os jogadores não possam falar livremente durante a ronda toda, obrigando-os a ter mais cuidado. Durante esta fase, o Vigia patrulha a sala, observa os jogadores e reage quando deteta que alguém está a falar.
+
+O comportamento do Vigia baseia-se em visão e audição. A visão permite iniciar uma investigação quando existe um jogador dentro da área observada pelo Vigia, enquanto a audição permite ao NPC reagir quando existe comunicação por voz. Quando o Vigia deteta uma posição relevante, desloca-se até essa zona para investigar. A penalização só avança se, durante essa investigação, existir um jogador próximo que continue a falar.
+
+A penalização consiste em enviar o jogador para uma jaula que está dentro da sala de aula, impedindo-o de responder ao resto das perguntas nessa ronda. Apesar de ter impacto no desempenho do jogador, esta penalização não o elimina da partida, permitindo que continue a participar nas fases seguintes.
+
+
+%%________________________________________________________________________
+\subsection{A voz como mecânica central}
+\label{subsec:voz}
+%%________________________________________________________________________
+
+A voz de proximidade é uma das mecânicas principais do jogo e é suportada pela tecnologia MetaVoiceChat \cite{Metater2024}. Durante a fase de quiz, os jogadores podem comunicar para discutir respostas, pedir ajuda ou tentar influenciar os adversários, tornando a experiência mais social e adicionando uma componente de interação mais natural entre os jogadores.
+
+Durante o quiz, um jogador pode pedir ajuda, discutir uma resposta ou tentar influenciar outros jogadores. No entanto, a voz tem um lado negativo pois ao falar, o jogador chama a atenção do Vigia. Assim, comunicar pode ser útil para encontrar a resposta certa, mas também aumenta o risco de os jogadores serem apanhados.
+
+
+%%________________________________________________________________________
+\subsection{Corrida de obstáculos}
+\label{subsec:corrida}
+%%________________________________________________________________________
+
+A corrida de obstáculos foi adicionada com o objetivo de introduzir uma nova dinâmica após a fase de quiz. Esta fase adiciona novos desafios ao jogo, relacionados com o movimento dos jogadores, a forma como se deslocam pelo caminho até à próxima sala e a chegada dentro do tempo limite.
+
+Durante a corrida, os jogadores percorrem os corredores da escola e enfrentam diferentes tipos de obstáculos, tanto fixos como em movimento. Os Colegas são NPCs que circulam pelo espaço e que dificultam o percurso dos jogadores. Para além disso, os próprios jogadores podem interagir entre si através de empurrões ou bloqueios, tornando a corrida mais dinâmica e competitiva.
+
+A penalização para os jogadores que não conseguem chegar dentro do tempo limite dá maior importância a esta fase porque mesmo que um jogador tenha bons resultados no quiz, pode perder a sua vantagem face aos seus adversários caso tenha dificuldades durante a corrida. Desta forma, o modelo combina diferentes partes da experiência de jogo, incluindo o conhecimento, a comunicação, o movimento e a interação entre jogadores.
+
+
+%%________________________________________________________________________
+\subsection{Exemplo ilustrativo de uma ronda}
+\label{subsec:exemploRonda}
+%%________________________________________________________________________
+
+Este exemplo ajuda melhor a compreender o funcionamento do modelo proposto. No início de cada ronda, os jogadores encontram-se sentados ou próximos das suas mesas. O sistema apresenta uma pergunta no quadro da sala e cada jogador tem acesso às opções de resposta através dos botões presentes na sua mesa. Um jogador pode saber a resposta correta, mas outro jogador pode tentar aproximar-se da sua mesa e carregar numa opção errada, alterando a resposta associada.
+
+Durante esta fase, os jogadores podem comunicar por voz para discutir a pergunta e tentar chegar a uma resposta em conjunto. Esta comunicação pode ser útil, mas se for feita durante demasiado tempo, o Vigia pode ouvir o som e movimentar-se ao local para investigar. Se o jogador for apanhado, este é transportado para a jaula dentro da sala de aula e é impossibilitado de continuar a responder a mais perguntas nessa fase de quiz.
+
+Quando o tempo da pergunta termina, o sistema verifica as respostas dadas e atualiza a pontuação dos jogadores no Leaderboard. Após terminarem as cinco perguntas da fase de quiz, inicia-se a fase de corrida de obstáculos. Os jogadores saem da sala, percorrem os corredores, desviam-se dos obstáculos e tentam chegar à sala seguinte dentro do tempo definido. Os jogadores que conseguem chegar a tempo continuam para a ronda seguinte, enquanto os restantes são penalizados. Este ciclo repete-se ao longo da partida até ao final, onde o jogador com maior pontuação é declarado vencedor.

@@ -1,0 +1,41 @@
+Purrnet: https://www.youtube.com/watch?v=NPwPKmw2Cd8&list=PLF6lFlLzb6CSO2MyOcUStQJ7YRuQmi58W&index=2
+Purrlobby
+
+Kinematic Character Controller (TEMP):
+https://assetstore.unity.com/packages/tools/physics/kinematic-character-controller-99131
+https://www.youtube.com/watch?v=9ibpY64wBYM
+
+Cinemachine Camera
+
+Steamworks.NET
+
+MetaVoiceChat: https://github.com/Metater/MetaVoiceChat
+
+ReadCSV https://www.educative.io/answers/how-to-read-a-csv-file-in-c-sharp
+
+pick up + hold objects: https://www.youtube.com/watch?v=pPcYr3tL3Sc
+
+crosshair: https://kenney-assets.itch.io/crosshair-pack
+
+shader system (skybox): https://assetstore.unity.com/packages/vfx/summonstyle-hardline-illustrative-comic-style-control-system-359042
+https://summonboxstudio.com/docs/smnstylehardline/Usage/API/APIOutline
+
+persistent data storage
+
+player prefs
+
+camera stacking
+
+rpc: https://www.youtube.com/watch?v=h2YRwb0RhcA
+
+change color script: https://www.youtube.com/watch?v=0Szglwf7bAU
+
+outlines: https://github.com/tantaneity/unity-urp-outline-postprocess
+
+unity postprocessing urp examples: https://github.com/togucchi/urp-postprocessing-examples/tree/main
+
+classroom objects: https://styloo.itch.io/classroom-asset-pack
+
+new skybox: https://assetstore.unity.com/packages/vfx/shaders/free-skybox-extended-shader-107400?srsltid=AfmBOopskbcJzwj6yYDctAoz0L5Uur7lGPQUNFzRs22VjgmL6VIpFQy1
+
+low poly crown: https://sketchfab.com/3d-models/simple-low-poly-crown-e2462871cc894914adbdb8722838c3b0

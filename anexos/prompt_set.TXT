@@ -1,0 +1,265 @@
+BackToSchool - Prompt set relevante
+Data de levantamento: 2026-07-09
+
+Fontes consultadas:
+- Historico local do Codex relacionado com o projeto BackToSchool.
+- Historico local do Antigravity relacionado com o projeto BackToSchool.
+- Codigo do projeto, em especial o gerador de questionarios com a API Gemini.
+
+Nota metodologica:
+Os prompts abaixo foram selecionados por serem representativos do uso de ferramentas de inteligencia artificial generativa durante o desenvolvimento do jogo BackToSchool. A selecao privilegia pedidos associados a organizacao inicial de ideias, clarificacao tecnica, debugging, rede/multiplayer, NPC Vigia, geracao/interpretação de perguntas em JSON e apoio na documentacao. Algumas mensagens foram mantidas com a grafia original, para preservar fidelidade ao historico de utilizacao. Mensagens repetidas, puramente operacionais ou sem relevancia direta para o desenvolvimento foram excluidas.
+
+
+1. Organizacao do projeto, relatorio e planeamento
+
+[COD-01] Apoio ao relatorio e organizacao inicial de conteudos
+Ferramenta: Codex
+Data aproximada: 2026-06-01
+Contexto: Pedido de apoio para adiantar o relatorio do projeto com base nos requisitos, no guia de estilo e no estado real do jogo em Unity.
+Prompt:
+"temos vindo a trabalhar no projeto back to schoool e esta na altura de dar um adianto no relatorio, tens o acesso ao mcp como sabes e documentos importantes em /Users/belarmino/Documents/ISEL/3-ano-2-segmestre/PRJ (...) segue /Users/belarmino/Documents/ISEL/3-ano-2-segmestre/PRJ/Relatório Final - Projeto e Seminário - LEIC - 2024-25.pdf /Users/belarmino/Documents/ISEL/3-ano-2-segmestre/PRJ/Relatório Intermédio - Projeto e Seminário - LEIC - 2024-25.pdf para perceberes como fazer o relatorio e ja tinhamos um pre relatorio em /Users/belarmino/Documents/ISEL/3-ano-2-segmestre/PRJ/projeto relatorio.pdf (...) o relatorio tem de estar de acordo com o /Users/belarmino/Documents/ISEL/3-ano-2-segmestre/PRJ/Guia de Estilo - Projeto e Seminário - LEIC - 2024-25.pdf"
+Relevancia:
+Este prompt demonstra a utilizacao de IA para organizar informacao do projeto, cruzar documentos de requisitos/estilo e apoiar a estruturacao do relatorio.
+
+[ANT-01] Organizacao dos scripts realmente utilizados
+Ferramenta: Antigravity
+Data aproximada: 2026-06-28
+Contexto: Pedido para analisar o projeto e separar, na pasta de implementacao, apenas os scripts utilizados no fluxo real do jogo.
+Prompt:
+"tens de analisar profundamente o BackToschool, e colocar em documentos/isel/prj/pros-final-n61/03_implementacao, somente scripts que estejam a ser de facto utilizados no projeto. tens o unity mcp para tal e dou te acesso total ao meu computador"
+Relevancia:
+Este prompt mostra o uso de IA para levantamento tecnico do projeto e organizacao dos artefactos de implementacao.
+
+[ANT-02] Analise do fluxo do jogo e remocao de elementos mortos
+Ferramenta: Antigravity
+Data aproximada: 2026-06-28
+Contexto: Pedido para analisar o fluxo desde a criacao da lobby ate ao jogo em Quiz AI, identificando scripts, prefabs ou pastas sem utilizacao.
+Prompt:
+"okay, de uma olhada no fluxo de funcionamento do projeto desde a craicao da lobby ate o fluxo de jogo em quiz ai, para verrificares se existe alguma pasta ou script ou entao prefab morto"
+Relevancia:
+Este prompt esta associado ao apoio na compreensao da arquitetura do jogo e na validacao do fluxo funcional.
+
+[ANT-03] Limpeza de comentarios e mensagens de debug
+Ferramenta: Antigravity
+Data aproximada: 2026-06-28
+Contexto: Pedido para limpar scripts presentes na pasta de implementacao.
+Prompt:
+"mais um pedido volte a todos os scripts presentes na pasta implementacao e limpe tudo que for comentario ou DEBUG"
+Relevancia:
+Este prompt demonstra utilizacao de IA em tarefas de limpeza e preparacao final do codigo.
+
+
+2. Multiplayer, PurrNet, Steam e sincronizacao
+
+[COD-02] Debugging do empurrao em multiplayer
+Ferramenta: Codex
+Data aproximada: 2026-05-22
+Contexto: Problemas em rede onde apenas o host conseguia empurrar o outro jogador e os NPCs produziam forcas diferentes no host e no cliente.
+Prompt:
+"Atualmente tenho 2 problemas no meu jogo backtoschool o projeto esta em Documents/BackToSchool. Somente o host consegue empurrar o outro player.(THE LOG PUSH-DBG-0 DOESN'T FIRE UP IN THE CLIENT) E os colegasEmpurrar empurram o host normalmente e o outro player recebe um empurrao muito forte"
+Relevancia:
+Este prompt corresponde diretamente ao apoio na depuracao de sincronizacao em rede e chamadas remotas/RPCs.
+
+[COD-03] Reestruturacao da logica de empurrao
+Ferramenta: Codex
+Data aproximada: 2026-05-22
+Contexto: Persistencia do problema de empurrao, levando ao pedido de refazer a logica.
+Prompt:
+"o problema persiste refaca toda a logica do empurrar do 0 referente a cameras mecanicas etc, codigo etc e depois explique como fez para colocar no relatorio tecnico. use o mcp para tal"
+Relevancia:
+Este prompt mostra o uso de IA para clarificacao de solucao tecnica e apoio a implementacao/debugging de uma mecanica de rede.
+
+[COD-04] Discussao tecnica sobre transporte de rede
+Ferramenta: Codex
+Data aproximada: 2026-05-22
+Contexto: Duvida tecnica sobre o uso de UDP Transport ou Steam no funcionamento multiplayer.
+Prompt:
+"continua.... , uma duvida, nao é suposto mudar para udp transport? ou com steam ira funcionar"
+Relevancia:
+Este prompt evidencia o uso de IA para esclarecer conceitos tecnicos relacionados com a pilha de rede.
+
+[ANT-04] Problemas de multiplayer, empurrao e voice chat via Steam
+Ferramenta: Antigravity
+Data aproximada: 2026-05-21
+Contexto: Testes multiplayer com outro elemento do grupo revelaram problemas no empurrao e no voice chat.
+Prompt:
+"Quando estive a testar o Back to school, ao jogar com o meu colega de grupo mutiplayer via steam, constatamos alguns problemas: 1 - somente 1 de nos conseguia empurrar o outro 2 - O voice chat nao estava a funcionar, nao dava apara ouvir acho eu mas o vigia detectava se nao me engano, so que ambos nao conseguiamos ouvir um ao outro investigue estes 2 pontos tens o mcp para tal"
+Relevancia:
+Este prompt demonstra uso de IA para investigar problemas de integracao entre multiplayer, audio e comportamento do Vigia.
+
+[ANT-05] Analise do voice chat e mixer de audio
+Ferramenta: Antigravity
+Data aproximada: 2026-05-21
+Contexto: Investigacao sobre o volume do voice chat e a ligacao ao mixer.
+Prompt:
+"a questao do audio nao tem tambem a haver com o mixer ? pois tinhamos adicionado o voice chat volume que podia ser aumentado ou abaixado na sena principal em quiz ai, quando falo o mixer nao se mexe mas o vigia me persegue, isso quer dizer que algo deteta o volume da voz mas nao tem output ?"
+Relevancia:
+Este prompt mostra apoio na clarificacao da diferenca entre deteccao de voz, output de audio e configuracao de mixer.
+
+
+3. NPC Vigia, estados, sons e comportamento autonomo
+
+[COD-05] Integracao de sons com o comportamento do Vigia
+Ferramenta: Codex
+Data aproximada: 2026-06-03
+Contexto: Pedido de analise do sistema de som e da ligacao ao comportamento do Vigia quando deteta jogadores a falar.
+Prompt:
+"é o seguinte estou na fase do projeto, de atribuicao de sons, inclusive ja o tinha feito antes. Tens de analisar muito bem a logica de jogo e implementar todos os sons que enviei ao projeto localizado em Documents/BackToSchool. (...) Som de grito/raiva/chamada de atancao, no momento em que o vigia comeca a deslocar-se para o colega que estiver a falar (...)"
+Relevancia:
+Este prompt esta relacionado com a concepcao e afinacao do comportamento do Vigia, nomeadamente deteccao de voz, perseguição e feedback sonoro.
+
+[COD-06] Clarificacao sobre quem decide os sons do Vigia e do jogo
+Ferramenta: Codex
+Data aproximada: 2026-06-03
+Contexto: Duvida sobre responsabilidade logica entre scripts, estado de rede e execucao de audio.
+Prompt:
+"FirstPersonNetworkState ou Vigia decide 'agora deve haver passo' E a questao de sons de intervalo e de acerto etc quem decide e queme xecuta?"
+Relevancia:
+Este prompt mostra o uso de IA para clarificar responsabilidades entre componentes e apoiar a organizacao da logica de estados/eventos.
+
+[ANT-06] Vigia ausente na build e perguntas ausentes no quadro
+Ferramenta: Antigravity
+Data aproximada: 2026-06-08
+Contexto: Durante testes de build, o Vigia nao aparecia e inicialmente as perguntas tambem nao surgiam no quadro.
+Prompts:
+"testei, o vigia nao apareceu e as perguntas no quadro tambem nao tinha la perguntas."
+"rodei a build, as perguntas no quadro ja estao a aparecer mas no entando o vigia nao esta la"
+"aidiconei o modulo para criar a build para windows, e testei a nova build e o vigia ainda nao esta a aparecer"
+Relevancia:
+Estes prompts documentam apoio de IA em debugging de build e validacao funcional do NPC autonomo.
+
+
+4. Geracao de perguntas, JSON e API Gemini
+
+[GEM-01] Instrucao de sistema usada com a API Gemini
+Origem: Codigo do projeto
+Ficheiro: 03_Implementacao/Quiz AI/Core Systems/GameManagers/GenerateQuizJSON/GenerateQuizJSON.cs
+Contexto: Instrucao de sistema usada para forcar a resposta da API em JSON puro.
+Prompt:
+"You are a helpful assistant that outputs raw JSON only. NEVER use markdown like ```json."
+Relevancia:
+Esta instrucao foi usada para reduzir respostas invalidas e facilitar a leitura/interpretação do JSON gerado.
+
+[GEM-02] Prompt principal para geracao de questionarios
+Origem: Codigo do projeto
+Ficheiro: 03_Implementacao/Quiz AI/Core Systems/GameManagers/GenerateQuizJSON/GenerateQuizJSON.cs
+Contexto: Template de prompt usado para gerar rondas e perguntas do jogo com a API Gemini.
+Prompt:
+"Generate a trivia game with exactly {roundNumber} rounds.
+Each round must have exactly {questionsPerRound} questions.
+All questions must be at {difficulty} difficulty level.
+Themes must ONLY come from the following list:
+{csvData}
+
+Rules:
+- total_rounds must equal {roundNumber}
+- round_id must start at 1 and increment sequentially
+- question_id must start at 1 inside each round
+- correct_option_index must be 0-based (0,1,2,3)
+- IMPORTANT: You MUST randomize the correct_option_index for every question. The correct answer should NOT always be at index 0.
+- CRITICAL: Every question must be fully self-contained. Do not use pronouns like 'he', 'she', or 'it' assuming the player knows the theme.
+- CRITICAL: The question must explicitly state the subject (e.g., 'What year did World War 2 start?' instead of 'What year did it start?').
+- Each question must have exactly 4 options
+- Each option must contain a maximum of 1 to 3 words
+- No duplicate questions
+
+Return JSON in this EXACT structure:
+{
+  \"match_data\": {
+    \"total_rounds\": number,
+    \"rounds\": [
+      {
+        \"round_id\": number,
+        \"theme\": \"string\",
+        \"questions\": [
+          {
+            \"question_id\": number,
+            \"text\": \"string\",
+            \"options\": [\"string\", \"string\", \"string\", \"string\"],
+            \"correct_option_index\": number
+          }
+        ]
+      }
+    ]
+  }
+}
+
+Return raw JSON only. No markdown."
+Relevancia:
+Este e o prompt mais diretamente associado a geracao de questionarios no jogo. Define o numero de rondas, numero de perguntas, dificuldade, temas permitidos, estrutura JSON obrigatoria, indice da resposta correta e restricoes de qualidade das perguntas.
+
+[ANT-07] Clarificacao sobre perguntas no quadro
+Ferramenta: Antigravity
+Data aproximada: 2026-06-28
+Contexto: Pedido de explicacao sobre como as perguntas aparecem no quadro, apesar do quadro nao ter script proprio.
+Prompt:
+"explique como sao colocadas as perguntas no quadro pois o quadro nao tem script"
+Relevancia:
+Este prompt esta associado a compreensao do processo de leitura, distribuicao e apresentacao das perguntas no jogo.
+
+[COD-07] Prompt para gerar banco de perguntas de treino da discussao
+Ferramenta: Codex
+Data aproximada: 2026-07-08/2026-07-09
+Contexto: Preparacao para a discussao do projeto, com geracao de perguntas baseadas no relatorio, requisitos, GDD e projeto Unity.
+Prompt:
+"Gera um novo banco de perguntas para a app `BackToSchoolQuizTrainer`.
+
+Objetivo:
+- Quero treinar para a discussao/defesa do projeto BackToSchool.
+- As perguntas devem ser tecnicas, baseadas no relatorio, no projeto Unity, nos requisitos funcionais e nao funcionais, no GDD, no sistema de lobby, no fluxo multiplayer, no Quiz AI, no Vigia, na API Gemini, PurrNet, Steamworks, scripts e cenas do projeto.
+
+Fontes que deves usar:
+- O relatorio e documentos em `/Users/belarmino/Documents/ISEL/3-ano-2-segmestre/PRJ/pros-final-n61`
+- O projeto Unity em `/Users/belarmino/Documents/BackToSchool`
+- O MCP do Unity, se necessario, para confirmar cenas, GameObjects, scripts, componentes e fluxo real.
+
+Formato obrigatorio de saida:
+- Escreve diretamente no ficheiro `questions_generated.txt`
+- Uma pergunta por linha
+- Usa exatamente este formato:
+  id|difficulty|topic|question|optionA|optionB|optionC|optionD|correctIndex|explanation"
+Relevancia:
+Embora este prompt seja posterior ao desenvolvimento principal do jogo, e relevante como exemplo de afinacao de prompts para geracao de questionarios e preparacao da defesa tecnica.
+
+
+5. Build, distribuicao e validacao final
+
+[ANT-08] Apoio a criacao da build para distribuicao
+Ferramenta: Antigravity
+Data aproximada: 2026-06-08
+Contexto: Pedido de ajuda para gerar uma build do jogo e disponibiliza-la para testes.
+Prompt:
+"quero dar build do meu jogo e o que pretendo fazer e basicamente coloca-lo no drive para que pessoas possam baixa-lo. ajude me a dar build tens o mcp para tal"
+Relevancia:
+Este prompt documenta apoio de IA no processo de build, validacao e preparacao para distribuicao a testers.
+
+[ANT-09] Investigacao de lobby Steam na build
+Ferramenta: Antigravity
+Data aproximada: 2026-06-08
+Contexto: Problema ao criar lobby na build com Steam aberta.
+Prompt:
+"ao rodar pela build mesmo com steam aberta nao consigo criar a lobby qp sera?"
+Relevancia:
+Este prompt esta relacionado com debugging de integracao Steam/PurrNet fora do editor.
+
+
+6. Declaracao do uso de IA no relatorio
+
+[ANT-10] Apoio na redacao do apendice sobre uso de IA
+Ferramenta: Antigravity
+Data aproximada: 2026-07-04
+Contexto: Pedido para ajudar a redigir o apendice do relatorio relativo ao uso de IA no processo de desenvolvimento.
+Prompt:
+"preciso que me ajudes no segundo apendice referente ao uso de AI, \"dizer que utilizamos ai para nos ajudar a planear o sistema do jogo, perceber conceitos e debugging\" coisa do genero O projeto esta em documents/BackTosShool de certeza que saberas o que la escrever"
+Relevancia:
+Este prompt documenta explicitamente a intencao de declarar no relatorio o uso de ferramentas de IA como apoio ao planeamento, compreensao tecnica e debugging.
+
+
+Resumo de correspondencia com o relatorio:
+- Organizacao inicial de ideias: COD-01, ANT-01, ANT-02.
+- Criacao e afinacao de prompts para questionarios: GEM-01, GEM-02, COD-07.
+- Clarificacao de solucoes tecnicas: COD-04, COD-06, ANT-05, ANT-07.
+- Debugging e resolucao de erros: COD-02, COD-03, ANT-04, ANT-06, ANT-08, ANT-09.
+- Logica do Vigia/NPC autonomo: COD-05, COD-06, ANT-06.
+- Leitura/interpretação de JSON Gemini: GEM-01, GEM-02, ANT-07.
+- Sincronizacao em rede/RPCs/PurrNet/Steam: COD-02, COD-03, COD-04, ANT-04, ANT-09.
