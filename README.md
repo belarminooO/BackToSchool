@@ -53,12 +53,30 @@ O ciclo de cada partida alterna entre perguntas, transição, corrida de obstác
 3. Para geração dinâmica de quizzes, defina a variável de ambiente `API_KEY` com uma chave válida da API Gemini antes de iniciar o Unity.
 4. Abra as cenas `LobbySample` e `Quiz AI` e inicie a partida pelo lobby.
 
-## 🖥️ Builds
+## 🖥️ Builds e Como Jogar
 
 Os executáveis distribuídos com o projeto estão em [`builds/`](builds):
 
 - [`BackToSchool_macOS.zip`](builds/BackToSchool_macOS.zip)
 - [`BackToSchool_Windows.zip`](builds/BackToSchool_Windows.zip)
+
+### 🕹️ Como jogar
+
+**Requisitos:**
+1. Baixe e descompacte o ficheiro `.zip`.
+2. Se não tiver a Steam instalada, descarregue [aqui](https://store.steampowered.com/about/).
+3. O jogo **precisa da Steam aberta e com a sua conta iniciada** para funcionar. Sem a Steam, o multiplayer e a criação de lobbies não irão funcionar.
+
+**Jogar sozinho:**
+1. Abra o jogo executável.
+2. Clique em "Create Lobby" para criar uma sala.
+3. Dentro do lobby, carregue em "Ready" para iniciar a partida.
+
+**Jogar com amigos:**
+1. Para jogarem juntos, todos têm de estar adicionados como amigos na Steam.
+2. Uma pessoa cria o lobby ("Create Lobby").
+3. Após criado, o *host* pode convidar os amigos usando a interface da Steam.
+4. Em alternativa, os amigos podem abrir o jogo, clicar em "Browse" e juntar-se diretamente ao lobby criado.
 
 ## 🎬 Vídeo de demonstração
 
