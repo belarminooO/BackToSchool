@@ -64,7 +64,7 @@ Os executáveis distribuídos com o projeto estão em [`builds/`](builds):
 
 O vídeo de gameplay está disponível abaixo (ou na [página de releases](https://github.com/belarminooO/BackToSchool/releases/tag/v1.0.0)).
 
-<video src="https://github.com/belarminooO/BackToSchool/releases/download/v1.0.0/BackToSchoolVideo.mp4" controls="controls" style="max-width: 100%;"></video>
+[📥 Transferir e assistir ao Vídeo de Gameplay (567 MB)](https://github.com/belarminooO/BackToSchool/releases/download/v1.0.0/BackToSchoolVideo.mp4)
 
 ## 📁 Documentação e anexos
 
