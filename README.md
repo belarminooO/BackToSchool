@@ -1,10 +1,10 @@
-# 🎒 Final Project - Back To School
+# Final Project - Back To School
 
 **Back To School** é um jogo multijogador em 3D do género “Party Game” para WindowsPC, desenvolvido em Unity3D. Neste jogo, os jogadores assumem o papel de alunos numa escola e competem em questionários sobre diversos temas, os quais são escolhidos pelos jogadores, mas gerados por inteligência artificial. Os jogadores deverão conseguir resolver os questionários sem que o vigia da prova escute possíveis conversas. Neste contexto será implementado um sistema de “Proximity Voice Chat”. Sempre que o tema muda, os jogadores deslocam-se a uma nova sala, enfrentando uma corrida de obstáculos pelos corredores. No final, vence quem tiver maior pontuação total.
 
 ![Lobby do jogo](docs/figures/LobbyImage.png)
 
-## 📦 Tecnologias
+## Tecnologias
 
 - **Unity 6.0.4f1** e **C#**
 - **PurrNet** para sincronização multijogador *peer-to-peer*
@@ -13,7 +13,7 @@
 - **Gemini 2.5 Flash** para gerar quizzes temáticos em JSON
 - **Cinemachine**, **Unity Input System** e **Unity AI Navigation**
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 - Criação, pesquisa e entrada em lobbies multijogador.
 - Quizzes dinâmicos a partir de temas definidos pelo anfitrião.
@@ -23,13 +23,13 @@
 - Movimento em primeira pessoa: correr, saltar, agachar, agarrar, empurrar e atirar objetos.
 - Pontuação, temporizador, transições de ronda e classificação final sincronizados.
 
-## 🧭 Processo de desenvolvimento
+## Processo de desenvolvimento
 
 O projeto começou pela definição do conceito e dos requisitos do jogo, seguida do Game Design Document e dos diagramas de arquitetura. A implementação foi organizada em torno de dois cenários principais: `LobbySample`, para entrada e configuração da partida, e `Quiz AI`, para o ciclo de jogo.
 
 O ciclo de cada partida alterna entre perguntas, transição, corrida de obstáculos e preparação da ronda seguinte. A sincronização P2P mantém esse estado partilhado entre os jogadores; o anfitrião lê os temas, pede as perguntas ao modelo de IA e distribui o quiz gerado pelos restantes pares.
 
-## 📚 O que foi consolidado
+## O que foi consolidado
 
 - Arquitetura multijogador P2P e chamadas remotas com PurrNet.
 - Máquinas de estado para coordenar as fases de uma ronda.
@@ -43,24 +43,24 @@ O ciclo de cada partida alterna entre perguntas, transição, corrida de obstác
 
 1. Clone o repositório e obtenha os assets LFS:
 
-   ```bash
-   git clone https://github.com/belarminooO/BackToSchool.git
-   cd BackToSchool
-   git lfs pull
-   ```
+ ```bash
+ git clone https://github.com/belarminooO/BackToSchool.git
+ cd BackToSchool
+ git lfs pull
+ ```
 
 2. Abra a pasta no **Unity Hub** com o Unity **6.0.4f1**.
 3. Para geração dinâmica de quizzes, defina a variável de ambiente `API_KEY` com uma chave válida da API Gemini antes de iniciar o Unity.
 4. Abra as cenas `LobbySample` e `Quiz AI` e inicie a partida pelo lobby.
 
-## 🖥️ Builds e Como Jogar
+## Builds e Como Jogar
 
 Os executáveis distribuídos com o projeto estão em [`builds/`](builds):
 
 - [`BackToSchool_macOS.zip`](builds/BackToSchool_macOS.zip)
 - [`BackToSchool_Windows.zip`](builds/BackToSchool_Windows.zip)
 
-### 🕹️ Como jogar
+### Como jogar
 
 **Requisitos:**
 1. Baixe e descompacte o ficheiro `.zip`.
@@ -78,13 +78,13 @@ Os executáveis distribuídos com o projeto estão em [`builds/`](builds):
 3. Após criado, o *host* pode convidar os amigos usando a interface da Steam.
 4. Em alternativa, os amigos podem abrir o jogo, clicar em "Browse" e juntar-se diretamente ao lobby criado.
 
-## 🎬 Vídeo de demonstração
+## Vídeo de demonstração
 
 O vídeo de gameplay está disponível abaixo (ou na [página de releases](https://github.com/belarminooO/BackToSchool/releases/tag/v1.0.0)).
 
-[📥 Transferir e assistir ao Vídeo de Gameplay (567 MB)](https://github.com/belarminooO/BackToSchool/releases/download/v1.0.0/BackToSchoolVideo.mp4)
+[ Transferir e assistir ao Vídeo de Gameplay (567 MB)](https://github.com/belarminooO/BackToSchool/releases/download/v1.0.0/BackToSchoolVideo.mp4)
 
-## 📁 Documentação e anexos
+## Documentação e anexos
 
 | Conteúdo | Localização |
 | --- | --- |
@@ -95,7 +95,7 @@ O vídeo de gameplay está disponível abaixo (ou na [página de releases](https
 | Avaliação de jogabilidade | [`anexos/04_Teste`](anexos/04_Teste) |
 | Relatório final | [`anexos/_RELATORIO/Projeto Relatório.pdf`](anexos/_RELATORIO/Projeto%20Relat%C3%B3rio.pdf) |
 
-## 👥 Autoria
+## Autoria
 
 Projeto académico da unidade curricular de Projeto — LEIM, ISEL/DEI (2025/2026).
 
