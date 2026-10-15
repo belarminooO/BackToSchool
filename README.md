@@ -4,6 +4,8 @@
 
 ![Lobby do jogo](docs/figures/LobbyImage.png)
 
+---
+
 ## Tecnologias
 
 - **Unity 6.0.4f1** e **C#**
@@ -12,6 +14,8 @@
 - **MetaVoiceChat** para voz de proximidade
 - **Gemini 2.5 Flash** para gerar quizzes temáticos em JSON
 - **Cinemachine**, **Unity Input System** e **Unity AI Navigation**
+
+---
 
 ## Funcionalidades
 
@@ -23,11 +27,15 @@
 - Movimento em primeira pessoa: correr, saltar, agachar, agarrar, empurrar e atirar objetos.
 - Pontuação, temporizador, transições de ronda e classificação final sincronizados.
 
+---
+
 ## Processo de desenvolvimento
 
 O projeto começou pela definição do conceito e dos requisitos do jogo, seguida do Game Design Document e dos diagramas de arquitetura. A implementação foi organizada em torno de dois cenários principais: `LobbySample`, para entrada e configuração da partida, e `Quiz AI`, para o ciclo de jogo.
 
 O ciclo de cada partida alterna entre perguntas, transição, corrida de obstáculos e preparação da ronda seguinte. A sincronização P2P mantém esse estado partilhado entre os jogadores; o anfitrião lê os temas, pede as perguntas ao modelo de IA e distribui o quiz gerado pelos restantes pares.
+
+---
 
 ## O que foi consolidado
 
@@ -38,6 +46,8 @@ O ciclo de cada partida alterna entre perguntas, transição, corrida de obstác
 - Navegação de NPCs com NavMesh e interações físicas em primeira pessoa.
 
 
+
+---
 
 ## Executar o projeto
 
@@ -52,6 +62,8 @@ O ciclo de cada partida alterna entre perguntas, transição, corrida de obstác
 2. Abra a pasta no **Unity Hub** com o Unity **6.0.4f1**.
 3. Para geração dinâmica de quizzes, defina a variável de ambiente `API_KEY` com uma chave válida da API Gemini antes de iniciar o Unity.
 4. Abra as cenas `LobbySample` e `Quiz AI` e inicie a partida pelo lobby.
+
+---
 
 ## Builds e Como Jogar
 
@@ -78,11 +90,15 @@ Os executáveis distribuídos com o projeto estão em [`builds/`](builds):
 3. Após criado, o *host* pode convidar os amigos usando a interface da Steam.
 4. Em alternativa, os amigos podem abrir o jogo, clicar em "Browse" e juntar-se diretamente ao lobby criado.
 
+---
+
 ## Vídeo de demonstração
 
 O vídeo de gameplay está disponível abaixo (ou na [página de releases](https://github.com/belarminooO/BackToSchool/releases/tag/v1.0.0)).
 
 [Transferir e assistir ao Vídeo de Gameplay (567 MB)](https://github.com/belarminooO/BackToSchool/releases/download/v1.0.0/BackToSchoolVideo.mp4)
+
+---
 
 ## Documentação e anexos
 
@@ -95,6 +111,8 @@ O vídeo de gameplay está disponível abaixo (ou na [página de releases](https
 | Avaliação de jogabilidade | [`anexos/04_Teste`](anexos/04_Teste) |
 | Relatório final | [`anexos/_RELATORIO/Projeto Relatório.pdf`](anexos/_RELATORIO/Projeto%20Relat%C3%B3rio.pdf) |
 
+---
+
 ## Autoria
 
 Projeto académico da unidade curricular de Projeto — LEIM, ISEL/DEI (2025/2026).
@@ -103,3 +121,18 @@ Projeto académico da unidade curricular de Projeto — LEIM, ISEL/DEI (2025/202
 - Miguel Ferreira
 
 As bibliotecas, recursos e *asset packs* de terceiros usados no projeto mantêm as respetivas licenças e atribuições presentes no código-fonte.
+
+---
+
+## Contacto
+
+<a href="https://www.linkedin.com/in/belarmino-sacate-1b830037b/">
+  <img align="center" alt="LinkedIn" width="24px" src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" />
+  LinkedIn Profile
+</a>
+<br>
+<br>
+<a href="mailto:belarmino.s.bs@gmail.com">
+  <img align="center" alt="Gmail" width="24px" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Gmail_Icon.png" />
+  belarmino.s.bs@gmail.com
+</a>
