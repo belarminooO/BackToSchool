@@ -39,7 +39,7 @@ O ciclo de cada partida alterna entre perguntas, transição, corrida de obstác
 
 
 
-## ▶️ Executar o projeto
+## Executar o projeto
 
 1. Clone o repositório e obtenha os assets LFS:
 
