@@ -1,6 +1,6 @@
 # Final Project - Back To School
 
-**Back To School é um party game competitivo multijogador em primeira pessoa para Windows PC desenvolvido em Unity 6.3. Cada ronda é composta por duas fases. A primeira decorre numa sala de aula onde os jogadores respondem a questionários de escolha múltipla gerados dinamicamente por inteligência artificial, comunicam através de voz por proximidade e tentam evitar ser apanhados por um vigia controlado pelo computador. A segunda fase consiste numa corrida de obstáculos até à sala seguinte dentro de um limite de tempo, sendo os jogadores que não conseguem chegar a tempo são penalizados.
+** Back To School é um party game competitivo multijogador em primeira pessoa para Windows PC desenvolvido em Unity 6.3. Cada ronda é composta por duas fases. A primeira decorre numa sala de aula onde os jogadores respondem a questionários de escolha múltipla gerados dinamicamente por inteligência artificial, comunicam através de voz por proximidade e tentam evitar ser apanhados por um vigia controlado pelo computador. A segunda fase consiste numa corrida de obstáculos até à sala seguinte dentro de um limite de tempo, sendo os jogadores que não conseguem chegar a tempo são penalizados.
 
 
 ![Lobby do jogo](docs/figures/LobbyImage.png)
